@@ -52,7 +52,15 @@ class InvitationResource extends JsonResource
                     'location' => $event->location,
                 ];
             })->values()->all(),
-            'music' => $this->music?->file ?: '',
+            'music' => $this->music->first() ? [
+                'title' => $this->music->first()->title,
+                'artist' => $this->music->first()->artist,
+                'file' => $this->music->first()->file,
+            ] : [
+                'title' => '',
+                'artist' => '',
+                'file' => '',
+            ],
         ];
     }
 }

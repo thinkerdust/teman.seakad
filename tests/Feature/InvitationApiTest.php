@@ -165,10 +165,14 @@ class InvitationApiTest extends TestCase
         ]);
 
         // Tambah musik
-        Music::create([
-            'invitation_id' => $invitation->id,
+        $music = Music::create([
+            'title' => 'Background Music',
+            'artist' => 'Artist Name',
+            'genre' => 'Wedding',
+            'mood' => 'Romantic',
             'file' => '/storage/invitations/music/love.mp3',
         ]);
+        $invitation->music()->sync([$music->id]);
 
         $response = $this->getJson('/api/invitation/' . $invitation->slug);
         $response->assertStatus(200);
@@ -191,12 +195,20 @@ class InvitationApiTest extends TestCase
                 ]
             ],
             'gallery' => [
-                '*' => ['id', 'image', 'sort']
+                [
+                    'id', 'image', 'sort'
+                ]
             ],
             'events' => [
-                '*' => ['id', 'name', 'date', 'time', 'location']
+                [
+                    'id', 'name', 'date', 'time', 'location'
+                ]
             ],
-            'music'
+            'music' => [
+                'title',
+                'artist',
+                'file',
+            ]
         ]);
 
         // Uji isi nilai JSON response
@@ -223,7 +235,11 @@ class InvitationApiTest extends TestCase
                     'location' => 'Hotel Mulia',
                 ]
             ],
-            'music' => '/storage/invitations/music/love.mp3'
+            'music' => [
+                'title' => 'Background Music',
+                'artist' => 'Artist Name',
+                'file' => '/storage/invitations/music/love.mp3'
+            ]
         ]);
     }
 }

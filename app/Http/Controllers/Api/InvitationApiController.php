@@ -54,4 +54,51 @@ class InvitationApiController extends Controller
         // Return resources detail undangan
         return new InvitationResource($invitation);
     }
+
+    /**
+     * Dapatkan rekomendasi lagu berdasarkan tema undangan.
+     */
+    public function recommend(Request $request, string $theme): JsonResponse
+    {
+        $moods = [];
+        switch (strtolower($theme)) {
+            case 'floral-elegant':
+            case 'floral':
+                $moods = ['Romantic'];
+                break;
+            case 'luxury-gold':
+            case 'luxury':
+                $moods = ['Elegant', 'Luxury'];
+                break;
+            case 'islamic-wedding':
+            case 'islamic':
+                $moods = ['Islamic'];
+                break;
+            case 'rustic-forest':
+            case 'rustic':
+                $moods = ['Acoustic', 'Classic'];
+                break;
+            default:
+                $moods = ['Romantic', 'Elegant'];
+                break;
+        }
+
+        $tracks = \App\Models\Music::whereIn('mood', $moods)
+            ->where('status', 'active')
+            ->get()
+            ->map(function ($track) {
+                return [
+                    'id' => $track->id,
+                    'title' => $track->title,
+                    'artist' => $track->artist,
+                    'cover' => $track->cover ? asset($track->cover) : null,
+                    'preview' => $track->file ? asset($track->file) : '',
+                ];
+            });
+
+        return response()->json([
+            'theme' => $theme,
+            'recommendations' => $tracks,
+        ]);
+    }
 }

@@ -5,16 +5,16 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ThemeController;
+use App\Http\Controllers\Admin\MusicController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\InvitationContentController;
 use App\Http\Controllers\PublicInvitationController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
-// Public Front-end Landing Page (will be Vue in subsequent phases)
-Route::get('/', function () {
-    return view('welcome');
-});
+// Public Front-end Landing Page
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -52,6 +52,14 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/themes', [ThemeController::class, 'store'])->name('themes.store')->middleware('permission:theme.create');
     Route::put('/themes/{theme}', [ThemeController::class, 'update'])->name('themes.update')->middleware('permission:theme.update');
     Route::delete('/themes/{theme}', [ThemeController::class, 'destroy'])->name('themes.destroy')->middleware('permission:theme.delete');
+
+    // Music Management Resource Routes
+    Route::get('/music', [MusicController::class, 'index'])->name('music.index')->middleware('permission:music.view');
+    Route::get('/music/create', [MusicController::class, 'create'])->name('music.create')->middleware('permission:music.create');
+    Route::post('/music', [MusicController::class, 'store'])->name('music.store')->middleware('permission:music.create');
+    Route::get('/music/{music}/edit', [MusicController::class, 'edit'])->name('music.edit')->middleware('permission:music.update');
+    Route::put('/music/{music}', [MusicController::class, 'update'])->name('music.update')->middleware('permission:music.update');
+    Route::delete('/music/{music}', [MusicController::class, 'destroy'])->name('music.destroy')->middleware('permission:music.delete');
 
     // Invitation Management Resource Routes
     Route::get('/invitations', [InvitationController::class, 'index'])->name('invitations.index')->middleware('permission:invitation.view');

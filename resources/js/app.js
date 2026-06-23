@@ -76,7 +76,7 @@ if (document.getElementById('app') && window.invitationData) {
                     maps_url: window.invitationData.maps_url,
                     description: window.invitationData.description,
                     gallery: window.invitationData.gallery || [],
-                    music: window.invitationData.music || '',
+                    music: window.invitationData.music || null,
                     story: window.invitationData.story || [],
                     events: window.invitationData.events || []
                 }),

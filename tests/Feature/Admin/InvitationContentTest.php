@@ -302,48 +302,62 @@ class InvitationContentTest extends TestCase
     }
 
     /**
-     * User can upload background music (MP3).
+     * User can select music from library and set wedding mood.
      */
-    public function test_user_can_upload_music(): void
+    public function test_user_can_select_music_from_library(): void
     {
-        Storage::fake('public');
-
-        $musicFile = UploadedFile::fake()->create('instrumental.mp3', 1024, 'audio/mpeg');
+        $music = Music::create([
+            'title' => 'A Thousand Years',
+            'artist' => 'Christina Perri',
+            'genre' => 'Wedding',
+            'mood' => 'Romantic',
+            'file' => '/storage/music/test.mp3',
+            'status' => 'active'
+        ]);
 
         $response = $this->actingAs($this->user)
             ->post(route('admin.invitations.content.music', $this->invitation->id), [
-                'action' => 'upload',
-                'music_file' => $musicFile,
+                'action' => 'select',
+                'music_id' => $music->id,
+                'wedding_mood' => 'Romantic',
             ]);
 
         $response->assertStatus(302);
         $response->assertSessionHas('success', 'Musik latar berhasil diperbarui.');
 
-        $this->assertDatabaseHas('music', [
+        // Verify relationship synced in pivot table
+        $this->assertDatabaseHas('invitation_music', [
             'invitation_id' => $this->invitation->id,
+            'music_id' => $music->id,
         ]);
 
-        $music = Music::where('invitation_id', $this->invitation->id)->first();
-        $path = str_replace('/storage/', '', $music->file);
-        Storage::disk('public')->assertExists($path);
+        // Verify wedding mood is saved to invitation
+        $this->assertDatabaseHas('invitations', [
+            'id' => $this->invitation->id,
+            'wedding_mood' => 'Romantic',
+        ]);
     }
 
     /**
-     * User can delete background music.
+     * User can detach background music.
      */
-    public function test_user_can_delete_music(): void
+    public function test_user_can_detach_music(): void
     {
-        Storage::fake('public');
-
-        $musicFile = UploadedFile::fake()->create('instrumental.mp3', 500, 'audio/mpeg');
-        $storedPath = Storage::disk('public')->putFile('invitations/music', $musicFile);
-
         $music = Music::create([
-            'invitation_id' => $this->invitation->id,
-            'file' => '/storage/' . $storedPath,
+            'title' => 'A Thousand Years',
+            'artist' => 'Christina Perri',
+            'genre' => 'Wedding',
+            'mood' => 'Romantic',
+            'file' => '/storage/music/test.mp3',
+            'status' => 'active'
         ]);
 
-        Storage::disk('public')->assertExists($storedPath);
+        $this->invitation->music()->sync([$music->id]);
+
+        $this->assertDatabaseHas('invitation_music', [
+            'invitation_id' => $this->invitation->id,
+            'music_id' => $music->id,
+        ]);
 
         $response = $this->actingAs($this->user)
             ->post(route('admin.invitations.content.music', $this->invitation->id), [
@@ -353,10 +367,9 @@ class InvitationContentTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success', 'Musik latar berhasil dihapus.');
 
-        $this->assertDatabaseMissing('music', [
-            'id' => $music->id,
+        $this->assertDatabaseMissing('invitation_music', [
+            'invitation_id' => $this->invitation->id,
+            'music_id' => $music->id,
         ]);
-
-        Storage::disk('public')->assertMissing($storedPath);
     }
 }

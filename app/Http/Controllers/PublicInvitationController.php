@@ -94,7 +94,15 @@ class PublicInvitationController extends Controller
                     'location' => $e->location,
                 ];
             })->values()->all(),
-            'music' => $invitation->music?->file ?: '',
+            'music' => $invitation->music->first() ? [
+                'title' => $invitation->music->first()->title,
+                'artist' => $invitation->music->first()->artist,
+                'file' => $invitation->music->first()->file,
+            ] : [
+                'title' => '',
+                'artist' => '',
+                'file' => '',
+            ],
         ];
 
         return view('public.invitation', compact('invitation', 'invitationData'));

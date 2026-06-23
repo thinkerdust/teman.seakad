@@ -1,0 +1,295 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Playfair Display', Georgia, serif;
+    
+    --color-rose-gold-50: #fbf8f8;
+    --color-rose-gold-100: #f7eded;
+    --color-rose-gold-200: #ebd6d8;
+    --color-rose-gold-300: #dab2b6;
+    --color-rose-gold-400: #c58991;
+    --color-rose-gold-500: #b76e79;
+    --color-rose-gold-600: #9f5460;
+    --color-rose-gold-700: #84414c;
+    --color-rose-gold-800: #6e3740;
+    --color-rose-gold-900: #5c3137;
+    --color-rose-gold-950: #33171a;
+    
+    --color-champagne-50: #fefdfb;
+    --color-champagne-100: #faf7ed;
+    --color-champagne-200: #f4edd4;
+    --color-champagne-300: #ecddb1;
+    --color-champagne-400: #dfc886;
+    --color-champagne-500: #d2b05c;
+    --color-champagne-600: #bd9543;
+    --color-champagne-700: #9d7535;
+    --color-champagne-800: #805c2d;
+    --color-champagne-900: #694b27;
+    --color-champagne-950: #3b2813;
+}
+
+/* Custom premium landing page styles */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Lenis smooth scrolling */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
+body {
+    background-color: #fdfbf7;
+    color: #2d2d2d;
+    overflow-x: hidden;
+}
+
+.dark body {
+    background-color: #121212;
+    color: #f5f5f5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fdfbf7;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ebd6d8;
+    border-radius: 9999px;
+    border: 2px solid #fdfbf7;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #33171a;
+    border: 2px solid #121212;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c58991;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #b76e79;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-panel {
+    background: rgba(26, 26, 26, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glassmorphism floating feature cards */
+.glass-feature-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(183, 110, 121, 0.06);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+}
+
+.glass-feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -15px rgba(183, 110, 121, 0.15);
+    border-color: rgba(183, 110, 121, 0.35);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.dark .glass-feature-card {
+    background: rgba(26, 26, 26, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.dark .glass-feature-card:hover {
+    background: rgba(26, 26, 26, 0.6);
+    border-color: rgba(210, 176, 92, 0.25);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+/* 3D Perspective phone mockup */
+.hero-phone-container {
+    perspective: 1500px;
+    transform-style: preserve-3d;
+}
+
+.hero-phone-mockup {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* Particle Canvas */
+.particle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Smooth active navbar transition */
+#main-navbar {
+    transition: background-color 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease, padding 0.5s ease, box-shadow 0.5s ease;
+}
+
+#main-navbar.navbar-scrolled {
+    background-color: rgba(253, 251, 247, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(183, 110, 121, 0.1);
+    box-shadow: 0 4px 30px rgba(183, 110, 121, 0.03);
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+.dark #main-navbar.navbar-scrolled {
+    background-color: rgba(18, 18, 18, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Vertical Timeline Workflow */
+.workflow-progress-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: rgba(235, 214, 216, 0.4);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.dark .workflow-progress-line {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.workflow-progress-active {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, #b76e79, #d2b05c);
+    height: 0%;
+    will-change: height;
+}
+
+@media (max-width: 768px) {
+    .workflow-progress-line {
+        left: 20px;
+        transform: none;
+    }
+}
+
+
+
+/* Showcase Stack Cards */
+.showcase-card {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+    will-change: transform;
+}
+
+.showcase-card:hover {
+    transform: translateY(-12px) rotate(1.5deg) scale(1.025);
+    box-shadow: 0 30px 60px -15px rgba(183, 110, 121, 0.22);
+}
+
+.dark .showcase-card:hover {
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* Cinematic CTA glow */
+.cta-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    mix-blend-mode: plus-lighter;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+/* Form input focus styles */
+.focus-ring:focus {
+    outline: none;
+    border-color: #b76e79;
+    box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.2);
+}
+
+/* Base animations */
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+/* Reveal base class */
+.reveal-section {
+    will-change: transform, opacity;
+}
+
+.animate-spin-slow {
+    animation: spin 15s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

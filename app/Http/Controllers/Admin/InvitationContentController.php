@@ -22,8 +22,12 @@ class InvitationContentController extends Controller
         $this->authorizeInvitationAction($invitation, 'invitation.update');
 
         $invitation->load(['galleries', 'stories', 'events', 'music']);
+        
+        $musicLibrary = Music::where('status', 'active')->orderBy('title')->get();
+        $recommendationService = new \App\Services\MusicRecommendationService();
+        $recommendedMusic = $recommendationService->recommend($invitation);
 
-        return view('admin.invitations.content.edit', compact('invitation'));
+        return view('admin.invitations.content.edit', compact('invitation', 'musicLibrary', 'recommendedMusic'));
     }
 
     /**
@@ -188,45 +192,31 @@ class InvitationContentController extends Controller
     {
         $this->authorizeInvitationAction($invitation, 'invitation.update');
 
-        $action = $request->input('action', 'upload');
+        $action = $request->input('action', 'select');
 
-        if ($action === 'upload') {
+        if ($action === 'select') {
             $request->validate([
-                'music_file' => ['required', 'file', 'mimes:mp3,wav', 'max:20480'] // Maksimal 20MB
+                'music_id' => ['required', 'exists:music,id'],
+                'wedding_mood' => ['nullable', 'string', 'max:255'],
             ], [
-                'music_file.required' => 'File musik wajib diunggah.',
-                'music_file.mimes' => 'Format musik harus berupa MP3 atau WAV.',
-                'music_file.max' => 'Ukuran file musik maksimal adalah 20MB.'
+                'music_id.required' => 'Lagu wajib dipilih.',
+                'music_id.exists' => 'Lagu terpilih tidak valid.',
             ]);
 
-            if ($request->hasFile('music_file')) {
-                // Hapus musik lama jika ada
-                if ($invitation->music) {
-                    $oldPath = str_replace('/storage/', '', $invitation->music->file);
-                    Storage::disk('public')->delete($oldPath);
-                    $invitation->music->delete();
-                }
+            // Simpan mood pernikahan ke undangan
+            $invitation->update([
+                'wedding_mood' => $request->input('wedding_mood'),
+            ]);
 
-                // Simpan berkas baru
-                $path = $request->file('music_file')->store('invitations/music', 'public');
+            // Hubungkan musik dengan undangan (Many-to-Many sync)
+            $invitation->music()->sync([$request->input('music_id')]);
 
-                Music::create([
-                    'invitation_id' => $invitation->id,
-                    'file' => '/storage/' . $path
-                ]);
-
-                return redirect()->back()->with('success', 'Musik latar berhasil diperbarui.');
-            }
+            return redirect()->back()->with('success', 'Musik latar berhasil diperbarui.');
         } elseif ($action === 'delete') {
-            if ($invitation->music) {
-                $oldPath = str_replace('/storage/', '', $invitation->music->file);
-                Storage::disk('public')->delete($oldPath);
-                $invitation->music->delete();
+            // Hapus asosiasi musik
+            $invitation->music()->detach();
 
-                return redirect()->back()->with('success', 'Musik latar berhasil dihapus.');
-            }
-
-            return redirect()->back()->with('error', 'Tidak ada musik latar untuk dihapus.');
+            return redirect()->back()->with('success', 'Musik latar berhasil dihapus.');
         }
 
         return redirect()->back()->with('error', 'Tindakan musik tidak valid.');
