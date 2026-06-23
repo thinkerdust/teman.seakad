@@ -15,6 +15,7 @@ Alpine.data('usersManager', (config) => ({
         email: config.oldEmail || '',
         phone: config.oldPhone || '',
         status: config.oldStatus || 'active',
+        role_id: config.oldRoleId || '',
         avatar_url: ''
     },
     
@@ -26,6 +27,7 @@ Alpine.data('usersManager', (config) => ({
             email: user.email,
             phone: user.phone || '',
             status: user.status,
+            role_id: user.roles && user.roles.length > 0 ? user.roles[0].id : '',
             avatar_url: user.avatar ? '/storage/' + user.avatar : ''
         };
         this.editUserModalOpen = true;
@@ -125,6 +127,9 @@ Alpine.data('usersManager', (config) => ({
             if (error.response && error.response.status === 422) {
                 // Validation errors from Laravel Form Requests
                 this.errors = error.response.data.errors || {};
+            } else if (error.response && error.response.status === 403) {
+                // Unauthorized / forbidden from PermissionMiddleware
+                alert(error.response.data.message || 'Anda tidak memiliki hak akses untuk melakukan aksi ini.');
             } else {
                 console.error('Terjadi kesalahan:', error);
                 alert('Terjadi kesalahan pada sistem. Silakan coba lagi.');

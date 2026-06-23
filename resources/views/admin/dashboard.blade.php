@@ -7,14 +7,15 @@
     <x-admin.breadcrumb pageTitle="Dashboard" />
 
     <!-- Stat Cards Grid -->
-    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
+    <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 {{ auth()->user()->hasPermission('user.view') ? 'lg:grid-cols-4' : 'lg:grid-cols-3' }} md:gap-6">
         
+        @if(auth()->user()->hasPermission('user.view'))
         <!-- Stat Card: Users -->
         <x-admin.stat-card 
             title="Total Pengguna" 
             value="{{ $stats['total_users'] }}" 
-            trend="+12%" 
-            :trendUp="true"
+            trend="{{ $stats['user_trend'] }}" 
+            :trendUp="!str_contains($stats['user_trend'], '-')"
         >
             <x-slot:iconSlot>
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -22,13 +23,14 @@
                 </svg>
             </x-slot:iconSlot>
         </x-admin.stat-card>
+        @endif
 
         <!-- Stat Card: Invitations -->
         <x-admin.stat-card 
             title="Total Undangan" 
             value="{{ $stats['total_invitations'] }}" 
-            trend="0%" 
-            :trendUp="true"
+            trend="{{ $stats['invitation_trend'] }}" 
+            :trendUp="!str_contains($stats['invitation_trend'], '-')"
         >
             <x-slot:iconSlot>
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -37,6 +39,7 @@
             </x-slot:iconSlot>
         </x-admin.stat-card>
 
+        @if(auth()->user()->hasPermission('theme.view'))
         <!-- Stat Card: Themes -->
         <x-admin.stat-card 
             title="Tema Undangan" 
@@ -50,13 +53,14 @@
                 </svg>
             </x-slot:iconSlot>
         </x-admin.stat-card>
+        @endif
 
         <!-- Stat Card: Guests -->
         <x-admin.stat-card 
             title="Tamu RSVP" 
             value="{{ $stats['total_guests'] }}" 
-            trend="0%" 
-            :trendUp="true"
+            trend="{{ $stats['guest_trend'] }}" 
+            :trendUp="!str_contains($stats['guest_trend'], '-')"
         >
             <x-slot:iconSlot>
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -67,26 +71,53 @@
 
     </div>
 
+    <!-- Charts Visualization Grid -->
+    <div class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <!-- Chart: Monthly Invitations -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 transition-all duration-200 hover:shadow-md">
+            <div class="mb-4">
+                <h4 class="text-base font-bold text-slate-800 dark:text-white">Undangan Dibuat</h4>
+                <p class="text-xs text-slate-400 dark:text-slate-500">Statistik volume pembuatan undangan baru per bulan (6 bulan terakhir)</p>
+            </div>
+            <div id="chart-invitations" class="min-h-[300px]"></div>
+        </div>
+
+        <!-- Chart: Visitor Statistics -->
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 transition-all duration-200 hover:shadow-md">
+            <div class="mb-4">
+                <h4 class="text-base font-bold text-slate-800 dark:text-white">Statistik Pengunjung</h4>
+                <p class="text-xs text-slate-400 dark:text-slate-500">Jumlah kunjungan tamu ke tautan undangan digital pernikahan (14 hari terakhir)</p>
+            </div>
+            <div id="chart-visitors" class="min-h-[300px]"></div>
+        </div>
+    </div>
+
     <!-- Dashboard Content Area -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         
         <!-- Welcome Card & Quick Actions -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="{{ auth()->user()->hasPermission('user.view') ? 'lg:col-span-2' : 'lg:col-span-3' }} space-y-6">
             
             <!-- Greeting Card -->
             <div class="relative overflow-hidden rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-600 to-violet-700 p-6 text-white shadow-sm dark:border-none">
                 <div class="relative z-10">
                     <h3 class="text-xl font-bold md:text-2xl">Selamat Datang di Teman Seakad!</h3>
                     <p class="mt-2 text-sm text-indigo-100 max-w-xl">
-                        Aplikasi undangan pernikahan digital premium. Kelola pengguna, rancang tema indah, dan pantau kehadiran tamu undangan pernikahan dengan mudah di sini.
+                        @if(auth()->user()->hasPermission('user.view'))
+                            Aplikasi undangan pernikahan digital premium. Kelola pengguna, rancang tema indah, dan pantau kehadiran tamu undangan pernikahan dengan mudah di sini.
+                        @else
+                            Aplikasi undangan pernikahan digital premium. Buat undangan pernikahan digital impian Anda, pilih tema elegan, dan undang para tamu dengan mudah di sini.
+                        @endif
                     </p>
                     <div class="mt-6 flex flex-wrap gap-3">
                         <a href="#" class="rounded-lg bg-white px-4 py-2 text-xs font-semibold text-indigo-700 hover:bg-slate-50 transition duration-150 shadow-sm">
                             Buat Undangan Baru
                         </a>
+                        @if(auth()->user()->hasPermission('theme.view'))
                         <a href="#" class="rounded-lg bg-indigo-500/30 border border-indigo-400/30 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500/40 transition duration-150">
                             Lihat Template Tema
                         </a>
+                        @endif
                     </div>
                 </div>
                 <!-- Background decoration shapes -->
@@ -111,6 +142,7 @@
 
         </div>
 
+        @if(auth()->user()->hasPermission('user.view'))
         <!-- Sidebar Widget Column -->
         <div class="space-y-6">
             
@@ -150,6 +182,191 @@
             </x-admin.card>
 
         </div>
+        @endif
 
     </div>
 @endsection
+
+@push('scripts')
+    <!-- CDN ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartData = @json($chartData);
+            const isDarkInit = document.documentElement.classList.contains('dark');
+            const initialTheme = isDarkInit ? 'dark' : 'light';
+            const initialGridColor = isDarkInit ? '#1e293b' : '#f1f5f9';
+            const initialLabelColor = isDarkInit ? '#94a3b8' : '#64748b';
+
+            // 1. Invitations Created Chart (Bar Chart)
+            const optionsInvitations = {
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif',
+                    background: 'transparent'
+                },
+                theme: {
+                    mode: initialTheme
+                },
+                series: [{
+                    name: 'Undangan Dibuat',
+                    data: chartData.invitations.series
+                }],
+                xaxis: {
+                    categories: chartData.invitations.labels,
+                    labels: {
+                        style: {
+                            colors: initialLabelColor,
+                            fontSize: '12px'
+                        }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: initialLabelColor,
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'light',
+                        type: "vertical",
+                        shadeIntensity: 0.25,
+                        gradientToColors: ['#8b5cf6'], // Violet
+                        inverseColors: true,
+                        opacityFrom: 0.85,
+                        opacityTo: 0.85,
+                        stops: [50, 0, 100]
+                    }
+                },
+                colors: ['#6366f1'], // Indigo
+                plotOptions: {
+                    bar: {
+                        borderRadius: 5,
+                        columnWidth: '45%',
+                        distributed: false
+                    }
+                },
+                grid: {
+                    borderColor: initialGridColor,
+                    strokeDashArray: 4,
+                    padding: { top: 0, right: 0, bottom: 0, left: 10 }
+                },
+                dataLabels: { enabled: false }
+            };
+
+            const chartInvitations = new ApexCharts(document.querySelector("#chart-invitations"), optionsInvitations);
+            chartInvitations.render();
+
+            // 2. Visitor Statistics Chart (Area Chart)
+            const optionsVisitors = {
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif',
+                    background: 'transparent'
+                },
+                theme: {
+                    mode: initialTheme
+                },
+                series: [{
+                    name: 'Jumlah Kunjungan',
+                    data: chartData.visitors.series
+                }],
+                xaxis: {
+                    categories: chartData.visitors.labels,
+                    labels: {
+                        style: {
+                            colors: initialLabelColor,
+                            fontSize: '11px'
+                        }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: initialLabelColor,
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                colors: ['#10b981'], // Emerald
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [0, 100]
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                grid: {
+                    borderColor: initialGridColor,
+                    strokeDashArray: 4,
+                    padding: { top: 0, right: 0, bottom: 0, left: 10 }
+                },
+                dataLabels: { enabled: false },
+                markers: {
+                    size: 4,
+                    colors: ['#10b981'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: { size: 6 }
+                }
+            };
+
+            const chartVisitors = new ApexCharts(document.querySelector("#chart-visitors"), optionsVisitors);
+            chartVisitors.render();
+
+            // 3. Dynamic Dark/Light Mode Switcher using MutationObserver
+            const updateChartsTheme = (isDark) => {
+                const themeMode = isDark ? 'dark' : 'light';
+                const gridColor = isDark ? '#334155' : '#f1f5f9';
+                const labelColor = isDark ? '#94a3b8' : '#64748b';
+
+                const newOptions = {
+                    theme: { mode: themeMode },
+                    grid: { borderColor: gridColor },
+                    xaxis: {
+                        labels: {
+                            style: { colors: labelColor }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            style: { colors: labelColor }
+                        }
+                    }
+                };
+
+                chartInvitations.updateOptions(newOptions);
+                chartVisitors.updateOptions(newOptions);
+            };
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        const isDark = document.documentElement.classList.contains('dark');
+                        updateChartsTheme(isDark);
+                    }
+                });
+            });
+
+            observer.observe(document.documentElement, { attributes: true });
+        });
+    </script>
+@endpush

@@ -22,5 +22,11 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             \URL::forceScheme('https');
         }
+
+        // Disable wrapping for resources
+        \Illuminate\Http\Resources\Json\JsonResource::withoutWrapping();
+
+        // Register Sidebar View Composer
+        view()->composer('admin.layouts.sidebar', \App\Http\View\Composers\SidebarComposer::class);
     }
 }

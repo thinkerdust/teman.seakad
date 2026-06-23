@@ -14,7 +14,8 @@
             oldName: '{{ old('name', '') }}',
             oldEmail: '{{ old('email', '') }}',
             oldPhone: '{{ old('phone', '') }}',
-            oldStatus: '{{ old('status', 'active') }}'
+            oldStatus: '{{ old('status', 'active') }}',
+            oldRoleId: '{{ old('role_id', '') }}'
         })"
     >
         <!-- Table & Filter Card -->
@@ -26,6 +27,7 @@
                         Daftar Pengguna
                     </h3>
                     
+                    @if(auth()->user()->hasPermission('user.create'))
                     <button 
                         @click="createUserModalOpen = true"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition duration-150"
@@ -35,6 +37,7 @@
                         </svg>
                         Tambah User
                     </button>
+                    @endif
                 </div>
             </x-slot:header>
 
@@ -89,6 +92,7 @@
                         <tr>
                             <th class="px-6 py-4">Pengguna</th>
                             <th class="px-6 py-4">Kontak</th>
+                            <th class="px-6 py-4">Role</th>
                             <th class="px-6 py-4 text-center">Status</th>
                             <th class="px-6 py-4">Login Terakhir</th>
                             <th class="px-6 py-4 text-right">Aksi</th>
@@ -120,6 +124,18 @@
                                     <div class="font-medium text-slate-800 dark:text-white">{{ $user->email }}</div>
                                     <div class="text-xs text-slate-400">{{ $user->phone ?: '-' }}</div>
                                 </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($user->roles as $role)
+                                            <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-950/30 dark:text-indigo-400 dark:ring-indigo-400/20">
+                                                {{ $role->name }}
+                                            </span>
+                                        @endforeach
+                                        @if($user->roles->isEmpty())
+                                            <span class="text-xs text-slate-400">-</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 text-center">
                                     @if($user->status === 'active')
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
@@ -141,6 +157,7 @@
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <!-- Edit Button -->
+                                        @if(auth()->user()->hasPermission('user.update'))
                                         <button 
                                             @click="editUser({{ json_encode($user) }})"
                                             class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -161,9 +178,10 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m-5-4v1a3 3 0 00-3 3H6a3 3 0 00-3 3 2 2 0 002 2h14a2 2 0 002-2m-4-3a2 2 0 11-4 0 2 2 0 014 0z" />
                                             </svg>
                                         </button>
+                                        @endif
 
                                         <!-- Delete Button (Only visible if not current user and not superadmin default) -->
-                                        @if($user->id !== Auth::id() && $user->email !== 'admin@teman-seakad.com')
+                                        @if($user->id !== Auth::id() && $user->email !== 'admin@teman-seakad.com' && auth()->user()->hasPermission('user.delete'))
                                             <button 
                                                 @click="confirmDelete({{ json_encode($user) }})"
                                                 class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-white text-rose-600 hover:bg-rose-50 dark:border-rose-950/20 dark:bg-slate-900 dark:text-rose-400 dark:hover:bg-rose-950/40"
@@ -253,7 +271,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         <!-- Phone -->
                         <div>
                             <label for="create_phone" class="block text-sm font-medium text-slate-700 dark:text-slate-300">No. Telepon</label>
@@ -275,6 +293,22 @@
                             </select>
                             <span x-show="errors.status" x-text="errors.status ? errors.status[0] : ''" class="text-xs text-rose-500 mt-1 block"></span>
                             @error('status')
+                                @if(!old('id')) <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @endif
+                            @enderror
+                        </div>
+
+                        <!-- Role -->
+                        <div>
+                            <label for="create_role" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Role *</label>
+                            <select id="create_role" name="role_id" required
+                                class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-white">
+                                <option value="" disabled selected>Pilih Role</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}" {{ (old('id') ? '' : old('role_id')) == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                            <span x-show="errors.role_id" x-text="errors.role_id ? errors.role_id[0] : ''" class="text-xs text-rose-500 mt-1 block"></span>
+                            @error('role_id')
                                 @if(!old('id')) <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @endif
                             @enderror
                         </div>
@@ -414,7 +448,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         <!-- Phone -->
                         <div>
                             <label for="edit_phone" class="block text-sm font-medium text-slate-700 dark:text-slate-300">No. Telepon</label>
@@ -436,6 +470,22 @@
                             </select>
                             <span x-show="errors.status" x-text="errors.status ? errors.status[0] : ''" class="text-xs text-rose-500 mt-1 block"></span>
                             @error('status')
+                                @if(old('id')) <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @endif
+                            @enderror
+                        </div>
+
+                        <!-- Role -->
+                        <div>
+                            <label for="edit_role" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Role *</label>
+                            <select id="edit_role" name="role_id" required :value="selectedUser.role_id" @change="selectedUser.role_id = $event.target.value"
+                                class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-white">
+                                <option value="" disabled>Pilih Role</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                            <span x-show="errors.role_id" x-text="errors.role_id ? errors.role_id[0] : ''" class="text-xs text-rose-500 mt-1 block"></span>
+                            @error('role_id')
                                 @if(old('id')) <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @endif
                             @enderror
                         </div>
