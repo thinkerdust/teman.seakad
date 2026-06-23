@@ -9,7 +9,7 @@
                 Pilih Paket Sesuai Kebutuhan Pernikahan Anda
             </h2>
             <div class="h-0.5 w-16 bg-rose-gold-400 mx-auto"></div>
-            <p class="text-zinc-650 dark:text-zinc-400">
+            <p class="text-zinc-600 dark:text-zinc-400">
                 Pilih dari beberapa pilihan paket harga transparan kami. Mulai secara gratis dan tingkatkan ke premium untuk fitur yang lebih lengkap.
             </p>
         </div>
@@ -75,7 +75,7 @@
                         <span class="text-xs text-zinc-500 ml-2">/ sekali bayar</span>
                     </div>
                     <hr class="border-rose-gold-150/40 dark:border-zinc-800">
-                    <ul class="space-y-3 text-xs text-zinc-650 dark:text-zinc-400">
+                    <ul class="space-y-3 text-xs text-zinc-600 dark:text-zinc-400">
                         <li class="flex items-center gap-2">
                             <svg class="h-4 w-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                             <span>Semua Pilihan Tema Premium</span>
@@ -116,7 +116,7 @@
                         <span class="text-3xl font-serif font-bold">Hubungi Kami</span>
                     </div>
                     <hr class="border-rose-gold-100/30 dark:border-zinc-800">
-                    <ul class="space-y-3 text-xs text-zinc-650 dark:text-zinc-400">
+                    <ul class="space-y-3 text-xs text-zinc-600 dark:text-zinc-400">
                         <li class="flex items-center gap-2">
                             <svg class="h-4 w-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                             <span>Semua Fitur Paket Premium</span>

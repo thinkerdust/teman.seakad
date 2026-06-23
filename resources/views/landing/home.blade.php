@@ -12,8 +12,8 @@
     <!-- Live Preview Section -->
     @include('landing.components.preview')
 
-    <!-- Themes Showcase Section -->
-    @include('landing.components.themes')
+    <!-- Showcase Grid Gallery Section -->
+    @include('landing.components.showcase')
 
     <!-- How It Works Section -->
     @include('landing.components.workflow')

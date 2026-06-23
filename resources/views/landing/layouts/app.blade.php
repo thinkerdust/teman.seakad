@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +31,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
     <!-- Styles & Scripts -->
-    @vite(['resources/css/landing.css', 'resources/js/landing.js'])
+    <script>
+        // Sinkronkan tema gelap dari localStorage sebelum page load untuk menghindari flash
+        try {
+            const darkMode = localStorage.getItem('_x_darkMode');
+            if (darkMode === 'true' || (darkMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        } catch (e) {
+            console.error('Gagal memuat tema gelap', e);
+        }
+    </script>
+    @vite(['resources/css/landing.css', 'resources/js/landing/app.js'])
     
     @stack('styles')
 
@@ -52,7 +65,7 @@
     }
     </script>
 </head>
-<body class="antialiased min-h-screen flex flex-col bg-[#fdfbf7] text-[#2d2d2d] dark:bg-zinc-950 dark:text-zinc-200">
+<body class="antialiased min-h-screen flex flex-col bg-[#fdfbf7] text-[#2d2d2d] dark:bg-zinc-950 dark:text-zinc-200" id="page-wrapper">
     <!-- Navbar -->
     @include('landing.components.navbar')
 

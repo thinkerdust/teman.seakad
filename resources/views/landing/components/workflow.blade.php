@@ -1,87 +1,107 @@
-<section id="workflow" class="py-24 px-6 md:px-12 bg-[#faf8f5]/60 dark:bg-zinc-900/40 relative">
-    <div class="max-w-7xl mx-auto">
+<section id="workflow" class="py-28 px-6 md:px-12 bg-[#faf8f5]/60 dark:bg-zinc-900/40 relative workflow-timeline-container overflow-hidden">
+    <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
-        <div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
+        <div class="text-center max-w-2xl mx-auto mb-24 space-y-4 reveal-section">
             <span class="text-xs font-bold uppercase tracking-wider text-rose-gold-600 dark:text-rose-gold-400 bg-rose-gold-50 dark:bg-rose-gold-950/20 px-3 py-1.5 rounded-full">
                 Cara Kerja
             </span>
-            <h2 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h2 class="font-serif text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
                 4 Langkah Mudah Membuat Undangan Digital Anda
             </h2>
             <div class="h-0.5 w-16 bg-rose-gold-400 mx-auto"></div>
-            <p class="text-zinc-650 dark:text-zinc-400">
+            <p class="text-zinc-600 dark:text-zinc-400">
                 Ikuti langkah-langkah sederhana di bawah ini untuk membuat dan menyebarkan undangan pernikahan digital Anda secara instan.
             </p>
         </div>
 
-        <!-- Workflow Grid / Timeline -->
-        <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Connecting Line on Desktop -->
-            <div class="hidden lg:block absolute top-[52px] left-[12%] right-[12%] h-[1.5px] bg-gradient-to-r from-rose-gold-200 via-rose-gold-300 to-rose-gold-200 -z-10"></div>
-
-            <!-- Step 1 -->
-            <div class="flex flex-col items-center text-center space-y-4 group">
-                <div class="relative flex items-center justify-center h-20 w-20 rounded-2xl bg-white border border-rose-gold-100 shadow-md group-hover:scale-105 group-hover:border-rose-gold-300 transition duration-300 dark:bg-zinc-900 dark:border-zinc-850">
-                    <span class="absolute -top-3 -right-3 h-7 w-7 rounded-full bg-rose-gold-500 text-white text-xs font-bold flex items-center justify-center shadow-md">
-                        1
-                    </span>
-                    <svg class="h-8 w-8 text-rose-gold-600 dark:text-rose-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                    </svg>
-                </div>
-                <h3 class="font-serif text-lg font-bold text-zinc-900 dark:text-white mt-2">Daftar Akun</h3>
-                <p class="text-xs text-zinc-550 dark:text-zinc-400 leading-relaxed max-w-[200px]">
-                    Lakukan registrasi akun secara gratis dengan mengisi nama, email, dan nomor WhatsApp aktif Anda.
-                </p>
+        <!-- Vertical Timeline Wrap -->
+        <div class="relative">
+            <!-- Central Line (desktop) / Left Line (mobile) -->
+            <div class="workflow-progress-line">
+                <div class="workflow-progress-active"></div>
             </div>
 
-            <!-- Step 2 -->
-            <div class="flex flex-col items-center text-center space-y-4 group">
-                <div class="relative flex items-center justify-center h-20 w-20 rounded-2xl bg-white border border-rose-gold-100 shadow-md group-hover:scale-105 group-hover:border-rose-gold-300 transition duration-300 dark:bg-zinc-900 dark:border-zinc-850">
-                    <span class="absolute -top-3 -right-3 h-7 w-7 rounded-full bg-rose-gold-500 text-white text-xs font-bold flex items-center justify-center shadow-md">
-                        2
-                    </span>
-                    <svg class="h-8 w-8 text-rose-gold-600 dark:text-rose-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                    </svg>
+            <!-- Steps -->
+            <div class="space-y-16 md:space-y-24">
+                
+                <!-- Step 1: Choose Theme (Left on desktop) -->
+                <div class="workflow-step relative flex flex-col md:flex-row items-center md:justify-between w-full">
+                    <!-- Dot Indicator in center -->
+                    <div class="absolute md:left-1/2 md:-translate-x-1/2 left-[12px] md:left-1/2 top-7 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-4 border-rose-gold-500 z-10 shadow-md"></div>
+                    
+                    <!-- Content Card (Left side on desktop) -->
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 md:text-right text-left">
+                        <div class="glass-feature-card p-6 md:p-8 rounded-3xl relative inline-block text-left w-full">
+                            <span class="text-[10px] font-bold text-rose-gold-500 uppercase tracking-widest">Langkah 1</span>
+                            <h3 class="font-serif text-lg md:text-xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Choose Theme</h3>
+                            <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                Telusuri dan pilih desain tema undangan digital premium yang paling sesuai dengan preferensi estetika pernikahan impian Anda.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Empty space for desktop balancing right side -->
+                    <div class="hidden md:block w-[45%]"></div>
                 </div>
-                <h3 class="font-serif text-lg font-bold text-zinc-900 dark:text-white mt-2">Pilih Tema</h3>
-                <p class="text-xs text-zinc-550 dark:text-zinc-400 leading-relaxed max-w-[200px]">
-                    Telusuri dan pilih tema undangan digital premium yang sesuai dengan konsep atau preferensi gaya pernikahan Anda.
-                </p>
-            </div>
 
-            <!-- Step 3 -->
-            <div class="flex flex-col items-center text-center space-y-4 group">
-                <div class="relative flex items-center justify-center h-20 w-20 rounded-2xl bg-white border border-rose-gold-100 shadow-md group-hover:scale-105 group-hover:border-rose-gold-300 transition duration-300 dark:bg-zinc-900 dark:border-zinc-850">
-                    <span class="absolute -top-3 -right-3 h-7 w-7 rounded-full bg-rose-gold-500 text-white text-xs font-bold flex items-center justify-center shadow-md">
-                        3
-                    </span>
-                    <svg class="h-8 w-8 text-rose-gold-600 dark:text-rose-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
+                <!-- Step 2: Customize (Right on desktop) -->
+                <div class="workflow-step relative flex flex-col md:flex-row items-center md:justify-between w-full">
+                    <!-- Dot Indicator in center -->
+                    <div class="absolute md:left-1/2 md:-translate-x-1/2 left-[12px] md:left-1/2 top-7 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-4 border-champagne-500 z-10 shadow-md"></div>
+                    
+                    <!-- Empty space for desktop balancing left side -->
+                    <div class="hidden md:block w-[45%]"></div>
+                    
+                    <!-- Content Card (Right side on desktop) -->
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 text-left">
+                        <div class="glass-feature-card p-6 md:p-8 rounded-3xl relative inline-block w-full">
+                            <span class="text-[10px] font-bold text-champagne-600 dark:text-champagne-400 uppercase tracking-widest">Langkah 2</span>
+                            <h3 class="font-serif text-lg md:text-xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Customize</h3>
+                            <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                Isi data diri lengkap mempelai, susunan acara akad/resepsi, unggah galeri foto pre-wedding, serta tentukan musik latar romantis pilihan Anda.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="font-serif text-lg font-bold text-zinc-900 dark:text-white mt-2">Kustomisasi</h3>
-                <p class="text-xs text-zinc-550 dark:text-zinc-400 leading-relaxed max-w-[200px]">
-                    Lengkapi informasi mempelai, susunan acara, unggah foto galeri pre-wedding, dan pilih alunan musik latar belakang.
-                </p>
-            </div>
 
-            <!-- Step 4 -->
-            <div class="flex flex-col items-center text-center space-y-4 group">
-                <div class="relative flex items-center justify-center h-20 w-20 rounded-2xl bg-white border border-rose-gold-100 shadow-md group-hover:scale-105 group-hover:border-rose-gold-300 transition duration-300 dark:bg-zinc-900 dark:border-zinc-850">
-                    <span class="absolute -top-3 -right-3 h-7 w-7 rounded-full bg-rose-gold-500 text-white text-xs font-bold flex items-center justify-center shadow-md">
-                        4
-                    </span>
-                    <svg class="h-8 w-8 text-rose-gold-600 dark:text-rose-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 10.742L19.88 4.674A1 1 0 1121 5.56l-6.175 11.233A1.986 1.986 0 0113 18h-2a2 2 0 01-2-2v-1.258L8.684 10.742z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 12.01V12a1 1 0 00-1-1h-.01a1 1 0 00-1 1v.01" />
-                    </svg>
+                <!-- Step 3: Publish (Left on desktop) -->
+                <div class="workflow-step relative flex flex-col md:flex-row items-center md:justify-between w-full">
+                    <!-- Dot Indicator in center -->
+                    <div class="absolute md:left-1/2 md:-translate-x-1/2 left-[12px] md:left-1/2 top-7 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-4 border-rose-gold-500 z-10 shadow-md"></div>
+                    
+                    <!-- Content Card (Left side on desktop) -->
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 md:text-right text-left">
+                        <div class="glass-feature-card p-6 md:p-8 rounded-3xl relative inline-block text-left w-full">
+                            <span class="text-[10px] font-bold text-rose-gold-500 uppercase tracking-widest">Langkah 3</span>
+                            <h3 class="font-serif text-lg md:text-xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Publish</h3>
+                            <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                Tinjau pratinjau draf akhir undangan digital Anda, lalu terbitkan secara instan agar siap diakses secara online oleh dunia.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Empty space for desktop balancing right side -->
+                    <div class="hidden md:block w-[45%]"></div>
                 </div>
-                <h3 class="font-serif text-lg font-bold text-zinc-900 dark:text-white mt-2">Bagikan Undangan</h3>
-                <p class="text-xs text-zinc-550 dark:text-zinc-400 leading-relaxed max-w-[200px]">
-                    Selesai! Terbitkan undangan Anda dan bagikan tautan unik personal ke keluarga, kerabat, serta seluruh tamu undangan Anda.
-                </p>
+
+                <!-- Step 4: Share (Right on desktop) -->
+                <div class="workflow-step relative flex flex-col md:flex-row items-center md:justify-between w-full">
+                    <!-- Dot Indicator in center -->
+                    <div class="absolute md:left-1/2 md:-translate-x-1/2 left-[12px] md:left-1/2 top-7 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-4 border-champagne-500 z-10 shadow-md"></div>
+                    
+                    <!-- Empty space for desktop balancing left side -->
+                    <div class="hidden md:block w-[45%]"></div>
+                    
+                    <!-- Content Card (Right side on desktop) -->
+                    <div class="w-full md:w-[45%] pl-10 md:pl-0 text-left">
+                        <div class="glass-feature-card p-6 md:p-8 rounded-3xl relative inline-block w-full">
+                            <span class="text-[10px] font-bold text-champagne-600 dark:text-champagne-400 uppercase tracking-widest">Langkah 4</span>
+                            <h3 class="font-serif text-lg md:text-xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Share</h3>
+                            <p class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                                Bagikan tautan undangan unik personal kepada keluarga, kerabat, serta tamu undangan melalui WhatsApp atau platform media sosial favorit Anda.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
