@@ -1,59 +1,152 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Teman Seakad
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Teman Seakad** adalah aplikasi web manajemen dan mesin undangan pernikahan digital berbasis **Laravel 12** dan **Vue 3**. Aplikasi ini dirancang dengan dua sisi utama: landing page publik / engine undangan (Vue 3) dan panel admin manajemen (Blade + Alpine.js).
 
-## About Laravel
+Bahasa utama untuk antarmuka pengguna, pesan validasi, dan dokumentasi operasional menggunakan **Bahasa Indonesia**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Layer | Teknologi |
+| :--- | :--- |
+| **Backend** | PHP 8.2+, Laravel 12 |
+| **Frontend** | Vue 3 (Invitation Engine), Blade templates, Alpine.js (Admin Panel) |
+| **Styling** | Tailwind CSS 4 (via `@tailwindcss/vite` plugin) |
+| **Animation** | GSAP 3 (ScrollTrigger, Page Transition) |
+| **Build Tool** | Vite 7 + `laravel-vite-plugin` |
+| **Database** | SQLite (Development), MySQL 8.0 (Production / Docker) |
+| **Container** | Docker Compose (PHP-FPM + Nginx + MySQL) |
+| **Testing** | PHPUnit 11 (In-memory SQLite) |
+| **Linting** | Laravel Pint |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Fitur Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Panel Admin (Dashboard)**
+   - Autentikasi manual berbasis Session.
+   - Manajemen Pengguna (CRUD) dengan filter pencarian, status (aktif/nonaktif), avatar, dan pencatatan riwayat login terakhir (`last_login_at`).
+   - Proteksi Superadmin bawaan dari penghapusan akun, serta proteksi penghapusan akun sendiri.
+2. **Vue Invitation Engine**
+   - Halaman undangan digital interaktif dan dinamis menggunakan Vue 3.
+   - Pilihan 4 tema premium bawaan:
+     - `floral-elegant` (Aestetika floral pastel, warna rose & sage, font serif)
+     - `luxury-gold` (Warna latar gelap dengan aksen emas mewah berkilau, font Cinzel)
+     - `islamic-wedding` (Aksen hijau zamrud, ornamen geometris islami, Bismillah header, font Amiri)
+     - `rustic-forest` (Warna kayu/tanah alami, ornamen dedaunan, garis putus-putus)
+   - 5 Komponen Bersama (Shared Components):
+     - **Hero Section** (GSAP entrance animation)
+     - **Countdown Timer** (Reactive countdown ke hari H)
+     - **Love Story Timeline** (Vertical timeline dengan GSAP ScrollTrigger)
+     - **Event Details** (Kartu detail akad/resepsi dengan integrasi Google Maps)
+     - **Gallery Showcase** (Grid foto modern dengan custom touch-swipe lightbox modal)
+   - Sistem musik latar otomatis (Floating Audio player) yang terintegrasi dengan tombol pembuka undangan untuk melewati pembatasan autoplay browser.
+3. **Konfirmasi RSVP**
+   - Form konfirmasi kehadiran (RSVP) langsung terintegrasi di bagian bawah undangan.
+   - Pengiriman data RSVP asinkron via Axios ke endpoint backend.
+4. **API Endpoint & Resource**
+   - Endpoint `GET /api/invitation/{slug}` untuk mengambil data undangan lengkap beserta galeri, cerita, tema, dan acara terkait dalam format JSON terstruktur.
+   - Dilengkapi penanganan status (Draft / Expired) yang aman.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Struktur Direktori
 
-### Premium Partners
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/          # Controller untuk panel admin (DashboardController, UserController)
+│   │   ├── Api/            # API Controllers (InvitationApiController)
+│   │   └── Auth/           # Controller autentikasi (AuthController)
+│   └── Resources/          # API JSON Resources (InvitationResource)
+├── Models/                 # Eloquent Models (User, Invitation, Event, Gallery, Story, RSVP, Theme)
+└── Providers/              # Service Providers
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+resources/
+├── css/
+│   ├── app.css             # CSS entry point untuk halaman undangan
+│   ├── admin.css           # CSS entry point untuk panel admin
+│   └── admin/              # CSS per-modul admin
+├── js/
+│   ├── app.js              # JS entry point untuk halaman undangan (Vue 3 mounting + router)
+│   ├── bootstrap.js        # Axios setup
+│   └── invitation/
+│       ├── components/     # Komponen Vue bersama (Hero, Countdown, Gallery, dll)
+│       └── templates/      # 4 Direktori tema undangan (floral-elegant, luxury-gold, dll)
+└── views/
+    ├── admin/              # Blade views panel admin
+    ├── auth/               # Blade views halaman login & auth
+    └── public/             # Blade views halaman publik (invitation.blade.php)
 
-## Contributing
+routes/
+├── web.php                 # Web routes (admin panel, auth, public pages)
+└── api.php                 # API routes (/api/invitation/{slug})
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Instalasi & Setup Awal
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Ikuti langkah-langkah di bawah ini untuk menjalankan project di lingkungan lokal:
 
-## Security Vulnerabilities
+1. **Clone repository dan masuk ke folder project:**
+   ```bash
+   git clone <repository-url>
+   cd teman.seakad
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. **Jalankan script setup komprehensif:**
+   Script ini akan menyalin berkas `.env`, memasang dependensi PHP & Node, menghasilkan app key, menjalankan migrasi database, dan melakukan seeding data awal.
+   ```bash
+   composer setup
+   ```
 
-## License
+3. **Jalankan Server Pengembangan (Dev Server):**
+   Gunakan perintah concurrent untuk menjalankan server artisan, antrean queue, log pail, dan Vite sekaligus:
+   ```bash
+   composer dev
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. **Akses Aplikasi:**
+   Buka peramban (browser) Anda dan akses alamat:
+   - Landing Page / Undangan: `http://127.0.0.1:8000/{slug}`
+   - Panel Admin: `http://127.0.0.1:8000/admin` (Gunakan kredensial admin default)
+
+---
+
+## Pengujian (Testing)
+
+Aplikasi ini dilengkapi pengujian fitur terotomatisasi menggunakan PHPUnit. 
+Untuk menjalankan semua unit & feature test:
+
+```bash
+composer test
+# atau
+php artisan test
+```
+
+---
+
+## Perintah Lanjutan (Docker & Linting)
+
+- **Menjalankan environment Docker (MySQL & Nginx):**
+  ```bash
+  docker compose up -d
+  docker compose exec app php artisan migrate
+  docker compose exec app php artisan db:seed
+  ```
+- **Linting & Code Formatting PHP:**
+  ```bash
+  ./vendor/bin/pint
+  ```
+
+---
+
+## Aturan Pengembangan Penting
+
+1. **Bahasa**: Tulis komentar kode dan pesan validasi dalam **Bahasa Indonesia**. Nama kelas, metode, variabel, dan tabel tetap dalam **Bahasa Inggris**.
+2. **Form Request**: Selalu pisahkan kelas validasi (misal: `StoreUserRequest` & `UpdateUserRequest`) alih-alih melakukan validasi manual di dalam controller.
+3. **Aesthetics & UI**: Pastikan antarmuka undangan selalu rapi, responsif (mobile-first), dan modern menggunakan utility classes dari Tailwind CSS 4.
+4. **Alpine.js & Vue**: Gunakan Alpine.js untuk fitur interaktif di area Admin Panel. Gunakan Vue 3 khusus untuk Invitation Engine / area publik. Jangan campur kedua library tersebut dalam satu halaman.
