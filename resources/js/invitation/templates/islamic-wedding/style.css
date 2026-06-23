@@ -1,0 +1,154 @@
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+.theme-islamic-wedding {
+    font-family: 'Amiri', 'Playfair Display', Georgia, serif;
+    background-color: #f5fbf7; /* Very soft light green background */
+    color: #1e3a2b; /* Deep green-slate text */
+}
+
+/* Islamic Header Styling */
+.theme-islamic-wedding .arabic-bismillah {
+    font-family: 'Amiri', serif;
+}
+
+/* Hero Section Custom Styling */
+.theme-islamic-wedding .hero-section {
+    background: radial-gradient(circle at center, #f5fbf7 0%, #ebf5ee 100%);
+    border-bottom: 1px solid rgba(16, 124, 65, 0.1);
+}
+
+.theme-luxury-gold .hero-subtitle {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .hero-names {
+    font-family: 'Amiri', serif;
+    color: #107c41; /* Emerald green */
+    font-weight: 700;
+}
+
+.theme-islamic-wedding .hero-date {
+    color: #b58428; /* Gold accent */
+    font-weight: 600;
+}
+
+.theme-islamic-wedding .hero-divider {
+    background-color: #107c41;
+}
+
+/* Countdown Styling */
+.theme-islamic-wedding .countdown-title {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .countdown-card {
+    background-color: #ffffff;
+    border-color: #ebf5ee;
+    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.08);
+}
+
+.theme-islamic-wedding .countdown-number {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .countdown-label {
+    color: #b58428;
+}
+
+.theme-islamic-wedding .countdown-finished-title {
+    color: #107c41;
+}
+
+/* Event Styling */
+.theme-islamic-wedding .events-subtitle {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .events-title {
+    color: #1e3a2b;
+}
+
+.theme-islamic-wedding .event-card {
+    background-color: #ffffff;
+    border-color: #ebf5ee;
+    box-shadow: 0 6px 16px rgba(16, 124, 65, 0.06);
+}
+
+.theme-islamic-wedding .event-name {
+    color: #107c41;
+    font-family: 'Amiri', serif;
+}
+
+.theme-islamic-wedding .event-card-divider {
+    background-color: #b58428;
+}
+
+.theme-islamic-wedding .event-icon-bg {
+    background-color: #f0f7f3;
+    color: #107c41;
+}
+
+.theme-islamic-wedding .event-map-btn {
+    background-color: #107c41;
+    color: #ffffff;
+}
+
+.theme-islamic-wedding .event-map-btn:hover {
+    background-color: #0b592e;
+}
+
+/* Story/Timeline Section */
+.theme-islamic-wedding .story-subtitle {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .story-title {
+    color: #1e3a2b;
+}
+
+.theme-islamic-wedding .story-line {
+    background-color: #ebf5ee;
+}
+
+.theme-islamic-wedding .story-dot {
+    border-color: #107c41;
+}
+
+.theme-islamic-wedding .story-dot span {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .story-card {
+    background-color: #ffffff;
+    border-color: #ebf5ee;
+    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.05);
+}
+
+.theme-islamic-wedding .story-card-date {
+    color: #b58428;
+}
+
+.theme-islamic-wedding .story-card-title {
+    color: #107c41;
+}
+
+/* Gallery Section */
+.theme-islamic-wedding .gallery-subtitle {
+    color: #107c41;
+}
+
+.theme-islamic-wedding .gallery-title {
+    color: #1e3a2b;
+}
+
+.theme-islamic-wedding .gallery-item-wrapper {
+    border-color: #ebf5ee;
+    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.06);
+}

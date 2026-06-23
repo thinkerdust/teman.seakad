@@ -26,6 +26,7 @@ class StoreUserRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:20'],
             'status' => ['required', 'string', 'in:active,inactive'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'role_id' => ['required', 'exists:roles,id'],
         ];
     }
 
@@ -47,6 +48,8 @@ class StoreUserRequest extends FormRequest
             'avatar.image' => 'File avatar harus berupa gambar.',
             'avatar.mimes' => 'Format avatar harus jpeg, png, jpg, atau gif.',
             'avatar.max' => 'Ukuran avatar maksimal 2MB.',
+            'role_id.required' => 'Role wajib dipilih.',
+            'role_id.exists' => 'Role yang dipilih tidak valid.',
         ];
     }
 }

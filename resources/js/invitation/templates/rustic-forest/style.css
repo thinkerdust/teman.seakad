@@ -1,0 +1,150 @@
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+.theme-rustic-forest {
+    font-family: 'Playfair Display', 'Times New Roman', Georgia, serif;
+    background-color: #f5ebe0; /* Earthy warm sand bg */
+    color: #4a3728; /* Deep wooden brown text */
+}
+
+/* Hero Section Custom Styling */
+.theme-rustic-forest .hero-section {
+    background: radial-gradient(circle at center, #f5ebe0 0%, #eddcd2 100%);
+    border-bottom: 2px dashed rgba(139, 90, 43, 0.15);
+}
+
+.theme-rustic-forest .hero-subtitle {
+    color: #3e5c46; /* Forest green */
+}
+
+.theme-rustic-forest .hero-names {
+    font-family: 'Great Vibes', cursive;
+    color: #8b5a2b; /* Wood brown */
+    font-weight: normal;
+}
+
+.theme-rustic-forest .hero-date {
+    color: #3e5c46;
+    font-weight: 600;
+}
+
+.theme-rustic-forest .hero-divider {
+    background-color: #8b5a2b;
+}
+
+/* Countdown Styling */
+.theme-rustic-forest .countdown-title {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .countdown-card {
+    background-color: #fffaf5;
+    border-color: #e3d5ca;
+    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.08);
+}
+
+.theme-rustic-forest .countdown-number {
+    color: #8b5a2b;
+}
+
+.theme-rustic-forest .countdown-label {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .countdown-finished-title {
+    color: #8b5a2b;
+}
+
+/* Event Styling */
+.theme-rustic-forest .events-subtitle {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .events-title {
+    color: #4a3728;
+}
+
+.theme-rustic-forest .event-card {
+    background-color: #fffaf5;
+    border-color: #e3d5ca;
+    box-shadow: 0 6px 16px rgba(139, 90, 43, 0.06);
+}
+
+.theme-rustic-forest .event-name {
+    color: #8b5a2b;
+    font-family: 'Playfair Display', serif;
+}
+
+.theme-rustic-forest .event-card-divider {
+    background-color: #3e5c46;
+}
+
+.theme-rustic-forest .event-icon-bg {
+    background-color: #f7ede2;
+    color: #8b5a2b;
+}
+
+.theme-rustic-forest .event-map-btn {
+    background-color: #3e5c46;
+    color: #ffffff;
+}
+
+.theme-rustic-forest .event-map-btn:hover {
+    background-color: #2b4131;
+}
+
+/* Story/Timeline Section */
+.theme-rustic-forest .story-subtitle {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .story-title {
+    color: #4a3728;
+}
+
+.theme-rustic-forest .story-line {
+    background-color: #e3d5ca;
+    border-style: dashed;
+}
+
+.theme-rustic-forest .story-dot {
+    border-color: #3e5c46;
+}
+
+.theme-rustic-forest .story-dot span {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .story-card {
+    background-color: #fffaf5;
+    border-color: #e3d5ca;
+    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.05);
+}
+
+.theme-rustic-forest .story-card-date {
+    color: #8b5a2b;
+}
+
+.theme-rustic-forest .story-card-title {
+    color: #3e5c46;
+}
+
+/* Gallery Section */
+.theme-rustic-forest .gallery-subtitle {
+    color: #3e5c46;
+}
+
+.theme-rustic-forest .gallery-title {
+    color: #4a3728;
+}
+
+.theme-rustic-forest .gallery-item-wrapper {
+    border-color: #e3d5ca;
+    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.06);
+}

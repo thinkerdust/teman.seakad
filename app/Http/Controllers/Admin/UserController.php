@@ -35,10 +35,13 @@ class UserController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Exclude current logged in user from list or keep them (keeping is fine, but ordering can put active/recent users first)
-        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        // Eager load roles
+        $users = $query->with('roles')->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        
+        // Fetch all roles for forms
+        $roles = \App\Models\Role::orderBy('name')->get();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     /**
@@ -46,7 +49,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $data = $request->safe()->except(['password', 'avatar']);
+        $data = $request->safe()->except(['password', 'avatar', 'role_id']);
         $data['password'] = Hash::make($request->password);
 
         // Handle avatar upload
@@ -55,7 +58,8 @@ class UserController extends Controller
             $data['avatar'] = $path;
         }
 
-        User::create($data);
+        $user = User::create($data);
+        $user->roles()->sync([$request->role_id]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User baru berhasil dibuat.');
@@ -66,7 +70,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->safe()->except(['password', 'avatar']);
+        $data = $request->safe()->except(['password', 'avatar', 'role_id']);
 
         // Check if updating password
         if ($request->filled('password')) {
@@ -85,6 +89,7 @@ class UserController extends Controller
         }
 
         $user->update($data);
+        $user->roles()->sync([$request->role_id]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Data user berhasil diperbarui.');

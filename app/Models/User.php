@@ -51,4 +51,52 @@ class User extends Authenticatable
             'last_login_at' => 'datetime',
         ];
     }
+
+    /**
+     * Relasi ke model Role (Many-to-Many).
+     */
+    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
+
+    /**
+     * Cache in-memory untuk roles dan permissions.
+     */
+    protected ?\Illuminate\Support\Collection $cachedRoles = null;
+    protected ?\Illuminate\Support\Collection $cachedPermissions = null;
+
+    /**
+     * Periksa apakah user memiliki role tertentu.
+     */
+    public function hasRole(string $roleName): bool
+    {
+        if (is_null($this->cachedRoles)) {
+            $this->cachedRoles = $this->roles->pluck('name');
+        }
+        return $this->cachedRoles->contains($roleName);
+    }
+
+    /**
+     * Periksa apakah user memiliki permission dengan key tertentu.
+     */
+    public function hasPermission(string $permissionKey): bool
+    {
+        // Bypass jika user adalah admin utama atau memiliki role Superadmin
+        if ($this->email === 'admin@teman-seakad.com' || $this->hasRole('Superadmin')) {
+            return true;
+        }
+
+        if (is_null($this->cachedPermissions)) {
+            $this->cachedPermissions = $this->roles()
+                ->with('permissions')
+                ->get()
+                ->pluck('permissions')
+                ->flatten()
+                ->pluck('key')
+                ->unique();
+        }
+
+        return $this->cachedPermissions->contains($permissionKey);
+    }
 }

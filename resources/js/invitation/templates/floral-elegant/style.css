@@ -1,0 +1,149 @@
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+.theme-floral-elegant {
+    font-family: 'Playfair Display', Georgia, serif;
+    background-color: #faf6f0; /* Cream background */
+    color: #4e3e3b; /* Dark warm brown text */
+}
+
+/* Hero Section Custom Styling */
+.theme-floral-elegant .hero-section {
+    background: radial-gradient(circle at center, #faf6f0 0%, #f5eee6 100%);
+}
+
+.theme-floral-elegant .hero-subtitle {
+    color: #c78283;
+}
+
+.theme-floral-elegant .hero-names {
+    font-family: 'Great Vibes', cursive;
+    color: #b86b70;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.theme-floral-elegant .hero-date {
+    color: #4e3e3b;
+    font-weight: 600;
+}
+
+.theme-floral-elegant .hero-divider {
+    background-color: #c78283;
+}
+
+/* Countdown Styling */
+.theme-floral-elegant .countdown-title {
+    color: #c78283;
+}
+
+.theme-floral-elegant .countdown-card {
+    background-color: #ffffff;
+    border-color: #ebdcd7;
+    box-shadow: 0 4px 12px rgba(223, 178, 171, 0.15);
+}
+
+.theme-floral-elegant .countdown-number {
+    color: #b86b70;
+}
+
+.theme-floral-elegant .countdown-label {
+    color: #8fa89b;
+    font-weight: 650;
+}
+
+.theme-floral-elegant .countdown-finished-title {
+    color: #b86b70;
+}
+
+/* Event Styling */
+.theme-floral-elegant .events-subtitle {
+    color: #c78283;
+}
+
+.theme-floral-elegant .events-title {
+    color: #4e3e3b;
+}
+
+.theme-floral-elegant .event-card {
+    background-color: #ffffff;
+    border-color: #f0e6e2;
+    box-shadow: 0 6px 16px rgba(223, 178, 171, 0.12);
+}
+
+.theme-floral-elegant .event-name {
+    color: #b86b70;
+    font-family: 'Playfair Display', serif;
+}
+
+.theme-floral-elegant .event-card-divider {
+    background-color: #c78283;
+}
+
+.theme-floral-elegant .event-icon-bg {
+    background-color: #faf0ed;
+    color: #c78283;
+}
+
+.theme-floral-elegant .event-map-btn {
+    background-color: #c78283;
+}
+
+.theme-floral-elegant .event-map-btn:hover {
+    background-color: #b86b70;
+}
+
+/* Story/Timeline Section */
+.theme-floral-elegant .story-subtitle {
+    color: #c78283;
+}
+
+.theme-floral-elegant .story-title {
+    color: #4e3e3b;
+}
+
+.theme-floral-elegant .story-line {
+    background-color: #ebdcd7;
+}
+
+.theme-floral-elegant .story-dot {
+    border-color: #c78283;
+}
+
+.theme-floral-elegant .story-dot span {
+    color: #c78283;
+}
+
+.theme-floral-elegant .story-card {
+    background-color: #ffffff;
+    border-color: #ebdcd7;
+    box-shadow: 0 4px 12px rgba(223, 178, 171, 0.1);
+}
+
+.theme-floral-elegant .story-card-date {
+    color: #c78283;
+}
+
+.theme-floral-elegant .story-card-title {
+    color: #4e3e3b;
+}
+
+/* Gallery Section */
+.theme-floral-elegant .gallery-subtitle {
+    color: #c78283;
+}
+
+.theme-floral-elegant .gallery-title {
+    color: #4e3e3b;
+}
+
+.theme-floral-elegant .gallery-item-wrapper {
+    border-color: #ebdcd7;
+    box-shadow: 0 4px 12px rgba(223, 178, 171, 0.12);
+}

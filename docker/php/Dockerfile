@@ -27,6 +27,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
+# Copy custom php configurations
+COPY ./docker/php/local.ini /usr/local/etc/php/conf.d/local.ini
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
