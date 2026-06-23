@@ -16,7 +16,8 @@ import {
     initNavbarScroll,
     initFloatingParticles,
     initCTAGlow,
-    initPreviewScroll
+    initPreviewScroll,
+    initMusicAnimation
 } from './animation';
 
 // Daftarkan plugin Alpine.js
@@ -93,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingParticles();
     initCTAGlow();
     initPreviewScroll();
+    initMusicAnimation();
 });
 
 // Mulai Alpine.js

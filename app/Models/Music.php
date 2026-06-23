@@ -23,15 +23,24 @@ class Music extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'invitation_id',
+        'title',
+        'artist',
+        'album',
+        'genre',
+        'mood',
+        'language',
+        'duration',
+        'cover',
+        'preview_url',
         'file',
+        'status',
     ];
 
     /**
-     * Get the invitation that owns this background music.
+     * Get the invitations that use this background music.
      */
-    public function invitation(): BelongsTo
+    public function invitations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo(Invitation::class);
+        return $this->belongsToMany(Invitation::class, 'invitation_music');
     }
 }

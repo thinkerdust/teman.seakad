@@ -83,6 +83,22 @@ class RolePermissionSeeder extends Seeder
                 'name' => 'Menghapus Menu',
                 'key' => 'menu.delete',
             ],
+            [
+                'name' => 'Melihat Musik',
+                'key' => 'music.view',
+            ],
+            [
+                'name' => 'Membuat Musik Baru',
+                'key' => 'music.create',
+            ],
+            [
+                'name' => 'Mengubah Musik',
+                'key' => 'music.update',
+            ],
+            [
+                'name' => 'Menghapus Musik',
+                'key' => 'music.delete',
+            ],
         ];
 
         $permissionModels = [];
@@ -112,6 +128,10 @@ class RolePermissionSeeder extends Seeder
                     'theme.create',
                     'theme.update',
                     'invitation.view',
+                    'music.view',
+                    'music.create',
+                    'music.update',
+                    'music.delete',
                 ],
             ],
             [
@@ -124,6 +144,7 @@ class RolePermissionSeeder extends Seeder
                     'invitation.create',
                     'invitation.update',
                     'invitation.delete',
+                    'music.view',
                 ],
             ],
         ];

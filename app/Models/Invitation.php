@@ -31,6 +31,7 @@ class Invitation extends Model
         'address',
         'maps_url',
         'description',
+        'wedding_mood',
     ];
 
     /**
@@ -104,10 +105,10 @@ class Invitation extends Model
     }
 
     /**
-     * Get the background music for this invitation.
+     * Get the background music chosen for this invitation.
      */
-    public function music(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function music(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasOne(Music::class);
+        return $this->belongsToMany(Music::class, 'invitation_music');
     }
 }

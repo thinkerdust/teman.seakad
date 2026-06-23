@@ -328,3 +328,50 @@ export function initPreviewScroll() {
         }
     });
 }
+
+/**
+ * Inisialisasi animasi pada Section Musik Latar (mock player & pulsing controls).
+ */
+export function initMusicAnimation() {
+    const mockPlayer = document.querySelector('.music-player-mock');
+    if (!mockPlayer) return;
+    
+    // Hover parallax effect on mock player card
+    mockPlayer.addEventListener('mousemove', (e) => {
+        const rect = mockPlayer.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(mockPlayer, {
+            rotateY: x * 0.08,
+            rotateX: -y * 0.08,
+            x: x * 0.05,
+            y: y * 0.05,
+            duration: 0.5,
+            ease: 'power2.out'
+        });
+    });
+    
+    mockPlayer.addEventListener('mouseleave', () => {
+        gsap.to(mockPlayer, {
+            rotateY: 0,
+            rotateX: 0,
+            x: 0,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out'
+        });
+    });
+    
+    // Pulse effect on play button representation inside landing player mock
+    const playBtn = mockPlayer.querySelector('.h-12.w-12');
+    if (playBtn) {
+        gsap.to(playBtn, {
+            scale: 1.08,
+            repeat: -1,
+            yoyo: true,
+            duration: 1.2,
+            ease: 'sine.inOut'
+        });
+    }
+}

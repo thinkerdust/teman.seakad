@@ -12,6 +12,9 @@
     <!-- Live Preview Section -->
     @include('landing.components.preview')
 
+    <!-- Wedding Music Section -->
+    @include('landing.components.music')
+
     <!-- Showcase Grid Gallery Section -->
     @include('landing.components.showcase')
 
