@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -30,12 +31,22 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors([
+                'email' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . $seconds . ' detik.',
+            ])->onlyInput('email');
+        }
+
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
 
         // Check if user status is active
         $user = User::where('email', $credentials['email'])->first();
         if ($user && $user->status !== 'active') {
+            RateLimiter::hit($throttleKey, 60);
             return back()->withErrors([
                 'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator.',
             ])->onlyInput('email');
@@ -43,6 +54,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            RateLimiter::clear($throttleKey);
 
             // Update last login timestamp
             $user = Auth::user();
@@ -53,6 +66,8 @@ class AuthController extends Controller
             return redirect()->intended(route('admin.dashboard'))
                 ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
+
+        RateLimiter::hit($throttleKey, 60);
 
         return back()->withErrors([
             'email' => 'Email atau password yang Anda masukkan salah.',

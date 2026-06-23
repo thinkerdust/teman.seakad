@@ -1,0 +1,140 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Playfair Display', Georgia, serif;
+    
+    --color-rose-gold-50: #fbf8f8;
+    --color-rose-gold-100: #f7eded;
+    --color-rose-gold-200: #ebd6d8;
+    --color-rose-gold-300: #dab2b6;
+    --color-rose-gold-400: #c58991;
+    --color-rose-gold-500: #b76e79;
+    --color-rose-gold-600: #9f5460;
+    --color-rose-gold-700: #84414c;
+    --color-rose-gold-800: #6e3740;
+    --color-rose-gold-900: #5c3137;
+    --color-rose-gold-950: #33171a;
+    
+    --color-champagne-50: #fefdfb;
+    --color-champagne-100: #faf7ed;
+    --color-champagne-200: #f4edd4;
+    --color-champagne-300: #ecddb1;
+    --color-champagne-400: #dfc886;
+    --color-champagne-500: #d2b05c;
+    --color-champagne-600: #bd9543;
+    --color-champagne-700: #9d7535;
+    --color-champagne-800: #805c2d;
+    --color-champagne-900: #694b27;
+    --color-champagne-950: #3b2813;
+}
+
+/* Custom premium landing page styles */
+[x-cloak] {
+    display: none !important;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #fdfbf7;
+    color: #2d2d2d;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-panel {
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Animations */
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.5) 60%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 150% 0;
+    }
+    to {
+        background-position: -50% 0;
+    }
+}
+
+/* Custom scrollbar for premium feel */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fdfbf7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #dab2b6;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c58991;
+}
+
+/* Form inputs focus styles */
+.focus-ring:focus {
+    outline: none;
+    border-color: #b76e79;
+    box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.2);
+}

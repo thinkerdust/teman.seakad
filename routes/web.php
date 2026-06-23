@@ -9,12 +9,11 @@ use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\InvitationContentController;
 use App\Http\Controllers\PublicInvitationController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
-// Public Front-end Landing Page (will be Vue in subsequent phases)
-Route::get('/', function () {
-    return view('welcome');
-});
+// Public Front-end Landing Page
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
