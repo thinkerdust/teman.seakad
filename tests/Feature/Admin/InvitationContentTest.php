@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Models\Gallery;
 use App\Models\Invitation;
 use App\Models\Music;
+use App\Models\Order;
+use App\Models\Package;
 use App\Models\Role;
 use App\Models\Story;
 use App\Models\Theme;
@@ -21,10 +23,15 @@ class InvitationContentTest extends TestCase
     use RefreshDatabase;
 
     protected Theme $theme;
+
     protected Role $userRole;
+
     protected Role $adminRole;
+
     protected Role $superadminRole;
+
     protected User $user;
+
     protected Invitation $invitation;
 
     protected function setUp(): void
@@ -50,6 +57,27 @@ class InvitationContentTest extends TestCase
         // Create user and user's invitation
         $this->user = User::factory()->create();
         $this->user->roles()->sync([$this->userRole->id]);
+
+        // Create an active package and order/subscription for the user
+        $package = Package::create([
+            'name' => 'Premium Pack',
+            'price' => 200000,
+            'invitation_quota' => 10,
+            'duration_days' => 30,
+            'status' => 'active',
+        ]);
+
+        Order::create([
+            'customer_name' => $this->user->name,
+            'phone' => '08987654321',
+            'email' => $this->user->email,
+            'package_id' => $package->id,
+            'quota' => 10,
+            'price' => 200000,
+            'status' => 'active',
+            'start_date' => now()->subDays(5)->toDateString(),
+            'end_date' => now()->addDays(25)->toDateString(),
+        ]);
 
         $this->invitation = Invitation::create([
             'user_id' => $this->user->id,
@@ -81,6 +109,20 @@ class InvitationContentTest extends TestCase
     {
         $otherUser = User::factory()->create();
         $otherUser->roles()->sync([$this->userRole->id]);
+
+        // Create an active order/subscription for the otherUser so they pass the subscription middleware
+        $package = Package::first();
+        Order::create([
+            'customer_name' => $otherUser->name,
+            'phone' => '08987654321',
+            'email' => $otherUser->email,
+            'package_id' => $package->id,
+            'quota' => 10,
+            'price' => 200000,
+            'status' => 'active',
+            'start_date' => now()->subDays(5)->toDateString(),
+            'end_date' => now()->addDays(25)->toDateString(),
+        ]);
 
         $response = $this->actingAs($otherUser)->get(route('admin.invitations.content.edit', $this->invitation->id));
         $response->assertStatus(403);
@@ -136,10 +178,10 @@ class InvitationContentTest extends TestCase
 
         $image = UploadedFile::fake()->image('myphoto.jpg');
         $storedPath = Storage::disk('public')->putFile('invitations/gallery', $image);
-        
+
         $gallery = Gallery::create([
             'invitation_id' => $this->invitation->id,
-            'image' => '/storage/' . $storedPath,
+            'image' => '/storage/'.$storedPath,
             'sort' => 0,
         ]);
 
@@ -178,8 +220,8 @@ class InvitationContentTest extends TestCase
                     'title' => 'Tunangan',
                     'date' => 'Maret 2024',
                     'description' => 'Mengikat janji pertunangan resmi.',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->actingAs($this->user)
@@ -210,7 +252,7 @@ class InvitationContentTest extends TestCase
                     'title' => 'Pertemuan Pertama (Updated)',
                     'date' => 'Desember 2020',
                     'description' => 'Kami pertama kali bertemu di kantin kampus.',
-                ]
+                ],
             ],
             'delete_story_ids' => (string) $story2->id,
         ];
@@ -244,8 +286,8 @@ class InvitationContentTest extends TestCase
                     'date' => '2026-07-15',
                     'time' => '10:00 - Selesai',
                     'location' => 'Gedung Serbaguna',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->actingAs($this->user)
@@ -271,7 +313,7 @@ class InvitationContentTest extends TestCase
                     'date' => '2026-07-16',
                     'time' => '09:00 - 13:00',
                     'location' => 'Rumah Mempelai Pria',
-                ]
+                ],
             ],
             'delete_event_ids' => '',
         ];
@@ -312,7 +354,7 @@ class InvitationContentTest extends TestCase
             'genre' => 'Wedding',
             'mood' => 'Romantic',
             'file' => '/storage/music/test.mp3',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         $response = $this->actingAs($this->user)
@@ -349,7 +391,7 @@ class InvitationContentTest extends TestCase
             'genre' => 'Wedding',
             'mood' => 'Romantic',
             'file' => '/storage/music/test.mp3',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         $this->invitation->music()->sync([$music->id]);
@@ -371,5 +413,45 @@ class InvitationContentTest extends TestCase
             'invitation_id' => $this->invitation->id,
             'music_id' => $music->id,
         ]);
+    }
+
+    /**
+     * User can upload custom music file.
+     */
+    public function test_user_can_upload_custom_music(): void
+    {
+        Storage::fake('public');
+
+        $musicFile = UploadedFile::fake()->create('custom_music.mp3', 1024, 'audio/mpeg');
+
+        $response = $this->actingAs($this->user)
+            ->post(route('admin.invitations.content.music', $this->invitation->id), [
+                'action' => 'upload',
+                'title' => 'Lagu Pernikahan Kami',
+                'music_file' => $musicFile,
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success', 'Musik latar kustom berhasil diunggah.');
+
+        // Verify database entry
+        $this->assertDatabaseHas('music', [
+            'title' => 'Lagu Pernikahan Kami',
+            'artist' => 'Custom Upload',
+            'status' => 'custom',
+        ]);
+
+        $customMusic = Music::where('status', 'custom')->first();
+        $this->assertNotNull($customMusic);
+
+        // Verify relationship synced in pivot table
+        $this->assertDatabaseHas('invitation_music', [
+            'invitation_id' => $this->invitation->id,
+            'music_id' => $customMusic->id,
+        ]);
+
+        // Verify storage file exists
+        $path = str_replace('/storage/', '', $customMusic->file);
+        Storage::disk('public')->assertExists($path);
     }
 }

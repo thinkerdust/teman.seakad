@@ -6,8 +6,8 @@ use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\MenuSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -58,7 +58,7 @@ class MenuTest extends TestCase
         $this->seed(MenuSeeder::class);
 
         $superadmin = User::factory()->create([
-            'email' => 'admin@teman-seakad.com'
+            'email' => 'admin@teman-seakad.com',
         ]);
 
         // 1. Create Menu (POST)
@@ -89,7 +89,7 @@ class MenuTest extends TestCase
         $this->assertDatabaseHas('menus', [
             'id' => $menu->id,
             'title' => 'Menu Uji Coba Diubah',
-            'status' => 'inactive'
+            'status' => 'inactive',
         ]);
 
         // 3. Delete Menu (DELETE)

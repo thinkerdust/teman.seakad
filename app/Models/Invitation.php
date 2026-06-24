@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Invitation extends Model
 {
@@ -63,7 +66,7 @@ class Invitation extends Model
 
                 // Set expired_at automatically to the subscription end_date if empty
                 if (empty($invitation->expired_at)) {
-                    $today = \Carbon\Carbon::today();
+                    $today = Carbon::today();
                     $activeSub = $invitation->user->subscriptions()
                         ->where('status', 'active')
                         ->where('start_date', '<=', $today)
@@ -77,6 +80,23 @@ class Invitation extends Model
             } elseif ($invitation->isDirty('status') && $invitation->status === 'draft') {
                 $invitation->published_at = null;
                 $invitation->expired_at = null;
+            }
+        });
+
+        static::deleting(function ($invitation) {
+            // Clean up custom music files
+            foreach ($invitation->music as $music) {
+                if ($music->status === 'custom') {
+                    $oldPath = str_replace('/storage/', '', $music->file);
+                    Storage::disk('public')->delete($oldPath);
+                    $music->delete();
+                }
+            }
+
+            // Clean up gallery files
+            foreach ($invitation->galleries as $gallery) {
+                $oldPath = str_replace('/storage/', '', $gallery->image);
+                Storage::disk('public')->delete($oldPath);
             }
         });
     }
@@ -140,7 +160,7 @@ class Invitation extends Model
     /**
      * Get the background music chosen for this invitation.
      */
-    public function music(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function music(): BelongsToMany
     {
         return $this->belongsToMany(Music::class, 'invitation_music');
     }

@@ -2,17 +2,17 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Invitation;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Invitation;
 
 class InvitationActiveMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -20,11 +20,11 @@ class InvitationActiveMiddleware
         $invitation = Invitation::where('slug', $slug)->first();
 
         // 1. Jika tidak ditemukan, abort 404
-        if (!$invitation) {
+        if (! $invitation) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Undangan tidak ditemukan.'
+                    'message' => 'Undangan tidak ditemukan.',
                 ], 404);
             }
             abort(404, 'Undangan tidak ditemukan.');
@@ -35,7 +35,7 @@ class InvitationActiveMiddleware
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Undangan ini masih dalam status draft dan belum diterbitkan oleh pemilik.'
+                    'message' => 'Undangan ini masih dalam status draft dan belum diterbitkan oleh pemilik.',
                 ], 403);
             }
             abort(403, 'Undangan ini masih dalam status draft dan belum diterbitkan oleh pemilik.');
@@ -53,9 +53,10 @@ class InvitationActiveMiddleware
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Undangan sudah tidak tersedia.'
+                    'message' => 'Undangan sudah tidak tersedia.',
                 ], 410);
             }
+
             return response()->view('public.expired', [], 410);
         }
 

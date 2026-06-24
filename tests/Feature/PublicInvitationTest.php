@@ -14,6 +14,7 @@ class PublicInvitationTest extends TestCase
     use RefreshDatabase;
 
     protected Theme $theme;
+
     protected User $user;
 
     protected function setUp(): void
@@ -58,7 +59,7 @@ class PublicInvitationTest extends TestCase
             'status' => 'draft',
         ]);
 
-        $response = $this->get('/' . $invitation->slug);
+        $response = $this->get('/'.$invitation->slug);
         $response->assertStatus(403);
         $this->assertDatabaseMissing('invitation_visits', [
             'invitation_id' => $invitation->id,
@@ -83,7 +84,7 @@ class PublicInvitationTest extends TestCase
             'status' => 'expired',
         ]);
 
-        $response1 = $this->get('/' . $invitation1->slug);
+        $response1 = $this->get('/'.$invitation1->slug);
         $response1->assertStatus(410);
 
         // Kasus 2: Status 'published' namun expired_at terlampaui (di masa lalu)
@@ -100,7 +101,7 @@ class PublicInvitationTest extends TestCase
             'expired_at' => Carbon::now()->subDays(1),
         ]);
 
-        $response2 = $this->get('/' . $invitation2->slug);
+        $response2 = $this->get('/'.$invitation2->slug);
         $response2->assertStatus(410);
     }
 
@@ -122,7 +123,7 @@ class PublicInvitationTest extends TestCase
             'expired_at' => Carbon::now()->addDays(30),
         ]);
 
-        $response = $this->get('/' . $invitation->slug);
+        $response = $this->get('/'.$invitation->slug);
         $response->assertStatus(200);
 
         // Pastikan view memuat script JSON data dan info pengantin

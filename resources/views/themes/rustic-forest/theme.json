@@ -1,0 +1,22 @@
+{
+    "name": "Rustic",
+    "version": "1.0",
+    "author": "Teman Seakad",
+    "colors": {
+        "primary": "#8b5a2b",
+        "background": "#f5ebe0",
+        "accent": "#3e5c46"
+    },
+    "fonts": {
+        "heading": "Playfair Display",
+        "body": "Instrument Sans"
+    },
+    "features": {
+        "music": true,
+        "gallery": true,
+        "countdown": true,
+        "rsvp": true,
+        "stories": true,
+        "gift": true
+    }
+}

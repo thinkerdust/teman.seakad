@@ -16,9 +16,13 @@ class MusicManagementTest extends TestCase
     use RefreshDatabase;
 
     protected Role $userRole;
+
     protected Role $adminRole;
+
     protected Role $superadminRole;
+
     protected User $adminUser;
+
     protected User $regularUser;
 
     protected function setUp(): void
@@ -77,7 +81,7 @@ class MusicManagementTest extends TestCase
             'genre' => 'Wedding',
             'mood' => 'Romantic',
             'file' => '/storage/music/test.mp3',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         $response = $this->actingAs($this->adminUser)->get(route('admin.music.index'));
@@ -122,11 +126,11 @@ class MusicManagementTest extends TestCase
         ]);
 
         $music = Music::where('title', 'Perfect')->first();
-        
+
         // Verify files exist in storage
         $musicFilePath = str_replace('/storage/', '', $music->file);
         $coverFilePath = str_replace('/storage/', '', $music->cover);
-        
+
         Storage::disk('public')->assertExists($musicFilePath);
         Storage::disk('public')->assertExists($coverFilePath);
     }
@@ -160,7 +164,7 @@ class MusicManagementTest extends TestCase
 
         $response = $this->actingAs($this->adminUser)->put(route('admin.music.update', $music->id), $payload);
         $response->assertStatus(302);
-        
+
         $this->assertDatabaseHas('music', [
             'id' => $music->id,
             'title' => 'Perfect (Acoustic)',
@@ -187,7 +191,7 @@ class MusicManagementTest extends TestCase
             'artist' => 'Some Artist',
             'genre' => 'Wedding',
             'mood' => 'Romantic',
-            'file' => '/storage/' . $storedPath,
+            'file' => '/storage/'.$storedPath,
             'status' => 'active',
         ]);
 

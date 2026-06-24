@@ -29,7 +29,7 @@ class UpdateMenuRequest extends FormRequest
                     if ($menuId && $value == $menuId) {
                         $fail('Menu tidak boleh menjadi parent bagi dirinya sendiri.');
                     }
-                }
+                },
             ],
             'title' => ['required', 'string', 'max:255'],
             'icon' => ['nullable', 'string'],

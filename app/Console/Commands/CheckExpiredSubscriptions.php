@@ -27,6 +27,7 @@ class CheckExpiredSubscriptions extends Command
     protected $description = 'Periksa dan tandai subscription dan invitation yang melewati tanggal kedaluwarsa';
 
     protected SubscriptionService $subscriptionService;
+
     protected InvitationService $invitationService;
 
     /**
@@ -45,7 +46,7 @@ class CheckExpiredSubscriptions extends Command
     public function handle(): void
     {
         $today = Carbon::today();
-        
+
         // 1. Dapatkan semua subscription aktif yang tanggal selesainya sebelum hari ini
         $expiredSubscriptions = UserSubscription::where('status', 'active')
             ->where('end_date', '<', $today)

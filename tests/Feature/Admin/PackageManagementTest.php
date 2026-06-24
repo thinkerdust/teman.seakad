@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Package;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;

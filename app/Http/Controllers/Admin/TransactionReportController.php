@@ -21,7 +21,7 @@ class TransactionReportController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%");
+                    ->orWhere('customer_name', 'like', "%{$search}%");
             });
         }
 
@@ -51,12 +51,12 @@ class TransactionReportController extends Controller
             $today = now()->toDateString();
             if ($request->period === 'active') {
                 $query->whereNotNull('start_date')
-                      ->whereNotNull('end_date')
-                      ->whereDate('start_date', '<=', $today)
-                      ->whereDate('end_date', '>=', $today);
+                    ->whereNotNull('end_date')
+                    ->whereDate('start_date', '<=', $today)
+                    ->whereDate('end_date', '>=', $today);
             } elseif ($request->period === 'expired') {
                 $query->whereNotNull('end_date')
-                      ->whereDate('end_date', '<', $today);
+                    ->whereDate('end_date', '<', $today);
             }
         }
 

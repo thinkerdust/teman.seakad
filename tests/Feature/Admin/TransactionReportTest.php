@@ -6,9 +6,9 @@ use App\Models\Order;
 use App\Models\Package;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class TransactionReportTest extends TestCase
@@ -16,6 +16,7 @@ class TransactionReportTest extends TestCase
     use RefreshDatabase;
 
     protected Package $packageGold;
+
     protected Package $packageSilver;
 
     protected function setUp(): void

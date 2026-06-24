@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\StoreMenuRequest;
 use App\Http\Requests\Admin\UpdateMenuRequest;
 use App\Models\Menu;
 use App\Models\Permission;
-use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {

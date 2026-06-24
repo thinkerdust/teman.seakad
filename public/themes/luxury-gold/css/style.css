@@ -1,0 +1,160 @@
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+.theme-luxury-gold {
+    font-family: 'Cinzel', Georgia, serif;
+    background-color: #0d0d0d; /* Deep dark background */
+    color: #f7f5f0; /* Ivory white text */
+}
+
+/* Hero Section Custom Styling */
+.theme-luxury-gold .hero-section {
+    background: radial-gradient(circle at center, #141414 0%, #0d0d0d 100%);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.theme-luxury-gold .hero-subtitle {
+    color: #d4af37;
+    letter-spacing: 0.25em;
+}
+
+.theme-luxury-gold .hero-names {
+    font-family: 'Cinzel', serif;
+    color: #e5c158;
+    background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    font-weight: 500;
+}
+
+.theme-luxury-gold .hero-date {
+    color: #e5c158;
+    font-weight: 500;
+}
+
+.theme-luxury-gold .hero-divider {
+    background-color: #d4af37;
+}
+
+/* Countdown Styling */
+.theme-luxury-gold .countdown-title {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .countdown-card {
+    background-color: #141414;
+    border-color: rgba(212, 175, 55, 0.2);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.08);
+}
+
+.theme-luxury-gold .countdown-number {
+    color: #f3e5ab;
+}
+
+.theme-luxury-gold .countdown-label {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .countdown-finished-title {
+    color: #f3e5ab;
+}
+
+/* Event Styling */
+.theme-luxury-gold .events-subtitle {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .events-title {
+    color: #f7f5f0;
+}
+
+.theme-luxury-gold .event-card {
+    background-color: #141414;
+    border-color: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.theme-luxury-gold .event-name {
+    color: #f3e5ab;
+    font-family: 'Cinzel', serif;
+}
+
+.theme-luxury-gold .event-card-divider {
+    background-color: #d4af37;
+}
+
+.theme-luxury-gold .event-icon-bg {
+    background-color: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
+}
+
+.theme-luxury-gold .event-map-btn {
+    background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+    color: #0d0d0d;
+    font-weight: 700;
+}
+
+.theme-luxury-gold .event-map-btn:hover {
+    background: linear-gradient(135deg, #e5c158 0%, #c59b27 100%);
+}
+
+/* Story/Timeline Section */
+.theme-luxury-gold .story-subtitle {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .story-title {
+    color: #f7f5f0;
+}
+
+.theme-luxury-gold .story-line {
+    background-color: rgba(212, 175, 55, 0.25);
+}
+
+.theme-luxury-gold .story-dot {
+    background-color: #0d0d0d;
+    border-color: #d4af37;
+}
+
+.theme-luxury-gold .story-dot span {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .story-card {
+    background-color: #141414;
+    border-color: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.theme-luxury-gold .story-card-date {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .story-card-title {
+    color: #f3e5ab;
+}
+
+.theme-luxury-gold .story-card-desc {
+    color: #dfdeda;
+}
+
+/* Gallery Section */
+.theme-luxury-gold .gallery-subtitle {
+    color: #d4af37;
+}
+
+.theme-luxury-gold .gallery-title {
+    color: #f7f5f0;
+}
+
+.theme-luxury-gold .gallery-item-wrapper {
+    border-color: rgba(212, 175, 55, 0.2);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05);
+}

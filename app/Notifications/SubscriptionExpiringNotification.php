@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,6 +13,7 @@ class SubscriptionExpiringNotification extends Notification
     use Queueable;
 
     protected UserSubscription $subscription;
+
     protected int $daysRemaining;
 
     /**
@@ -58,7 +58,7 @@ class SubscriptionExpiringNotification extends Notification
     {
         return [
             'title' => 'Reminder: Masa Aktif Langganan',
-            'message' => 'Subscription Anda akan berakhir pada tanggal ' . $this->subscription->end_date->format('d-m-Y'),
+            'message' => 'Subscription Anda akan berakhir pada tanggal '.$this->subscription->end_date->format('d-m-Y'),
             'type' => 'subscription_expiring',
             'days_remaining' => $this->daysRemaining,
             'subscription_id' => $this->subscription->id,

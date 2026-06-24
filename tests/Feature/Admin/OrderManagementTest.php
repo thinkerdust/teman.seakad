@@ -3,10 +3,9 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Order;
-use App\Models\Permission;
+use App\Models\Package;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Package;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -136,7 +135,7 @@ class OrderManagementTest extends TestCase
         $response = $this->actingAs($admin)->put(route('admin.orders.update', $order), $updatedData);
 
         $response->assertRedirect(route('admin.orders.index'));
-        
+
         $order->refresh();
         $this->assertEquals('John Doe Updated', $order->customer_name);
         $this->assertEquals('johndoe.updated@example.com', $order->email);
@@ -224,7 +223,7 @@ class OrderManagementTest extends TestCase
         ]);
 
         $response->assertRedirect(route('admin.orders.index'));
-        
+
         $order->refresh();
         $this->assertEquals('active', $order->status);
         $this->assertEquals('2026-06-24', $order->start_date->format('Y-m-d'));

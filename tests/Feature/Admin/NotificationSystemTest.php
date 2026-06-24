@@ -18,6 +18,7 @@ class NotificationSystemTest extends TestCase
     use RefreshDatabase;
 
     protected Role $userRole;
+
     protected Package $package;
 
     protected function setUp(): void

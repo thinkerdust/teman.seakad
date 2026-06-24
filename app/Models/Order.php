@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
+use App\Services\SubscriptionService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\UserSubscription;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -58,7 +56,7 @@ class Order extends Model
     {
         static::creating(function ($order) {
             if (empty($order->order_number)) {
-                $order->order_number = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+                $order->order_number = 'ORD-'.date('Ymd').'-'.strtoupper(Str::random(5));
             }
         });
 
@@ -73,11 +71,11 @@ class Order extends Model
     public function resolveUserAndSubscription(): void
     {
         // 1. Automatic User Account Creation
-        if (in_array($this->status, ['confirmed', 'active']) && !$this->user_id) {
+        if (in_array($this->status, ['confirmed', 'active']) && ! $this->user_id) {
             // Check if email already exists
             $user = User::where('email', $this->email)->first();
-            
-            if (!$user) {
+
+            if (! $user) {
                 $password = Str::random(10);
                 $user = User::create([
                     'name' => $this->customer_name,
@@ -86,12 +84,12 @@ class Order extends Model
                     'password' => Hash::make($password),
                     'status' => 'active',
                 ]);
-                
+
                 $userRole = Role::where('name', 'User')->first();
                 if ($userRole) {
                     $user->roles()->sync([$userRole->id]);
                 }
-                
+
                 // Store in session flash for UI display
                 session()->flash('user_credentials', [
                     'name' => $user->name,
@@ -101,7 +99,7 @@ class Order extends Model
                     'order_number' => $this->order_number,
                 ]);
             }
-            
+
             $this->user_id = $user->id;
             $this->saveQuietly();
         }
@@ -109,9 +107,9 @@ class Order extends Model
         // 2. Automatic User Subscription Creation / Update
         if (in_array($this->status, ['confirmed', 'active']) && $this->user_id && $this->start_date && $this->end_date) {
             $subscription = UserSubscription::where('order_id', $this->id)->first();
-            
+
             if ($subscription) {
-                app(\App\Services\SubscriptionService::class)->extendSubscription($subscription, $this->end_date->toDateString());
+                app(SubscriptionService::class)->extendSubscription($subscription, $this->end_date->toDateString());
                 $subscription->update([
                     'user_id' => $this->user_id,
                     'package_id' => $this->package_id,
@@ -119,7 +117,7 @@ class Order extends Model
                 ]);
             } else {
                 $user = $this->user ?? User::find($this->user_id);
-                app(\App\Services\SubscriptionService::class)->createSubscription(
+                app(SubscriptionService::class)->createSubscription(
                     $user,
                     $this,
                     $this->package,
@@ -134,7 +132,7 @@ class Order extends Model
             $subscription = UserSubscription::where('order_id', $this->id)->first();
             if ($subscription) {
                 if ($this->status === 'expired') {
-                    app(\App\Services\SubscriptionService::class)->expireSubscription($subscription);
+                    app(SubscriptionService::class)->expireSubscription($subscription);
                 } else {
                     $subscription->update(['status' => $this->status]);
                 }
@@ -148,11 +146,11 @@ class Order extends Model
     public function getFormattedPhoneAttribute(): string
     {
         $phone = preg_replace('/[^0-9]/', '', $this->phone);
-        
+
         if (str_starts_with($phone, '0')) {
-            $phone = '62' . substr($phone, 1);
+            $phone = '62'.substr($phone, 1);
         }
-        
+
         return $phone;
     }
 

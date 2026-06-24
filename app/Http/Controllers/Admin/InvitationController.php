@@ -7,9 +7,9 @@ use App\Http\Requests\Admin\StoreInvitationRequest;
 use App\Http\Requests\Admin\UpdateInvitationRequest;
 use App\Models\Invitation;
 use App\Models\Theme;
-use App\Services\SubscriptionService;
-use App\Services\QuotaService;
 use App\Services\InvitationService;
+use App\Services\QuotaService;
+use App\Services\SubscriptionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Auth;
 class InvitationController extends Controller
 {
     protected SubscriptionService $subscriptionService;
+
     protected QuotaService $quotaService;
+
     protected InvitationService $invitationService;
 
     public function __construct(
@@ -29,6 +31,7 @@ class InvitationController extends Controller
         $this->quotaService = $quotaService;
         $this->invitationService = $invitationService;
     }
+
     /**
      * Tampilkan daftar undangan dengan pencarian dan filter status.
      */
@@ -38,7 +41,7 @@ class InvitationController extends Controller
         $query = Invitation::query()->with(['user', 'theme']);
 
         // Batasi data jika bukan Superadmin atau Admin
-        if (!$user->hasRole('Superadmin') && !$user->hasRole('Admin') && $user->email !== 'admin@teman-seakad.com') {
+        if (! $user->hasRole('Superadmin') && ! $user->hasRole('Admin') && $user->email !== 'admin@teman-seakad.com') {
             $query->where('user_id', $user->id);
         }
 
@@ -47,9 +50,9 @@ class InvitationController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('slug', 'like', "%{$search}%")
-                  ->orWhere('groom_name', 'like', "%{$search}%")
-                  ->orWhere('bride_name', 'like', "%{$search}%");
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhere('groom_name', 'like', "%{$search}%")
+                    ->orWhere('bride_name', 'like', "%{$search}%");
             });
         }
 
@@ -59,11 +62,11 @@ class InvitationController extends Controller
             if ($status === 'expired') {
                 $query->where(function ($q) {
                     $q->where('status', 'expired')
-                      ->orWhere(function ($sub) {
-                          $sub->where('status', 'published')
-                              ->whereNotNull('expired_at')
-                              ->where('expired_at', '<', Carbon::now());
-                      });
+                        ->orWhere(function ($sub) {
+                            $sub->where('status', 'published')
+                                ->whereNotNull('expired_at')
+                                ->where('expired_at', '<', Carbon::now());
+                        });
                 });
             } else {
                 $query->where('status', $status);
@@ -71,7 +74,7 @@ class InvitationController extends Controller
         }
 
         $invitations = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
-        
+
         // Ambil tema aktif untuk dropdown formulir pembuatan/pembaruan undangan
         $themes = Theme::where('status', 'active')->orderBy('name')->get();
 
@@ -79,13 +82,13 @@ class InvitationController extends Controller
         $remainingQuota = 0;
         $totalQuota = 0;
         $createdCount = 0;
-        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin');
+        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && ! $user->hasRole('Superadmin') && ! $user->hasRole('Admin');
 
         if ($isRegularUser) {
             $hasActiveSubscription = $this->subscriptionService->checkActive($user);
 
             if ($hasActiveSubscription) {
-                $today = \Carbon\Carbon::today();
+                $today = Carbon::today();
                 $activeSub = $user->subscriptions()
                     ->where('status', 'active')
                     ->where('start_date', '<=', $today)
@@ -99,7 +102,7 @@ class InvitationController extends Controller
         }
 
         $viewData = compact(
-            'invitations', 
+            'invitations',
             'themes',
             'isRegularUser',
             'hasActiveSubscription',
@@ -122,15 +125,15 @@ class InvitationController extends Controller
     public function store(StoreInvitationRequest $request)
     {
         $user = Auth::user();
-        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin');
+        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && ! $user->hasRole('Superadmin') && ! $user->hasRole('Admin');
 
         if ($isRegularUser) {
-            if (!$this->subscriptionService->checkActive($user)) {
+            if (! $this->subscriptionService->checkActive($user)) {
                 return redirect()->route('admin.invitations.index')
                     ->with('error', 'Masa aktif akun Anda sudah berakhir, silakan melakukan perpanjangan.');
             }
 
-            if (!$this->quotaService->consumeQuota($user)) {
+            if (! $this->quotaService->consumeQuota($user)) {
                 return redirect()->route('admin.invitations.index')
                     ->with('error', 'Kuota pembuatan undangan Anda sudah habis. Silakan lakukan perpanjangan atau hubungi admin.');
             }
@@ -152,7 +155,7 @@ class InvitationController extends Controller
     public function update(UpdateInvitationRequest $request, Invitation $invitation)
     {
         $data = $request->validated();
-        
+
         $invitation->update($data);
 
         return redirect()->route('admin.invitations.index')
@@ -188,11 +191,11 @@ class InvitationController extends Controller
         } else {
             // Ubah menjadi published (Publish)
             $this->invitationService->publishInvitation($invitation);
-            
+
             $invitation->refresh();
-            
+
             if ($invitation->expired_at) {
-                $message = 'Undangan berhasil diterbitkan (aktif sampai ' . $invitation->expired_at->translatedFormat('d F Y') . ').';
+                $message = 'Undangan berhasil diterbitkan (aktif sampai '.$invitation->expired_at->translatedFormat('d F Y').').';
             } else {
                 $message = 'Undangan berhasil diterbitkan.';
             }
@@ -212,8 +215,8 @@ class InvitationController extends Controller
     protected function authorizeInvitationAction(Invitation $invitation, string $permission)
     {
         $user = Auth::user();
-        
-        if (!$user->hasPermission($permission)) {
+
+        if (! $user->hasPermission($permission)) {
             abort(403, 'Anda tidak memiliki hak akses untuk melakukan tindakan ini.');
         }
 

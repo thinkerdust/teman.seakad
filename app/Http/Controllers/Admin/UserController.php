@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -25,8 +26,8 @@ class UserController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -37,9 +38,9 @@ class UserController extends Controller
 
         // Eager load roles
         $users = $query->with('roles')->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
-        
+
         // Fetch all roles for forms
-        $roles = \App\Models\Role::orderBy('name')->get();
+        $roles = Role::orderBy('name')->get();
 
         return view('admin.users.index', compact('users', 'roles'));
     }
@@ -83,7 +84,7 @@ class UserController extends Controller
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            
+
             $path = $request->file('avatar')->store('avatars', 'public');
             $data['avatar'] = $path;
         }
@@ -141,6 +142,6 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Password user ' . $user->name . ' berhasil diperbarui.');
+            ->with('success', 'Password user '.$user->name.' berhasil diperbarui.');
     }
 }

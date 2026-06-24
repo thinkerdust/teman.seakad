@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Http\View\Composers\NotificationComposer;
+use App\Http\View\Composers\SidebarComposer;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,12 +27,12 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Disable wrapping for resources
-        \Illuminate\Http\Resources\Json\JsonResource::withoutWrapping();
+        JsonResource::withoutWrapping();
 
         // Register Sidebar View Composer
-        view()->composer('admin.layouts.sidebar', \App\Http\View\Composers\SidebarComposer::class);
+        view()->composer('admin.layouts.sidebar', SidebarComposer::class);
 
         // Register Notification View Composer
-        view()->composer('admin.layouts.header', \App\Http\View\Composers\NotificationComposer::class);
+        view()->composer('admin.layouts.header', NotificationComposer::class);
     }
 }

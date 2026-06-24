@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -13,14 +13,14 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Tambahkan kolom wedding_mood ke tabel invitations jika belum ada
-        if (!Schema::hasColumn('invitations', 'wedding_mood')) {
+        if (! Schema::hasColumn('invitations', 'wedding_mood')) {
             Schema::table('invitations', function (Blueprint $table) {
                 $table->string('wedding_mood')->nullable()->after('description');
             });
         }
 
         // 2. Buat tabel pivot invitation_music jika belum ada
-        if (!Schema::hasTable('invitation_music')) {
+        if (! Schema::hasTable('invitation_music')) {
             Schema::create('invitation_music', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('invitation_id')->constrained()->cascadeOnDelete();
@@ -53,7 +53,7 @@ return new class extends Migration
                     ->where('music_id', $item->id)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     DB::table('invitation_music')->insert([
                         'invitation_id' => $item->invitation_id,
                         'music_id' => $item->id,
@@ -99,7 +99,7 @@ return new class extends Migration
     public function down(): void
     {
         // Kembalikan kolom invitation_id ke tabel music
-        if (!Schema::hasColumn('music', 'invitation_id')) {
+        if (! Schema::hasColumn('music', 'invitation_id')) {
             Schema::table('music', function (Blueprint $table) {
                 $table->unsignedBigInteger('invitation_id')->nullable()->after('id');
             });
@@ -108,7 +108,7 @@ return new class extends Migration
             $relations = DB::table('invitation_music')->get();
             foreach ($relations as $rel) {
                 DB::table('music')->where('id', $rel->music_id)->update([
-                    'invitation_id' => $rel->invitation_id
+                    'invitation_id' => $rel->invitation_id,
                 ]);
             }
 
@@ -121,7 +121,7 @@ return new class extends Migration
         Schema::table('music', function (Blueprint $table) {
             $table->dropColumn([
                 'title', 'artist', 'album', 'genre', 'mood',
-                'language', 'duration', 'cover', 'preview_url', 'status'
+                'language', 'duration', 'cover', 'preview_url', 'status',
             ]);
         });
 

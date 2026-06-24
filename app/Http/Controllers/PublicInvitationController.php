@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invitation;
-use App\Models\InvitationVisit;
 use App\Models\Guest;
-use Carbon\Carbon;
+use App\Models\InvitationVisit;
+use App\Services\ThemeService;
 use Illuminate\Http\Request;
 
 class PublicInvitationController extends Controller
@@ -13,13 +12,13 @@ class PublicInvitationController extends Controller
     /**
      * Tampilkan undangan publik berdasarkan slug.
      */
-    public function show(Request $request, string $slug)
+    public function show(Request $request, string $slug, ThemeService $themeService)
     {
         // Ambil instance undangan dari request attribute yang telah divalidasi oleh middleware
         $invitation = $request->attributes->get('invitation');
-        
+
         // Eager load hubungan yang diperlukan untuk merender view
-        $invitation->load(['theme', 'galleries', 'stories', 'events', 'music']);
+        $invitation->load(['theme', 'galleries', 'stories', 'events', 'music', 'guests']);
 
         // 4. Catat statistik kunjungan baru ke database
         InvitationVisit::create([
@@ -31,7 +30,7 @@ class PublicInvitationController extends Controller
         // Ambil nama penerima dari query string '?to=Nama+Tamu'
         $recipientName = $request->query('to');
 
-        // Transformasikan data agar bersih dan rapi untuk dibaca oleh Vue
+        // Transformasikan data agar bersih dan rapi untuk dibaca oleh Vue/Blade
         $invitationData = [
             'title' => $invitation->title,
             'groom_name' => $invitation->groom_name,
@@ -48,14 +47,14 @@ class PublicInvitationController extends Controller
                 'slug' => $invitation->theme?->slug,
                 'folder' => $invitation->theme?->folder,
             ],
-            'gallery' => $invitation->galleries->sortBy('sort')->map(function($g) {
+            'gallery' => $invitation->galleries->sortBy('sort')->map(function ($g) {
                 return [
                     'id' => $g->id,
                     'image' => $g->image,
                     'sort' => $g->sort,
                 ];
             })->values()->all(),
-            'story' => $invitation->stories->sortBy('sort')->map(function($s) {
+            'story' => $invitation->stories->sortBy('sort')->map(function ($s) {
                 return [
                     'id' => $s->id,
                     'title' => $s->title,
@@ -64,7 +63,7 @@ class PublicInvitationController extends Controller
                     'sort' => $s->sort,
                 ];
             })->values()->all(),
-            'events' => $invitation->events->sortBy('date')->map(function($e) {
+            'events' => $invitation->events->sortBy('date')->map(function ($e) {
                 return [
                     'id' => $e->id,
                     'name' => $e->name,
@@ -84,7 +83,15 @@ class PublicInvitationController extends Controller
             ],
         ];
 
-        return view('public.invitation', compact('invitation', 'invitationData'));
+        // Resolve view based on theme engine
+        $view = 'public.invitation';
+        $themeConfig = [];
+        if ($invitation->theme) {
+            $view = $themeService->getThemeView($invitation->theme);
+            $themeConfig = $themeService->getThemeConfig($invitation->theme);
+        }
+
+        return view($view, compact('invitation', 'invitationData', 'themeConfig'));
     }
 
     /**
@@ -116,7 +123,7 @@ class PublicInvitationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Terima kasih, konfirmasi kehadiran Anda berhasil dikirim!'
+            'message' => 'Terima kasih, konfirmasi kehadiran Anda berhasil dikirim!',
         ]);
     }
 }

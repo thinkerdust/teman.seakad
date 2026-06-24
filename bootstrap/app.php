@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\InvitationActiveMiddleware;
+use App\Http\Middleware\PermissionMiddleware;
+use App\Http\Middleware\SubscriptionMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,9 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo('/admin/dashboard');
 
         $middleware->alias([
-            'permission' => \App\Http\Middleware\PermissionMiddleware::class,
-            'subscription.active' => \App\Http\Middleware\SubscriptionMiddleware::class,
-            'invitation.active' => \App\Http\Middleware\InvitationActiveMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'subscription.active' => SubscriptionMiddleware::class,
+            'invitation.active' => InvitationActiveMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

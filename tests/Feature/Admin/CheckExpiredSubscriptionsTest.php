@@ -19,7 +19,9 @@ class CheckExpiredSubscriptionsTest extends TestCase
     use RefreshDatabase;
 
     protected Role $userRole;
+
     protected Package $package;
+
     protected Theme $theme;
 
     protected function setUp(): void
@@ -85,7 +87,7 @@ class CheckExpiredSubscriptionsTest extends TestCase
             'user_id' => $user->id,
             'theme_id' => $this->theme->id,
             'slug' => $slug,
-            'title' => 'Wedding of ' . $user->name,
+            'title' => 'Wedding of '.$user->name,
             'groom_name' => 'Groom',
             'bride_name' => 'Bride',
             'venue' => 'Grand Hall',
@@ -181,7 +183,7 @@ class CheckExpiredSubscriptionsTest extends TestCase
 
         // Undangan yang expired_at nya di masa lalu (misal karena setting manual)
         $invitationExpired = $this->createInvitationForUser($user, 'undangan-expired-manual', 'published', Carbon::yesterday()->toDateString());
-        
+
         // Undangan yang expired_at nya besok
         $invitationActive = $this->createInvitationForUser($user, 'undangan-active-manual', 'published', Carbon::tomorrow()->toDateString());
 

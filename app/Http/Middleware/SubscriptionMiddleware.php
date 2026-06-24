@@ -2,21 +2,21 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\SubscriptionService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Carbon\Carbon;
 
 class SubscriptionMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -33,13 +33,13 @@ class SubscriptionMiddleware
         }
 
         // Check if user has an active subscription
-        if (!app(\App\Services\SubscriptionService::class)->checkActive($user)) {
+        if (! app(SubscriptionService::class)->checkActive($user)) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Masa aktif akun Anda sudah berakhir, silahkan melakukan perpanjangan'
+                    'message' => 'Masa aktif akun Anda sudah berakhir, silahkan melakukan perpanjangan',
                 ], 403);
             }
-            
+
             return redirect()->route('subscription.expired');
         }
 

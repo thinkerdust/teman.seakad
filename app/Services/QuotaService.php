@@ -25,7 +25,7 @@ class QuotaService
             ->where('end_date', '>=', $today)
             ->first();
 
-        if (!$activeSub) {
+        if (! $activeSub) {
             return false;
         }
 

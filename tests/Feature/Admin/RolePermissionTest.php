@@ -58,7 +58,7 @@ class RolePermissionTest extends TestCase
             'email' => 'admin@teman-seakad.com',
         ]);
         // Jangan beri role apa-apa secara sengaja untuk menguji bypass email
-        
+
         $response = $this->actingAs($superadmin)->get(route('admin.users.index'));
         $response->assertStatus(200);
 

@@ -49,7 +49,7 @@ class InvitationVisit extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if (!$model->created_at) {
+            if (! $model->created_at) {
                 $model->created_at = $model->freshTimestamp();
             }
         });

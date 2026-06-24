@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Guest;
 use App\Models\Invitation;
 use App\Models\InvitationVisit;
+use App\Models\Order;
 use App\Models\Theme;
 use App\Models\User;
-use App\Models\Order;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
 
@@ -58,7 +58,7 @@ class DashboardController extends Controller
 
             // Calculate trends vs last month
             $userTrend = '0%';
-            
+
             $currentMonthInvitations = Invitation::where('user_id', $user->id)
                 ->whereBetween('created_at', [$currentMonthStart, $now])
                 ->count();
@@ -124,7 +124,7 @@ class DashboardController extends Controller
         // 2. Prepare visual charts data
         $monthMap = [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun',
-            7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+            7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des',
         ];
 
         // Invitation Created per Month (Last 6 Months)
@@ -132,12 +132,12 @@ class DashboardController extends Controller
         $invitationChartData = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = $now->copy()->subMonths($i);
-            $invitationChartMonths[] = $monthMap[$date->month] . ' ' . $date->year;
+            $invitationChartMonths[] = $monthMap[$date->month].' '.$date->year;
 
             $query = Invitation::whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month);
 
-            if (!$isAdmin) {
+            if (! $isAdmin) {
                 $query->where('user_id', $user->id);
             }
 
@@ -149,11 +149,11 @@ class DashboardController extends Controller
         $visitorChartData = [];
         for ($i = 13; $i >= 0; $i--) {
             $date = $now->copy()->subDays($i);
-            $visitorChartDays[] = $date->day . ' ' . $monthMap[$date->month];
+            $visitorChartDays[] = $date->day.' '.$monthMap[$date->month];
 
             $query = InvitationVisit::whereDate('created_at', $date->toDateString());
 
-            if (!$isAdmin) {
+            if (! $isAdmin) {
                 $query->whereHas('invitation', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
                 });
@@ -173,7 +173,7 @@ class DashboardController extends Controller
         if ($isAdmin) {
             for ($i = 5; $i >= 0; $i--) {
                 $date = $now->copy()->subMonths($i);
-                $label = $monthMap[$date->month] . ' ' . $date->year;
+                $label = $monthMap[$date->month].' '.$date->year;
 
                 $subscriptionGrowthLabels[] = $label;
                 $subscriptionGrowthSeries[] = UserSubscription::whereYear('created_at', $date->year)
@@ -213,7 +213,7 @@ class DashboardController extends Controller
             'revenueMonthly' => [
                 'labels' => $revenueMonthlySeries ? $revenueMonthlyLabels : [],
                 'series' => $revenueMonthlySeries,
-            ]
+            ],
         ];
 
         return view('admin.dashboard', compact('stats', 'chartData'));
@@ -229,6 +229,7 @@ class DashboardController extends Controller
         }
 
         $diff = (($currentCount - $previousCount) / $previousCount) * 100;
-        return ($diff >= 0 ? '+' : '') . round($diff, 1) . '%';
+
+        return ($diff >= 0 ? '+' : '').round($diff, 1).'%';
     }
 }
