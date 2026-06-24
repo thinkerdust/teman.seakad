@@ -18,10 +18,10 @@ class ThemeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Seed roles & permissions
         $this->seed(RolePermissionSeeder::class);
-        
+
         // Use fake storage disk
         Storage::fake('public');
     }
@@ -44,6 +44,20 @@ class ThemeTest extends TestCase
         // Buat user tanpa role apa pun (permission: theme.view tidak ada)
         $user = User::factory()->create();
 
+        // Create active subscription to bypass SubscriptionMiddleware
+        \App\Models\Order::create([
+            'order_number' => 'ORD-TEST-1',
+            'customer_name' => $user->name,
+            'phone' => '08123456789',
+            'email' => $user->email,
+            'price' => 100000,
+            'quota' => 10,
+            'status' => 'active',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user->id,
+        ]);
+
         $response = $this->actingAs($user)->get(route('admin.themes.index'));
         $response->assertStatus(403);
     }
@@ -56,6 +70,20 @@ class ThemeTest extends TestCase
         $user = User::factory()->create();
         $userRole = Role::where('name', 'User')->first(); // memiliki theme.view
         $user->roles()->sync([$userRole->id]);
+
+        // Create active subscription to bypass SubscriptionMiddleware
+        \App\Models\Order::create([
+            'order_number' => 'ORD-TEST-2',
+            'customer_name' => $user->name,
+            'phone' => '08123456789',
+            'email' => $user->email,
+            'price' => 100000,
+            'quota' => 10,
+            'status' => 'active',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user->id,
+        ]);
 
         $response = $this->actingAs($user)->get(route('admin.themes.index'));
         $response->assertStatus(200);
@@ -119,7 +147,7 @@ class ThemeTest extends TestCase
             'name' => 'Old Theme Name',
             'slug' => 'old-theme-name',
             'folder' => 'floral-elegant',
-            'thumbnail' => '/storage/' . $oldPath,
+            'thumbnail' => '/storage/'.$oldPath,
             'status' => 'active',
         ]);
 
@@ -137,7 +165,7 @@ class ThemeTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        
+
         // Pastikan database diperbarui
         $theme->refresh();
         $this->assertEquals('updated-theme-name', $theme->slug);
@@ -168,7 +196,7 @@ class ThemeTest extends TestCase
             'name' => 'Theme To Delete',
             'slug' => 'theme-to-delete',
             'folder' => 'floral-elegant',
-            'thumbnail' => '/storage/' . $path,
+            'thumbnail' => '/storage/'.$path,
             'status' => 'active',
         ]);
 

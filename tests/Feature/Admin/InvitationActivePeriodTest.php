@@ -9,17 +9,19 @@ use App\Models\Role;
 use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserSubscription;
+use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 class InvitationActivePeriodTest extends TestCase
 {
     use RefreshDatabase;
 
     protected Theme $theme;
+
     protected Role $userRole;
+
     protected Package $package;
 
     protected function setUp(): void
@@ -102,7 +104,7 @@ class InvitationActivePeriodTest extends TestCase
         $invitation->refresh();
         $this->assertEquals('published', $invitation->status);
         $this->assertNotNull($invitation->published_at);
-        
+
         // expired_at should match subscription end_date
         $subscription = UserSubscription::where('user_id', $user->id)->first();
         $this->assertNotNull($subscription);

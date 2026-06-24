@@ -23,11 +23,14 @@ class UpdateThemeRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:themes,slug,' . $themeId],
+            'slug' => ['required', 'string', 'max:255', 'unique:themes,slug,'.$themeId],
             'thumbnail' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'description' => ['nullable', 'string'],
             'folder' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'view_path' => ['nullable', 'string', 'max:255'],
+            'config' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 

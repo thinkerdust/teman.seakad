@@ -22,12 +22,17 @@ class ServiceUpdateTest extends TestCase
     use RefreshDatabase;
 
     protected Role $userRole;
+
     protected Role $adminRole;
+
     protected Package $package;
+
     protected Theme $theme;
 
     protected SubscriptionService $subscriptionService;
+
     protected QuotaService $quotaService;
+
     protected InvitationService $invitationService;
 
     protected function setUp(): void
@@ -65,7 +70,7 @@ class ServiceUpdateTest extends TestCase
     public function test_subscription_service_methods(): void
     {
         $user = User::factory()->create();
-        
+
         $order = Order::create([
             'customer_name' => $user->name,
             'phone' => '08123456789',
@@ -198,7 +203,7 @@ class ServiceUpdateTest extends TestCase
         // 2. Uji setExpiredDate
         $expiredDate = Carbon::today()->addDays(15)->toDateString();
         $updatedInvitation = $this->invitationService->setExpiredDate($publishedInvitation, $expiredDate);
-        
+
         $this->assertEquals(Carbon::parse($expiredDate)->toDateString(), Carbon::parse($updatedInvitation->expired_at)->toDateString());
     }
 }

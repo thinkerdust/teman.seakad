@@ -4,10 +4,10 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Guest;
 use App\Models\Invitation;
+use App\Models\Order;
 use App\Models\Role;
 use App\Models\Theme;
 use App\Models\User;
-use App\Models\Order;
 use App\Models\UserSubscription;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,7 +20,7 @@ class DashboardTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Seed roles & permissions
         $this->seed(RolePermissionSeeder::class);
     }
@@ -52,7 +52,7 @@ class DashboardTest extends TestCase
             'name' => 'Floral Test',
             'slug' => 'floral-test',
             'folder' => 'floral-test',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         // Buat undangan untuk user1 & user2
@@ -97,7 +97,7 @@ class DashboardTest extends TestCase
 
         // 2. Akses dashboard sebagai Superadmin
         $response = $this->actingAs($superadmin)->get(route('admin.dashboard'));
-        
+
         $response->assertStatus(200);
         $response->assertViewHas('stats', function ($stats) {
             // Superadmin melihat total seluruh user (Superadmin + user1 + user2 = 3)
@@ -118,7 +118,7 @@ class DashboardTest extends TestCase
     {
         // 1. Buat data uji
         $userRole = Role::where('name', 'User')->first();
-        
+
         $user1 = User::factory()->create();
         $user1->roles()->sync([$userRole->id]);
 
@@ -143,7 +143,7 @@ class DashboardTest extends TestCase
             'name' => 'Floral Test',
             'slug' => 'floral-test',
             'folder' => 'floral-test',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         // Undangan milik user1
@@ -190,7 +190,7 @@ class DashboardTest extends TestCase
 
         // 2. Akses sebagai user1
         $response = $this->actingAs($user1)->get(route('admin.dashboard'));
-        
+
         $response->assertStatus(200);
         $response->assertViewHas('stats', function ($stats) {
             // User1 hanya melihat data miliknya sendiri (total_users disembunyikan/0, invitation = 1, guests = 1)
@@ -214,7 +214,7 @@ class DashboardTest extends TestCase
 
         // Buat dummy order & subscription
         $user = User::factory()->create([
-            'email' => 'client@example.com'
+            'email' => 'client@example.com',
         ]);
 
         $order1 = Order::create([
@@ -265,7 +265,7 @@ class DashboardTest extends TestCase
             'end_date' => now()->subDays(30)->toDateString(),
             'status' => 'expired',
         ]);
-        
+
         $response = $this->actingAs($superadmin)->get(route('admin.dashboard'));
 
         $response->assertStatus(200);

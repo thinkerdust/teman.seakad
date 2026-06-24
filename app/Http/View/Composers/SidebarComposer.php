@@ -26,16 +26,17 @@ class SidebarComposer
         // 2. Filter menu berdasarkan hak akses (permission)
         $filteredMenus = $rootMenus->filter(function ($menu) use ($user) {
             // Check root menu permission
-            if ($menu->permission && (!$user || !$user->hasPermission($menu->permission))) {
+            if ($menu->permission && (! $user || ! $user->hasPermission($menu->permission))) {
                 return false;
             }
 
             // Filter children
             if ($menu->children->isNotEmpty()) {
                 $menu->setRelation('children', $menu->children->filter(function ($child) use ($user) {
-                    if ($child->permission && (!$user || !$user->hasPermission($child->permission))) {
+                    if ($child->permission && (! $user || ! $user->hasPermission($child->permission))) {
                         return false;
                     }
+
                     return true;
                 }));
             }

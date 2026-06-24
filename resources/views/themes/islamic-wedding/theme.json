@@ -1,0 +1,22 @@
+{
+    "name": "Islamic",
+    "version": "1.0",
+    "author": "Teman Seakad",
+    "colors": {
+        "primary": "#107c41",
+        "background": "#f5fbf7",
+        "accent": "#b58428"
+    },
+    "fonts": {
+        "heading": "Amiri",
+        "body": "Playfair Display"
+    },
+    "features": {
+        "music": true,
+        "gallery": true,
+        "countdown": true,
+        "rsvp": true,
+        "stories": true,
+        "gift": true
+    }
+}

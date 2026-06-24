@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class AdminSeeder extends Seeder
             ]
         );
 
-        $superadminRole = \App\Models\Role::where('name', 'Superadmin')->first();
+        $superadminRole = Role::where('name', 'Superadmin')->first();
         if ($superadminRole) {
             $superadmin->roles()->sync([$superadminRole->id]);
         }
@@ -40,7 +41,7 @@ class AdminSeeder extends Seeder
             ]
         );
 
-        $adminRole = \App\Models\Role::where('name', 'Admin')->first();
+        $adminRole = Role::where('name', 'Admin')->first();
         if ($adminRole) {
             $admin->roles()->sync([$adminRole->id]);
         }
@@ -56,7 +57,7 @@ class AdminSeeder extends Seeder
             ]
         );
 
-        $userRole = \App\Models\Role::where('name', 'User')->first();
+        $userRole = Role::where('name', 'User')->first();
         if ($userRole) {
             $user->roles()->sync([$userRole->id]);
         }

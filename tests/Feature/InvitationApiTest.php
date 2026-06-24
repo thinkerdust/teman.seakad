@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
+use App\Models\Gallery;
 use App\Models\Invitation;
+use App\Models\Music;
+use App\Models\Story;
 use App\Models\Theme;
 use App\Models\User;
-use App\Models\Gallery;
-use App\Models\Story;
-use App\Models\Event;
-use App\Models\Music;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,6 +18,7 @@ class InvitationApiTest extends TestCase
     use RefreshDatabase;
 
     protected Theme $theme;
+
     protected User $user;
 
     protected function setUp(): void
@@ -45,7 +46,7 @@ class InvitationApiTest extends TestCase
         $response->assertStatus(404)
             ->assertJson([
                 'success' => false,
-                'message' => 'Undangan tidak ditemukan.'
+                'message' => 'Undangan tidak ditemukan.',
             ]);
     }
 
@@ -66,11 +67,11 @@ class InvitationApiTest extends TestCase
             'status' => 'draft',
         ]);
 
-        $response = $this->getJson('/api/invitation/' . $invitation->slug);
+        $response = $this->getJson('/api/invitation/'.$invitation->slug);
         $response->assertStatus(403)
             ->assertJson([
                 'success' => false,
-                'message' => 'Undangan ini masih dalam status draft.'
+                'message' => 'Undangan ini masih dalam status draft.',
             ]);
     }
 
@@ -92,11 +93,11 @@ class InvitationApiTest extends TestCase
             'status' => 'expired',
         ]);
 
-        $response1 = $this->getJson('/api/invitation/' . $invitation1->slug);
+        $response1 = $this->getJson('/api/invitation/'.$invitation1->slug);
         $response1->assertStatus(410)
             ->assertJson([
                 'success' => false,
-                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.'
+                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.',
             ]);
 
         // Kasus 2: Status 'published' namun expired_at terlampaui (di masa lalu)
@@ -113,11 +114,11 @@ class InvitationApiTest extends TestCase
             'expired_at' => Carbon::now()->subDays(1),
         ]);
 
-        $response2 = $this->getJson('/api/invitation/' . $invitation2->slug);
+        $response2 = $this->getJson('/api/invitation/'.$invitation2->slug);
         $response2->assertStatus(410)
             ->assertJson([
                 'success' => false,
-                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.'
+                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.',
             ]);
     }
 
@@ -174,7 +175,7 @@ class InvitationApiTest extends TestCase
         ]);
         $invitation->music()->sync([$music->id]);
 
-        $response = $this->getJson('/api/invitation/' . $invitation->slug);
+        $response = $this->getJson('/api/invitation/'.$invitation->slug);
         $response->assertStatus(200);
 
         // Uji struktur data JSON response
@@ -191,24 +192,24 @@ class InvitationApiTest extends TestCase
                 'maps_url',
                 'description',
                 'story' => [
-                    '*' => ['id', 'title', 'date', 'description', 'sort']
-                ]
+                    '*' => ['id', 'title', 'date', 'description', 'sort'],
+                ],
             ],
             'gallery' => [
                 [
-                    'id', 'image', 'sort'
-                ]
+                    'id', 'image', 'sort',
+                ],
             ],
             'events' => [
                 [
-                    'id', 'name', 'date', 'time', 'location'
-                ]
+                    'id', 'name', 'date', 'time', 'location',
+                ],
             ],
             'music' => [
                 'title',
                 'artist',
                 'file',
-            ]
+            ],
         ]);
 
         // Uji isi nilai JSON response
@@ -225,7 +226,7 @@ class InvitationApiTest extends TestCase
                 [
                     'image' => '/storage/invitations/gallery/photo1.jpg',
                     'sort' => 0,
-                ]
+                ],
             ],
             'events' => [
                 [
@@ -233,13 +234,13 @@ class InvitationApiTest extends TestCase
                     'date' => '2026-08-23',
                     'time' => '09:00',
                     'location' => 'Hotel Mulia',
-                ]
+                ],
             ],
             'music' => [
                 'title' => 'Background Music',
                 'artist' => 'Artist Name',
-                'file' => '/storage/invitations/music/love.mp3'
-            ]
+                'file' => '/storage/invitations/music/love.mp3',
+            ],
         ]);
     }
 }

@@ -26,6 +26,9 @@ class StoreThemeRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'folder' => ['required', 'string', 'max:255'],
             'status' => ['required', 'string', 'in:active,inactive'],
+            'view_path' => ['nullable', 'string', 'max:255'],
+            'config' => ['nullable', 'string'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 

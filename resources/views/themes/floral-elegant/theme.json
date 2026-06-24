@@ -1,0 +1,22 @@
+{
+    "name": "Floral",
+    "version": "1.0",
+    "author": "Teman Seakad",
+    "colors": {
+        "primary": "#b86b70",
+        "background": "#faf6f0",
+        "accent": "#8fa89b"
+    },
+    "fonts": {
+        "heading": "Playfair Display",
+        "body": "Instrument Sans"
+    },
+    "features": {
+        "music": true,
+        "gallery": true,
+        "countdown": true,
+        "rsvp": true,
+        "stories": true,
+        "gift": true
+    }
+}

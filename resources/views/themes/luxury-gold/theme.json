@@ -1,0 +1,22 @@
+{
+    "name": "Luxury",
+    "version": "1.0",
+    "author": "Teman Seakad",
+    "colors": {
+        "primary": "#d4af37",
+        "background": "#0d0d0d",
+        "accent": "#f3e5ab"
+    },
+    "fonts": {
+        "heading": "Cinzel",
+        "body": "Inter"
+    },
+    "features": {
+        "music": true,
+        "gallery": true,
+        "countdown": true,
+        "rsvp": true,
+        "stories": true,
+        "gift": true
+    }
+}

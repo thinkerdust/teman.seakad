@@ -8,6 +8,7 @@ use App\Models\Gallery;
 use App\Models\Invitation;
 use App\Models\Music;
 use App\Models\Story;
+use App\Services\MusicRecommendationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -22,9 +23,9 @@ class InvitationContentController extends Controller
         $this->authorizeInvitationAction($invitation, 'invitation.update');
 
         $invitation->load(['galleries', 'stories', 'events', 'music']);
-        
+
         $musicLibrary = Music::where('status', 'active')->orderBy('title')->get();
-        $recommendationService = new \App\Services\MusicRecommendationService();
+        $recommendationService = new MusicRecommendationService;
         $recommendedMusic = $recommendationService->recommend($invitation);
 
         return view('admin.invitations.content.edit', compact('invitation', 'musicLibrary', 'recommendedMusic'));
@@ -41,20 +42,20 @@ class InvitationContentController extends Controller
 
         if ($action === 'upload') {
             $request->validate([
-                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480']
+                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480'],
             ], [
                 'image.required' => 'File gambar wajib diunggah.',
                 'image.image' => 'File harus berupa gambar.',
                 'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
-                'image.max' => 'Ukuran gambar maksimal adalah 20MB.'
+                'image.max' => 'Ukuran gambar maksimal adalah 20MB.',
             ]);
 
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('invitations/gallery', 'public');
-                
+
                 Gallery::create([
                     'invitation_id' => $invitation->id,
-                    'image' => '/storage/' . $path,
+                    'image' => '/storage/'.$path,
                     'sort' => $invitation->galleries()->count(),
                 ]);
 
@@ -62,7 +63,7 @@ class InvitationContentController extends Controller
             }
         } elseif ($action === 'delete') {
             $request->validate([
-                'gallery_id' => ['required', 'exists:galleries,id']
+                'gallery_id' => ['required', 'exists:galleries,id'],
             ]);
 
             $gallery = Gallery::findOrFail($request->gallery_id);
@@ -119,7 +120,7 @@ class InvitationContentController extends Controller
                 Story::updateOrCreate(
                     [
                         'id' => $storyData['id'] ?? null,
-                        'invitation_id' => $invitation->id
+                        'invitation_id' => $invitation->id,
                     ],
                     [
                         'title' => $storyData['title'],
@@ -170,7 +171,7 @@ class InvitationContentController extends Controller
                 Event::updateOrCreate(
                     [
                         'id' => $eventData['id'] ?? null,
-                        'invitation_id' => $invitation->id
+                        'invitation_id' => $invitation->id,
                     ],
                     [
                         'name' => $eventData['name'],
@@ -203,6 +204,15 @@ class InvitationContentController extends Controller
                 'music_id.exists' => 'Lagu terpilih tidak valid.',
             ]);
 
+            // Clean up old custom music if exists
+            $oldMusic = $invitation->music()->first();
+            if ($oldMusic && $oldMusic->status === 'custom' && $oldMusic->id != $request->input('music_id')) {
+                $invitation->music()->detach();
+                $oldPath = str_replace('/storage/', '', $oldMusic->file);
+                Storage::disk('public')->delete($oldPath);
+                $oldMusic->delete();
+            }
+
             // Simpan mood pernikahan ke undangan
             $invitation->update([
                 'wedding_mood' => $request->input('wedding_mood'),
@@ -212,9 +222,58 @@ class InvitationContentController extends Controller
             $invitation->music()->sync([$request->input('music_id')]);
 
             return redirect()->back()->with('success', 'Musik latar berhasil diperbarui.');
+        } elseif ($action === 'upload') {
+            $request->validate([
+                'music_file' => ['required', 'file', 'mimes:mp3,wav', 'max:20480'],
+                'title' => ['nullable', 'string', 'max:255'],
+            ], [
+                'music_file.required' => 'File musik wajib diunggah.',
+                'music_file.mimes' => 'Format musik harus berupa MP3 atau WAV.',
+                'music_file.max' => 'Ukuran file musik maksimal adalah 20MB.',
+            ]);
+
+            // Clean up old custom music if exists
+            $oldMusic = $invitation->music()->first();
+            if ($oldMusic) {
+                $invitation->music()->detach();
+                if ($oldMusic->status === 'custom') {
+                    $oldPath = str_replace('/storage/', '', $oldMusic->file);
+                    Storage::disk('public')->delete($oldPath);
+                    $oldMusic->delete();
+                }
+            }
+
+            if ($request->hasFile('music_file')) {
+                $file = $request->file('music_file');
+                $filename = $file->getClientOriginalName();
+                $title = $request->input('title') ?: pathinfo($filename, PATHINFO_FILENAME);
+
+                $path = $file->store('invitations/music', 'public');
+
+                $customMusic = Music::create([
+                    'title' => $title,
+                    'artist' => 'Custom Upload',
+                    'genre' => 'Wedding',
+                    'mood' => 'Romantic',
+                    'file' => '/storage/'.$path,
+                    'status' => 'custom',
+                ]);
+
+                $invitation->music()->sync([$customMusic->id]);
+
+                return redirect()->back()->with('success', 'Musik latar kustom berhasil diunggah.');
+            }
         } elseif ($action === 'delete') {
-            // Hapus asosiasi musik
-            $invitation->music()->detach();
+            // Clean up old custom music if exists
+            $oldMusic = $invitation->music()->first();
+            if ($oldMusic) {
+                $invitation->music()->detach();
+                if ($oldMusic->status === 'custom') {
+                    $oldPath = str_replace('/storage/', '', $oldMusic->file);
+                    Storage::disk('public')->delete($oldPath);
+                    $oldMusic->delete();
+                }
+            }
 
             return redirect()->back()->with('success', 'Musik latar berhasil dihapus.');
         }
@@ -228,8 +287,8 @@ class InvitationContentController extends Controller
     protected function authorizeInvitationAction(Invitation $invitation, string $permission)
     {
         $user = Auth::user();
-        
-        if (!$user->hasPermission($permission)) {
+
+        if (! $user->hasPermission($permission)) {
             abort(403, 'Anda tidak memiliki hak akses untuk melakukan tindakan ini.');
         }
 

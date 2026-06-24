@@ -5,8 +5,11 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
@@ -55,7 +58,7 @@ class User extends Authenticatable
     /**
      * Relasi ke model Role (Many-to-Many).
      */
-    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
     }
@@ -63,7 +66,7 @@ class User extends Authenticatable
     /**
      * Relasi ke model Order (One-to-Many).
      */
-    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
@@ -71,7 +74,7 @@ class User extends Authenticatable
     /**
      * Relasi ke model UserSubscription (One-to-Many).
      */
-    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(UserSubscription::class);
     }
@@ -79,7 +82,7 @@ class User extends Authenticatable
     /**
      * Relasi ke model Invitation (One-to-Many).
      */
-    public function invitations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function invitations(): HasMany
     {
         return $this->hasMany(Invitation::class);
     }
@@ -87,8 +90,9 @@ class User extends Authenticatable
     /**
      * Cache in-memory untuk roles dan permissions.
      */
-    protected ?\Illuminate\Support\Collection $cachedRoles = null;
-    protected ?\Illuminate\Support\Collection $cachedPermissions = null;
+    protected ?Collection $cachedRoles = null;
+
+    protected ?Collection $cachedPermissions = null;
 
     /**
      * Periksa apakah user memiliki role tertentu.
@@ -98,6 +102,7 @@ class User extends Authenticatable
         if (is_null($this->cachedRoles)) {
             $this->cachedRoles = $this->roles->pluck('name');
         }
+
         return $this->cachedRoles->contains($roleName);
     }
 

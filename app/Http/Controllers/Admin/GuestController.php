@@ -24,7 +24,7 @@ class GuestController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -128,19 +128,19 @@ class GuestController extends Controller
 
         $guests = Guest::where('invitation_id', $invitation->id)->orderBy('name')->get();
 
-        $filename = "daftar-tamu-" . $invitation->slug . "-" . date('Y-m-d') . ".csv";
+        $filename = 'daftar-tamu-'.$invitation->slug.'-'.date('Y-m-d').'.csv';
 
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$filename",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
-        $callback = function() use($guests) {
+        $callback = function () use ($guests) {
             $file = fopen('php://output', 'w');
-            
+
             // Tulis Header Kolom
             fputcsv($file, ['Nama Tamu', 'Nomor Telepon', 'Kehadiran', 'Pesan / Ucapan', 'Tanggal RSVP']);
 
@@ -151,7 +151,7 @@ class GuestController extends Controller
                     $guest->phone ?: '-',
                     strtoupper(str_replace('_', ' ', $guest->attendance)),
                     $guest->message ?: '-',
-                    $guest->created_at->format('Y-m-d H:i:s')
+                    $guest->created_at->format('Y-m-d H:i:s'),
                 ]);
             }
 
@@ -169,11 +169,11 @@ class GuestController extends Controller
         $this->authorizeInvitationAction($invitation, 'invitation.update');
 
         $request->validate([
-            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:2048']
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
         ], [
             'csv_file.required' => 'File CSV wajib diunggah.',
             'csv_file.mimes' => 'Format file harus berupa CSV atau TXT.',
-            'csv_file.max' => 'Ukuran file maksimal adalah 2MB.'
+            'csv_file.max' => 'Ukuran file maksimal adalah 2MB.',
         ]);
 
         $file = $request->file('csv_file');
@@ -183,7 +183,7 @@ class GuestController extends Controller
         if (($handle = fopen($path, 'r')) !== false) {
             // Baca baris pertama sebagai header
             $header = fgetcsv($handle, 1000, ',');
-            
+
             // Loop data baris demi baris
             $rowCount = 0;
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
@@ -199,7 +199,7 @@ class GuestController extends Controller
 
                 // Normalisasi kehadiran
                 $attendance = str_replace(' ', '_', $attendance);
-                if (!in_array($attendance, ['hadir', 'tidak_hadir', 'belum_pasti'])) {
+                if (! in_array($attendance, ['hadir', 'tidak_hadir', 'belum_pasti'])) {
                     $attendance = 'belum_pasti';
                 }
 
@@ -207,12 +207,12 @@ class GuestController extends Controller
                 Guest::updateOrCreate(
                     [
                         'invitation_id' => $invitation->id,
-                        'name' => $name
+                        'name' => $name,
                     ],
                     [
                         'phone' => $phone,
                         'attendance' => $attendance,
-                        'message' => $message
+                        'message' => $message,
                     ]
                 );
                 $rowCount++;
@@ -233,8 +233,8 @@ class GuestController extends Controller
     protected function authorizeInvitationAction(Invitation $invitation, string $permission)
     {
         $user = Auth::user();
-        
-        if (!$user->hasPermission($permission)) {
+
+        if (! $user->hasPermission($permission)) {
             abort(403, 'Anda tidak memiliki hak akses untuk melakukan tindakan ini.');
         }
 

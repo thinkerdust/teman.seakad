@@ -559,6 +559,61 @@
                     @endif
                 </x-admin.card>
 
+                <!-- Custom Music Upload Card -->
+                <x-admin.card title="Unggah Musik Latar Kustom">
+                    <form 
+                        action="{{ route('admin.invitations.content.music', $invitation->id) }}" 
+                        method="POST" 
+                        enctype="multipart/form-data"
+                        class="space-y-4"
+                    >
+                        @csrf
+                        <input type="hidden" name="action" value="upload">
+                        
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Judul Lagu (Opsional)</label>
+                                <input 
+                                    type="text" 
+                                    name="title" 
+                                    placeholder="Contoh: Lagu Spesial Kita (Biarkan kosong untuk nama file asli)"
+                                    class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Pilih File Musik (MP3 / WAV)</label>
+                                <div class="relative flex items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50/50 p-6 text-center hover:bg-slate-55 transition dark:border-slate-700 dark:bg-slate-900/50 h-[80px]">
+                                    <input 
+                                        type="file" 
+                                        name="music_file" 
+                                        accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav"
+                                        required
+                                        class="absolute inset-0 cursor-pointer opacity-0"
+                                        onchange="document.getElementById('music-file-name').textContent = this.files[0] ? this.files[0].name : 'Pilih file'"
+                                    />
+                                    <div class="flex items-center gap-2">
+                                        <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                        </svg>
+                                        <span id="music-file-name" class="text-xs text-slate-550 dark:text-slate-400 font-semibold text-indigo-600">
+                                            Pilih file musik...
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-4">
+                            <button 
+                                type="submit" 
+                                class="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition duration-150"
+                            >
+                                Unggah Musik Latar
+                            </button>
+                        </div>
+                    </form>
+                </x-admin.card>
+
                 <!-- Music Selection Panel -->
                 <x-admin.card title="Perpustakaan & Rekomendasi Musik">
                     <!-- Hidden Select Form -->

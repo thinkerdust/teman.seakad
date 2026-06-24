@@ -14,7 +14,7 @@ class UpdateInvitationRequest extends FormRequest
         $invitation = $this->route('invitation');
         $user = $this->user();
 
-        if (!$user->hasPermission('invitation.update')) {
+        if (! $user->hasPermission('invitation.update')) {
             return false;
         }
 
@@ -37,7 +37,7 @@ class UpdateInvitationRequest extends FormRequest
         return [
             'theme_id' => ['required', 'exists:themes,id'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:invitations,slug,' . $invitationId],
+            'slug' => ['required', 'string', 'max:255', 'unique:invitations,slug,'.$invitationId],
             'groom_name' => ['required', 'string', 'max:255'],
             'bride_name' => ['required', 'string', 'max:255'],
             'akad_date' => ['nullable', 'date'],

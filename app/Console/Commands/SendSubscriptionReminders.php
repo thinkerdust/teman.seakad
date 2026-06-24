@@ -45,13 +45,13 @@ class SendSubscriptionReminders extends Command
 
         foreach ($subscriptions as $subscription) {
             $user = $subscription->user;
-            if (!$user) {
+            if (! $user) {
                 continue;
             }
 
             $daysRemaining = (int) today()->diffInDays($subscription->end_date, false);
 
-            if (!in_array($daysRemaining, [30, 7, 1])) {
+            if (! in_array($daysRemaining, [30, 7, 1])) {
                 continue;
             }
 
@@ -61,7 +61,7 @@ class SendSubscriptionReminders extends Command
                 ->where('data->days_remaining', $daysRemaining)
                 ->exists();
 
-            if (!$exists) {
+            if (! $exists) {
                 $user->notify(new SubscriptionExpiringNotification($subscription, $daysRemaining));
                 $count++;
             }

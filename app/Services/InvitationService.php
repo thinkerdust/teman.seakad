@@ -15,6 +15,7 @@ class InvitationService
         $invitation->update([
             'status' => 'published',
         ]);
+
         return $invitation;
     }
 
@@ -26,6 +27,7 @@ class InvitationService
         $invitation->update([
             'expired_at' => $expiredDate,
         ]);
+
         return $invitation;
     }
 
@@ -37,6 +39,7 @@ class InvitationService
         $invitation->update([
             'status' => 'expired',
         ]);
+
         return $invitation;
     }
 }

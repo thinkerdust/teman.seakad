@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Music;
 use App\Models\Invitation;
+use App\Models\Music;
+use Illuminate\Database\Eloquent\Collection;
 
 class MusicRecommendationService
 {
     /**
      * Berikan rekomendasi lagu berdasarkan undangan (atau theme folder/slug).
      *
-     * @param Invitation $invitation
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function recommend(Invitation $invitation)
     {
@@ -41,7 +41,7 @@ class MusicRecommendationService
         }
 
         if ($invitation->wedding_mood) {
-            if (!in_array($invitation->wedding_mood, $moods)) {
+            if (! in_array($invitation->wedding_mood, $moods)) {
                 array_unshift($moods, $invitation->wedding_mood);
             }
         }

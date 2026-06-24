@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InvitationResource;
 use App\Models\Invitation;
+use App\Models\Music;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,10 @@ class InvitationApiController extends Controller
             ->first();
 
         // 1. Jika tidak ditemukan, return response 404
-        if (!$invitation) {
+        if (! $invitation) {
             return response()->json([
                 'success' => false,
-                'message' => 'Undangan tidak ditemukan.'
+                'message' => 'Undangan tidak ditemukan.',
             ], 404);
         }
 
@@ -32,7 +33,7 @@ class InvitationApiController extends Controller
         if ($invitation->status === 'draft') {
             return response()->json([
                 'success' => false,
-                'message' => 'Undangan ini masih dalam status draft.'
+                'message' => 'Undangan ini masih dalam status draft.',
             ], 403);
         }
 
@@ -47,7 +48,7 @@ class InvitationApiController extends Controller
         if ($isExpired) {
             return response()->json([
                 'success' => false,
-                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.'
+                'message' => 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.',
             ], 410);
         }
 
@@ -83,7 +84,7 @@ class InvitationApiController extends Controller
                 break;
         }
 
-        $tracks = \App\Models\Music::whereIn('mood', $moods)
+        $tracks = Music::whereIn('mood', $moods)
             ->where('status', 'active')
             ->get()
             ->map(function ($track) {

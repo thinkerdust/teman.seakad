@@ -25,8 +25,8 @@ class MusicController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('artist', 'like', "%{$search}%")
-                  ->orWhere('album', 'like', "%{$search}%");
+                    ->orWhere('artist', 'like', "%{$search}%")
+                    ->orWhere('album', 'like', "%{$search}%");
             });
         }
 
@@ -58,6 +58,7 @@ class MusicController extends Controller
     {
         $this->authorizeMusicAction('music.create');
         $moods = ['Romantic', 'Elegant', 'Luxury', 'Islamic', 'Classic', 'Modern', 'Acoustic', 'Instrumental'];
+
         return view('admin.music.create', compact('moods'));
     }
 
@@ -71,13 +72,13 @@ class MusicController extends Controller
         // Unggah cover image jika ada
         if ($request->hasFile('cover')) {
             $path = $request->file('cover')->store('music/covers', 'public');
-            $data['cover'] = '/storage/' . $path;
+            $data['cover'] = '/storage/'.$path;
         }
 
         // Unggah berkas audio
         if ($request->hasFile('music_file')) {
             $path = $request->file('music_file')->store('music', 'public');
-            $data['file'] = '/storage/' . $path;
+            $data['file'] = '/storage/'.$path;
         }
 
         Music::create($data);
@@ -93,6 +94,7 @@ class MusicController extends Controller
     {
         $this->authorizeMusicAction('music.update');
         $moods = ['Romantic', 'Elegant', 'Luxury', 'Islamic', 'Classic', 'Modern', 'Acoustic', 'Instrumental'];
+
         return view('admin.music.edit', compact('music', 'moods'));
     }
 
@@ -110,7 +112,7 @@ class MusicController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('cover')->store('music/covers', 'public');
-            $data['cover'] = '/storage/' . $path;
+            $data['cover'] = '/storage/'.$path;
         }
 
         // Ganti file musik jika ada
@@ -120,7 +122,7 @@ class MusicController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('music_file')->store('music', 'public');
-            $data['file'] = '/storage/' . $path;
+            $data['file'] = '/storage/'.$path;
         }
 
         $music->update($data);
@@ -160,7 +162,7 @@ class MusicController extends Controller
     protected function authorizeMusicAction(string $permission)
     {
         $user = auth()->user();
-        if (!$user || !$user->hasPermission($permission)) {
+        if (! $user || ! $user->hasPermission($permission)) {
             abort(403, 'Anda tidak memiliki hak akses untuk mengelola perpustakaan musik.');
         }
     }

@@ -1,20 +1,20 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\ThemeController;
-use App\Http\Controllers\Admin\MusicController;
-use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\InvitationContentController;
-use App\Http\Controllers\PublicInvitationController;
-use App\Http\Controllers\LandingController;
+use App\Http\Controllers\Admin\InvitationController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MusicController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\ThemeController;
 use App\Http\Controllers\Admin\TransactionReportController;
-use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PublicInvitationController;
 use Illuminate\Support\Facades\Route;
 
 // Public Front-end Landing Page
@@ -24,10 +24,10 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    
+
     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
-    
+
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
@@ -38,7 +38,7 @@ Route::middleware('auth')->get('/subscription-expired', [AuthController::class, 
 // Authenticated Admin Dashboard Routes
 Route::middleware(['auth', 'subscription.active'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard.view');
 
     // User Management Resource Routes
@@ -120,3 +120,6 @@ Route::middleware('invitation.active')->group(function () {
     Route::get('/{slug}', [PublicInvitationController::class, 'show'])->name('public.invitation');
     Route::post('/{slug}/rsvp', [PublicInvitationController::class, 'rsvp'])->name('public.invitation.rsvp');
 });
+
+// Live Theme Preview Route
+Route::get('/theme-preview/{slug}', [ThemeController::class, 'preview'])->name('themes.preview');

@@ -32,6 +32,7 @@ class SubscriptionService
     public function checkActive(User $user): bool
     {
         $today = Carbon::today();
+
         return $user->subscriptions()
             ->where('status', 'active')
             ->where('start_date', '<=', $today)
@@ -48,6 +49,7 @@ class SubscriptionService
             'end_date' => $newEndDate,
             'status' => 'active',
         ]);
+
         return $subscription;
     }
 
@@ -59,6 +61,7 @@ class SubscriptionService
         $subscription->update([
             'status' => 'expired',
         ]);
+
         return $subscription;
     }
 }

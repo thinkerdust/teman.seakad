@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
-use App\Models\User;
 use App\Mail\ResetPasswordMail;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,9 @@ class AuthController extends Controller
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
+
             return back()->withErrors([
-                'email' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . $seconds . ' detik.',
+                'email' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam '.$seconds.' detik.',
             ])->onlyInput('email');
         }
 
@@ -47,6 +49,7 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
         if ($user && $user->status !== 'active') {
             RateLimiter::hit($throttleKey, 60);
+
             return back()->withErrors([
                 'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator.',
             ])->onlyInput('email');
@@ -60,18 +63,19 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Check if regular user has an active subscription
-            if ($user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin')) {
-                $today = \Carbon\Carbon::today();
+            if ($user->email !== 'admin@teman-seakad.com' && ! $user->hasRole('Superadmin') && ! $user->hasRole('Admin')) {
+                $today = Carbon::today();
                 $activeSubscription = $user->subscriptions()
                     ->where('status', 'active')
                     ->where('start_date', '<=', $today)
                     ->where('end_date', '>=', $today)
                     ->first();
-                
-                if (!$activeSubscription) {
+
+                if (! $activeSubscription) {
                     $user->update([
                         'last_login_at' => now(),
                     ]);
+
                     return redirect()->route('subscription.expired');
                 }
             }
@@ -82,7 +86,7 @@ class AuthController extends Controller
             ]);
 
             return redirect()->intended(route('admin.dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+                ->with('success', 'Selamat datang kembali, '.$user->name.'!');
         }
 
         RateLimiter::hit($throttleKey, 60);
@@ -97,7 +101,7 @@ class AuthController extends Controller
      */
     public function subscriptionExpired()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
@@ -145,17 +149,17 @@ class AuthController extends Controller
         );
 
         // Buat url reset password
-        $resetUrl = route('password.reset', ['token' => $token]) . '?email=' . urlencode($email);
+        $resetUrl = route('password.reset', ['token' => $token]).'?email='.urlencode($email);
 
         // Kirim email
         try {
             Mail::to($email)->send(new ResetPasswordMail($resetUrl));
         } catch (\Exception $e) {
             // Fallback ke log jika terjadi error pengiriman (atau tampilkan error jika tidak di local)
-            logger()->error('Gagal mengirim email reset password ke ' . $email . ': ' . $e->getMessage());
-            
+            logger()->error('Gagal mengirim email reset password ke '.$email.': '.$e->getMessage());
+
             // Simpan log reset link ke laravel.log agar tetap bisa di-test
-            logger()->info('Reset Link untuk ' . $email . ': ' . $resetUrl);
+            logger()->info('Reset Link untuk '.$email.': '.$resetUrl);
         }
 
         return back()->with('success', 'Link reset password telah dikirim ke email Anda. Silakan periksa inbox (atau logs jika di local dev).');
@@ -180,13 +184,14 @@ class AuthController extends Controller
         $record = DB::table('password_reset_tokens')->where('email', $request->email)->first();
 
         // Validasi ketersediaan token dan kedaluwarsa (misal 60 menit)
-        if (!$record || !Hash::check($request->token, $record->token)) {
+        if (! $record || ! Hash::check($request->token, $record->token)) {
             return back()->withErrors(['email' => 'Token reset password tidak valid atau telah kedaluwarsa.']);
         }
 
-        $createdAt = \Carbon\Carbon::parse($record->created_at);
+        $createdAt = Carbon::parse($record->created_at);
         if ($createdAt->addMinutes(60)->isPast()) {
             DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
             return back()->withErrors(['email' => 'Token reset password telah kedaluwarsa. Silakan ajukan ulang.']);
         }
 

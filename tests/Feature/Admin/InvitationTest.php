@@ -15,8 +15,11 @@ class InvitationTest extends TestCase
     use RefreshDatabase;
 
     protected Theme $theme;
+
     protected Role $userRole;
+
     protected Role $adminRole;
+
     protected Role $superadminRole;
 
     protected function setUp(): void

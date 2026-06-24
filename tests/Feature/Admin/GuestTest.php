@@ -17,8 +17,11 @@ class GuestTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Role $userRole;
+
     protected Theme $theme;
+
     protected Invitation $invitation;
 
     protected function setUp(): void
@@ -128,7 +131,7 @@ class GuestTest extends TestCase
 
         $response = $this->actingAs($this->user)->put(route('admin.invitations.guests.update', [
             'invitation' => $this->invitation->id,
-            'guest' => $guest->id
+            'guest' => $guest->id,
         ]), $payload);
 
         $response->assertRedirect(route('admin.invitations.guests.index', $this->invitation->id));
@@ -155,7 +158,7 @@ class GuestTest extends TestCase
 
         $response = $this->actingAs($this->user)->delete(route('admin.invitations.guests.destroy', [
             'invitation' => $this->invitation->id,
-            'guest' => $guest->id
+            'guest' => $guest->id,
         ]));
 
         $response->assertRedirect(route('admin.invitations.guests.index', $this->invitation->id));
@@ -186,10 +189,10 @@ class GuestTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)->get(route('admin.invitations.guests.export', $this->invitation->id));
-        
+
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-        
+
         $content = $response->streamedContent();
         $this->assertStringContainsString('Export Guest 1', $content);
         $this->assertStringContainsString('Export Guest 2', $content);
@@ -208,7 +211,7 @@ class GuestTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('guests.csv', $csvContent);
 
         $response = $this->actingAs($this->user)->post(route('admin.invitations.guests.import', $this->invitation->id), [
-            'csv_file' => $file
+            'csv_file' => $file,
         ]);
 
         $response->assertRedirect(route('admin.invitations.guests.index', $this->invitation->id));
@@ -245,11 +248,11 @@ class GuestTest extends TestCase
         ];
 
         $response = $this->post(route('public.invitation.rsvp', $this->invitation->slug), $payload);
-        
+
         $response->assertStatus(200);
         $response->assertJson([
             'success' => true,
-            'message' => 'Terima kasih, konfirmasi kehadiran Anda berhasil dikirim!'
+            'message' => 'Terima kasih, konfirmasi kehadiran Anda berhasil dikirim!',
         ]);
 
         $this->assertDatabaseHas('guests', [

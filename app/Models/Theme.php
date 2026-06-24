@@ -22,7 +22,23 @@ class Theme extends Model
         'description',
         'folder',
         'status',
+        'view_path',
+        'config',
+        'is_active',
     ];
+
+    /**
+     * Get the casts for the model.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'config' => 'array',
+            'is_active' => 'boolean',
+        ];
+    }
 
     /**
      * Get the invitations that use this theme.

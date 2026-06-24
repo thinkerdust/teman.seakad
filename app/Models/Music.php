@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Music extends Model
 {
@@ -39,7 +39,7 @@ class Music extends Model
     /**
      * Get the invitations that use this background music.
      */
-    public function invitations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function invitations(): BelongsToMany
     {
         return $this->belongsToMany(Invitation::class, 'invitation_music');
     }

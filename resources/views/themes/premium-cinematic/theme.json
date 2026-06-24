@@ -1,0 +1,22 @@
+{
+  "name": "Premium Cinematic",
+  "version": "1.0",
+  "author": "Teman Seakad",
+  "colors": {
+    "primary": "#B76E79",
+    "background": "#FFF8F0",
+    "accent": "#D4AF37"
+  },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Inter"
+  },
+  "features": {
+    "music": true,
+    "gallery": true,
+    "countdown": true,
+    "rsvp": true,
+    "stories": true,
+    "gift": true
+  }
+}

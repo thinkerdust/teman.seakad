@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOrderRequest;
 use App\Http\Requests\Admin\UpdateOrderRequest;
 use App\Models\Order;
-use App\Models\User;
+use App\Models\Package;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -26,9 +27,9 @@ class OrderController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('customer_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -44,7 +45,7 @@ class OrderController extends Controller
         $orders = $query->with(['user', 'package'])->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
         // Fetch active packages for dropdown in forms
-        $packages = \App\Models\Package::where('status', 'active')->orderBy('name')->get();
+        $packages = Package::where('status', 'active')->orderBy('name')->get();
 
         return view('admin.orders.index', compact('orders', 'packages'));
     }
@@ -55,7 +56,7 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $data = $request->validated();
-        
+
         Order::create($data);
 
         return redirect()->route('admin.orders.index')
@@ -129,7 +130,7 @@ class OrderController extends Controller
         ]);
 
         return redirect()->route('admin.orders.index')
-            ->with('success', 'Order ' . $order->order_number . ' telah diaktifkan.');
+            ->with('success', 'Order '.$order->order_number.' telah diaktifkan.');
     }
 
     /**
@@ -142,9 +143,9 @@ class OrderController extends Controller
             $order->update(['status' => 'follow_up']);
         }
 
-        $message = "Halo " . $order->customer_name . ", kami dari Teman Seakad ingin menindaklanjuti pesanan Anda dengan nomor " . $order->order_number . ". Apakah ada yang bisa kami bantu untuk menyelesaikan pesanan Anda? Terima kasih.";
-        
-        $waUrl = 'https://api.whatsapp.com/send?phone=' . $order->formatted_phone . '&text=' . rawurlencode($message);
+        $message = 'Halo '.$order->customer_name.', kami dari Teman Seakad ingin menindaklanjuti pesanan Anda dengan nomor '.$order->order_number.'. Apakah ada yang bisa kami bantu untuk menyelesaikan pesanan Anda? Terima kasih.';
+
+        $waUrl = 'https://api.whatsapp.com/send?phone='.$order->formatted_phone.'&text='.rawurlencode($message);
 
         return redirect()->away($waUrl);
     }
@@ -164,6 +165,7 @@ class OrderController extends Controller
         $existingUser = User::where('email', $order->email)->first();
         if ($existingUser) {
             $order->update(['user_id' => $existingUser->id]);
+
             return redirect()->route('admin.orders.index')
                 ->with('success', 'Email pelanggan sudah terdaftar. Order ini telah dihubungkan ke akun tersebut.');
         }
@@ -190,7 +192,7 @@ class OrderController extends Controller
         $order->update(['user_id' => $user->id]);
 
         return redirect()->route('admin.orders.index')
-            ->with('success', 'Akun user berhasil dibuat untuk ' . $order->customer_name)
+            ->with('success', 'Akun user berhasil dibuat untuk '.$order->customer_name)
             ->with('user_credentials', [
                 'name' => $user->name,
                 'email' => $user->email,
