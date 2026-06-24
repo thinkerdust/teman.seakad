@@ -15,32 +15,11 @@ class PublicInvitationController extends Controller
      */
     public function show(Request $request, string $slug)
     {
-        // Cari undangan beserta tema terkait dan konten pelengkapnya
-        $invitation = Invitation::with(['theme', 'galleries', 'stories', 'events', 'music'])
-            ->where('slug', $slug)
-            ->first();
-
-        // 1. Jika tidak ditemukan, abort 404
-        if (!$invitation) {
-            abort(404, 'Undangan tidak ditemukan.');
-        }
-
-        // 2. Jika status adalah draft
-        if ($invitation->status === 'draft') {
-            abort(403, 'Undangan ini masih dalam status draft dan belum diterbitkan oleh pemilik.');
-        }
-
-        // 3. Jika status kedaluwarsa (expired secara eksplisit atau melewati expired_at)
-        $isExpired = false;
-        if ($invitation->status === 'expired') {
-            $isExpired = true;
-        } elseif ($invitation->expired_at && $invitation->expired_at->isPast()) {
-            $isExpired = true;
-        }
-
-        if ($isExpired) {
-            abort(410, 'Undangan ini sudah tidak aktif / melewati masa kedaluwarsa.');
-        }
+        // Ambil instance undangan dari request attribute yang telah divalidasi oleh middleware
+        $invitation = $request->attributes->get('invitation');
+        
+        // Eager load hubungan yang diperlukan untuk merender view
+        $invitation->load(['theme', 'galleries', 'stories', 'events', 'music']);
 
         // 4. Catat statistik kunjungan baru ke database
         InvitationVisit::create([
@@ -113,14 +92,7 @@ class PublicInvitationController extends Controller
      */
     public function rsvp(Request $request, string $slug)
     {
-        $invitation = Invitation::where('slug', $slug)->first();
-        
-        if (!$invitation) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Undangan tidak ditemukan.'
-            ], 404);
-        }
+        $invitation = $request->attributes->get('invitation');
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],

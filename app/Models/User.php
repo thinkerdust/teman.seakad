@@ -61,6 +61,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi ke model Order (One-to-Many).
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Relasi ke model UserSubscription (One-to-Many).
+     */
+    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    /**
+     * Relasi ke model Invitation (One-to-Many).
+     */
+    public function invitations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
+    /**
      * Cache in-memory untuk roles dan permissions.
      */
     protected ?\Illuminate\Support\Collection $cachedRoles = null;

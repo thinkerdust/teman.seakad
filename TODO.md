@@ -41,6 +41,43 @@ Target:
 * PHP 8.2+
 * MySQL
 
+---
+
+# APPLICATION FLOW
+
+## Business Flow
+
+Landing Page
+|
+|
+Customer Order
+|
+|
+WhatsApp Admin
+|
+|
+Admin Follow Up
+|
+|
+Order Confirmed
+|
+|
+Admin Create User Account
+|
+|
+Assign Invitation Quota
+|
+|
+User Login Dashboard
+|
+|
+Create Invitation
+|
+|
+Publish Invitation
+
+---
+
 ==================================================
 
 ARSITEKTUR APLIKASI
@@ -660,42 +697,649 @@ Gunakan dynamic component berdasarkan theme.
 
 ==================================================
 
-PRODUCTION REQUIREMENT
+# PHASE 14
 
-Implementasikan:
+# ORDER MANAGEMENT SYSTEM
 
-* Migration
-* Model
-* Controller
-* Form Request Validation
-* API Resource
-* Service Layer
-* Repository Pattern
-* Seeder
-* Factory
-* Clean Code
-* Responsive Mobile First
-* SEO Meta
-* Open Graph
-* Lazy Load Image
-* Storage Management
+## Landing Page Order CTA
 
-==================================================
+Update landing page CTA:
 
-KERJAKAN BERTAHAP
+Button:
 
-Mulai dari:
+"Pesan Undangan"
 
-PHASE 1:
+Action:
 
-1. Integrasi TailAdmin
+Redirect WhatsApp
 
-2. Buat Admin Layout
+Format:
 
-3. Buat Authentication Manual
+https://wa.me/{admin_number}?text={message}
 
-4. Buat Dashboard
+Generate automatic message:
 
-Jangan membuat semua modul sekaligus.
+Example:
 
-Pastikan setiap phase selesai dan berjalan sebelum lanjut ke phase berikutnya.
+Halo Admin,
+
+Saya tertarik menggunakan layanan Undangan Pernikahan Digital.
+
+Nama:
+Tanggal Pernikahan:
+
+Terima kasih.
+
+---
+
+# PHASE 15
+
+# CUSTOMER ORDER MANAGEMENT UPDATE
+
+## Order Lifecycle
+
+Flow:
+
+Customer Order
+
+```
+    |
+```
+
+Admin Follow Up
+
+```
+    |
+```
+
+Order Confirmed
+
+```
+    |
+```
+
+Set Active Period
+
+```
+    |
+```
+
+Create User Account
+
+```
+    |
+```
+
+Assign Quota
+
+```
+    |
+```
+
+User Login
+
+```
+    |
+```
+
+Create Invitation
+
+---
+
+# ORDER DATABASE UPDATE
+
+Table:
+
+orders
+
+Fields:
+
+id
+
+order_number
+
+customer_name
+
+phone
+
+email
+
+package_id
+
+quota
+
+price
+
+status
+
+start_date
+
+end_date
+
+notes
+
+created_at
+
+updated_at
+
+---
+
+# ORDER STATUS
+
+pending
+
+Customer melakukan order
+
+follow_up
+
+Admin sedang melakukan komunikasi
+
+confirmed
+
+Order disetujui
+
+active
+
+User sudah aktif menggunakan layanan
+
+expired
+
+Masa aktif habis
+
+cancelled
+
+Order dibatalkan
+
+---
+
+# PHASE 16
+
+# PACKAGE MANAGEMENT UPDATE
+
+Table:
+
+packages
+
+Fields:
+
+id
+
+name
+
+description
+
+price
+
+invitation_quota
+
+duration_days
+
+status
+
+Example:
+
+Basic
+
+price:
+
+100000
+
+quota:
+
+1 invitation
+
+duration:
+
+30 hari
+
+Premium
+
+quota:
+
+5 invitation
+
+duration:
+
+365 hari
+
+---
+
+# PHASE 17
+
+# USER ACCOUNT + SUBSCRIPTION
+
+Saat admin confirm order:
+
+System otomatis:
+
+1. Membuat user
+
+users
+
+name
+
+email
+
+password
+
+phone
+
+2. Membuat subscription user
+
+Table:
+
+user_subscriptions
+
+Fields:
+
+id
+
+user_id
+
+order_id
+
+package_id
+
+start_date
+
+end_date
+
+status
+
+created_at
+
+updated_at
+
+---
+
+# USER ACCESS RULE
+
+User dapat login panel hanya jika:
+
+current_date >= start_date
+
+AND
+
+current_date <= end_date
+
+Jika expired:
+
+Redirect:
+
+/subscription-expired
+
+Message:
+
+"Masa aktif akun Anda sudah berakhir, silahkan melakukan perpanjangan"
+
+---
+
+# PHASE 18
+
+# INVITATION ACTIVE PERIOD
+
+Invitation memiliki keterikatan dengan subscription user.
+
+Update table:
+
+invitations
+
+Tambah field:
+
+published_at
+
+expired_at
+
+Rules:
+
+Saat user publish invitation:
+
+expired_at otomatis:
+
+subscription.end_date
+
+Example:
+
+User subscription:
+
+01 Januari 2026
+
+sampai
+
+01 Januari 2027
+
+Invitation:
+
+Published:
+
+05 Januari 2026
+
+Expired:
+
+01 Januari 2027
+
+---
+
+# PUBLIC INVITATION ACCESS RULE
+
+URL:
+
+domain.com/{slug}
+
+Flow:
+
+Guest membuka invitation
+
+System check:
+
+Invitation status:
+
+published
+
+AND
+
+today <= invitation.expired_at
+
+Jika valid:
+
+Render Vue Invitation
+
+Jika expired:
+
+Tampilkan halaman:
+
+"Undangan sudah tidak tersedia"
+
+---
+
+# PHASE 19
+
+# QUOTA + SUBSCRIPTION VALIDATION
+
+Sebelum membuat invitation:
+
+Check:
+
+1. User subscription active
+
+2. Quota tersedia
+
+Logic:
+
+if subscription_expired:
+
+block
+
+if quota_empty:
+
+block
+
+---
+
+# PHASE 20
+
+# MIDDLEWARE
+
+Buat middleware:
+
+SubscriptionMiddleware
+
+Function:
+
+checkActiveSubscription()
+
+Digunakan:
+
+Admin Panel
+
+Example:
+
+Route::middleware([
+
+'auth',
+
+'subscription.active'
+
+])
+
+---
+
+Buat middleware:
+
+InvitationActiveMiddleware
+
+Digunakan:
+
+Public Invitation Route
+
+Example:
+
+Route:
+
+/{slug}
+
+Check:
+
+status = published
+
+expired_at >= now()
+
+---
+
+# PHASE 21
+
+# DASHBOARD UPDATE
+
+Dashboard Admin / Superadmin
+
+Tambahkan widget:
+
+## Subscription Statistic
+
+* Total Active Subscription
+
+* Total Expired Subscription
+
+* Expired This Month
+
+* Upcoming Expired
+
+## Order Statistic
+
+* Total Order
+
+* Pending Order
+
+* Active Order
+
+* Expired Order
+
+## Revenue
+
+* Total Revenue
+
+* Monthly Revenue
+
+Chart:
+
+Subscription Growth
+
+Order Monthly
+
+Revenue Monthly
+
+---
+
+# PHASE 22
+
+# TRANSACTION REPORT UPDATE
+
+Transaction Report menampilkan:
+
+Order Number
+
+Customer
+
+Package
+
+Quota
+
+Start Date
+
+End Date
+
+Status
+
+Filter:
+
+* Date Range
+
+* Package
+
+* Status
+
+* Active / Expired
+
+---
+
+# PHASE 23
+
+# NOTIFICATION SYSTEM
+
+Tambahkan reminder:
+
+Before expired:
+
+H-30
+
+H-7
+
+H-1
+
+Notification:
+
+"Subscription Anda akan berakhir pada tanggal ..."
+
+Channel:
+
+* Dashboard Notification
+
+* Email
+
+* WhatsApp (optional)
+
+---
+
+# PHASE 24
+
+# SERVICE UPDATE
+
+Tambah:
+
+SubscriptionService
+
+Method:
+
+createSubscription()
+
+checkActive()
+
+extendSubscription()
+
+expireSubscription()
+
+QuotaService
+
+checkQuota()
+
+consumeQuota()
+
+InvitationService
+
+publishInvitation()
+
+setExpiredDate()
+
+---
+
+# PHASE 25
+
+# SCHEDULER
+
+Laravel Scheduler:
+
+Daily:
+
+Check subscription expired
+
+Command:
+
+subscriptions:check-expired
+
+Update:
+
+user_subscriptions.status
+
+active -> expired
+
+Invitation:
+
+published -> expired
+
+---
+
+# FINAL BUSINESS RULE
+
+User Account:
+
+Aktif berdasarkan:
+
+Order Period
+
+Invitation:
+
+Aktif berdasarkan:
+
+Subscription Period
+
+Quota:
+
+Berdasarkan:
+
+Package
+
+Order:
+
+Menjadi sumber:
+
+* User creation
+
+* Subscription
+
+* Quota
+
+* Transaction
+
+---
+
+# DEVELOPMENT PRIORITY UPDATE
+
+Next Implementation:
+
+1. Order Management + start/end date
+
+2. Package Management
+
+3. User Subscription
+
+4. Quota System
+
+5. Subscription Middleware
+
+6. Invitation Expiration
+
+7. Transaction Report
+
+8. Dashboard Update
+
+Semua phase wajib selesai dan testing sebelum lanjut.

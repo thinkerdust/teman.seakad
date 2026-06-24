@@ -11,6 +11,10 @@ use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\InvitationContentController;
 use App\Http\Controllers\PublicInvitationController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\TransactionReportController;
+use App\Http\Controllers\Admin\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 // Public Front-end Landing Page
@@ -28,8 +32,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 });
 
+// Subscription Expired Route (Guarded by auth)
+Route::middleware('auth')->get('/subscription-expired', [AuthController::class, 'subscriptionExpired'])->name('subscription.expired');
+
 // Authenticated Admin Dashboard Routes
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'subscription.active'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard.view');
@@ -40,6 +47,30 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:user.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:user.delete');
     Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password')->middleware('permission:user.update');
+
+    // Order Management Resource Routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware('permission:order.view');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('permission:order.create');
+    Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update')->middleware('permission:order.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:order.delete');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status')->middleware('permission:order.update');
+    Route::post('/orders/{order}/activate', [OrderController::class, 'activate'])->name('orders.activate')->middleware('permission:order.update');
+    Route::get('/orders/{order}/follow-up', [OrderController::class, 'followUp'])->name('orders.follow-up')->middleware('permission:order.update');
+    Route::post('/orders/{order}/create-user', [OrderController::class, 'createUser'])->name('orders.create-user')->middleware('permission:user.create');
+
+    // Transaction Report Routes
+    Route::get('/reports/transactions', [TransactionReportController::class, 'index'])->name('reports.transactions')->middleware('permission:order.view');
+
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+
+    // Package Management Resource Routes
+    Route::get('/packages', [PackageController::class, 'index'])->name('packages.index')->middleware('permission:package.view');
+    Route::post('/packages', [PackageController::class, 'store'])->name('packages.store')->middleware('permission:package.create');
+    Route::put('/packages/{package}', [PackageController::class, 'update'])->name('packages.update')->middleware('permission:package.update');
+    Route::delete('/packages/{package}', [PackageController::class, 'destroy'])->name('packages.destroy')->middleware('permission:package.delete');
 
     // Menu Management Resource Routes
     Route::get('/menus', [MenuController::class, 'index'])->name('menus.index')->middleware('permission:menu.view');
@@ -84,6 +115,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/invitations/{invitation}/content/music', [InvitationContentController::class, 'updateMusic'])->name('invitations.content.music')->middleware('permission:invitation.update');
 });
 
-// Wildcard Public Invitation Route
-Route::get('/{slug}', [PublicInvitationController::class, 'show'])->name('public.invitation');
-Route::post('/{slug}/rsvp', [PublicInvitationController::class, 'rsvp'])->name('public.invitation.rsvp');
+// Wildcard Public Invitation Route (Guarded by invitation.active)
+Route::middleware('invitation.active')->group(function () {
+    Route::get('/{slug}', [PublicInvitationController::class, 'show'])->name('public.invitation');
+    Route::post('/{slug}/rsvp', [PublicInvitationController::class, 'rsvp'])->name('public.invitation.rsvp');
+});

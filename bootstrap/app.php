@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+            'subscription.active' => \App\Http\Middleware\SubscriptionMiddleware::class,
+            'invitation.active' => \App\Http\Middleware\InvitationActiveMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -7,6 +7,8 @@ use App\Models\Invitation;
 use App\Models\Role;
 use App\Models\Theme;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\UserSubscription;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -120,6 +122,20 @@ class DashboardTest extends TestCase
         $user1 = User::factory()->create();
         $user1->roles()->sync([$userRole->id]);
 
+        // Create active subscription for user1 to pass SubscriptionMiddleware
+        Order::create([
+            'order_number' => 'ORD-USER-1',
+            'customer_name' => $user1->name,
+            'phone' => '08123456789',
+            'email' => $user1->email,
+            'price' => 100000,
+            'quota' => 10,
+            'status' => 'active',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user1->id,
+        ]);
+
         $user2 = User::factory()->create();
         $user2->roles()->sync([$userRole->id]);
 
@@ -185,5 +201,117 @@ class DashboardTest extends TestCase
 
         // Widget "Total Pengguna" disembunyikan untuk regular user
         $response->assertDontSee('Total Pengguna');
+    }
+
+    /**
+     * Uji Superadmin dapat melihat metrik langganan, order, dan revenue.
+     */
+    public function test_superadmin_can_view_subscription_order_and_revenue_metrics(): void
+    {
+        $superadmin = User::factory()->create();
+        $superadminRole = Role::where('name', 'Superadmin')->first();
+        $superadmin->roles()->sync([$superadminRole->id]);
+
+        // Buat dummy order & subscription
+        $user = User::factory()->create([
+            'email' => 'client@example.com'
+        ]);
+
+        $order1 = Order::create([
+            'order_number' => 'ORD-TEST-1',
+            'customer_name' => 'Client Test 1',
+            'phone' => '08123456789',
+            'email' => 'client@example.com',
+            'quota' => 5,
+            'price' => 150000,
+            'status' => 'confirmed', // Confirmed counts towards active subscription
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user->id,
+        ]);
+
+        $order2 = Order::create([
+            'order_number' => 'ORD-TEST-2',
+            'customer_name' => 'Client Test 2',
+            'phone' => '08123456789',
+            'email' => 'client@example.com',
+            'quota' => 5,
+            'price' => 200000,
+            'status' => 'active', // Active counts towards active subscription
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user->id,
+        ]);
+
+        // Create an expired subscription manually
+        $expiredUser = User::factory()->create(['email' => 'expired@example.com']);
+        $orderExpired = Order::create([
+            'order_number' => 'ORD-TEST-EXPIRED',
+            'customer_name' => 'Client Expired',
+            'phone' => '08123456789',
+            'email' => 'expired@example.com',
+            'quota' => 5,
+            'price' => 100000,
+            'status' => 'expired',
+            'start_date' => now()->subDays(60)->toDateString(),
+            'end_date' => now()->subDays(30)->toDateString(),
+            'user_id' => $expiredUser->id,
+        ]);
+
+        UserSubscription::create([
+            'user_id' => $expiredUser->id,
+            'order_id' => $orderExpired->id,
+            'start_date' => now()->subDays(60)->toDateString(),
+            'end_date' => now()->subDays(30)->toDateString(),
+            'status' => 'expired',
+        ]);
+        
+        $response = $this->actingAs($superadmin)->get(route('admin.dashboard'));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('stats', function ($stats) {
+            return $stats['total_active_subscriptions'] >= 2 &&
+                   $stats['total_expired_subscriptions'] >= 1 &&
+                   $stats['total_orders'] >= 3 &&
+                   $stats['total_revenue'] >= 350000;
+        });
+
+        $response->assertSee('Statistik Langganan');
+        $response->assertSee('Statistik Order');
+        $response->assertSee('Statistik Pendapatan');
+        $response->assertSee('Total Pendapatan');
+        $response->assertSee('Rp 350.000');
+    }
+
+    /**
+     * Uji Regular User tidak dapat melihat metrik langganan, order, dan revenue.
+     */
+    public function test_regular_user_cannot_view_subscription_order_and_revenue_metrics(): void
+    {
+        $userRole = Role::where('name', 'User')->first();
+        $user = User::factory()->create();
+        $user->roles()->sync([$userRole->id]);
+
+        // Create active subscription for user to pass SubscriptionMiddleware
+        Order::create([
+            'order_number' => 'ORD-USER-3',
+            'customer_name' => $user->name,
+            'phone' => '08123456789',
+            'email' => $user->email,
+            'price' => 100000,
+            'quota' => 10,
+            'status' => 'active',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(30)->toDateString(),
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('admin.dashboard'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Statistik Langganan');
+        $response->assertDontSee('Statistik Order');
+        $response->assertDontSee('Statistik Pendapatan');
+        $response->assertDontSee('Total Pendapatan');
     }
 }

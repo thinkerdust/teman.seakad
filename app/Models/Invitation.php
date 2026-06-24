@@ -22,6 +22,7 @@ class Invitation extends Model
         'slug',
         'title',
         'status',
+        'published_at',
         'expired_at',
         'groom_name',
         'bride_name',
@@ -42,10 +43,42 @@ class Invitation extends Model
     protected function casts(): array
     {
         return [
+            'published_at' => 'datetime',
             'expired_at' => 'datetime',
             'akad_date' => 'datetime',
             'reception_date' => 'datetime',
         ];
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function ($invitation) {
+            if ($invitation->isDirty('status') && $invitation->status === 'published') {
+                if (empty($invitation->published_at)) {
+                    $invitation->published_at = now();
+                }
+
+                // Set expired_at automatically to the subscription end_date if empty
+                if (empty($invitation->expired_at)) {
+                    $today = \Carbon\Carbon::today();
+                    $activeSub = $invitation->user->subscriptions()
+                        ->where('status', 'active')
+                        ->where('start_date', '<=', $today)
+                        ->where('end_date', '>=', $today)
+                        ->first();
+
+                    if ($activeSub) {
+                        $invitation->expired_at = $activeSub->end_date;
+                    }
+                }
+            } elseif ($invitation->isDirty('status') && $invitation->status === 'draft') {
+                $invitation->published_at = null;
+                $invitation->expired_at = null;
+            }
+        });
     }
 
     /**

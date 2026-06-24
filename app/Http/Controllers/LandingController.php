@@ -25,6 +25,19 @@ class LandingController extends Controller
              ->latest()
              ->first();
 
-         return view('landing.home', compact('themes', 'featuredInvitation'));
+         // Generate WhatsApp order URL dari konfigurasi
+         $whatsappNumber = config('services.whatsapp.admin_number', '6281234567890');
+         $whatsappMessage = config('services.whatsapp.order_message', '');
+         $whatsappOrderUrl = 'https://wa.me/' . $whatsappNumber . '?text=' . urlencode($whatsappMessage);
+
+         // URL WhatsApp tanpa pesan (untuk link kontak biasa)
+         $whatsappContactUrl = 'https://wa.me/' . $whatsappNumber;
+
+         return view('landing.home', compact(
+             'themes',
+             'featuredInvitation',
+             'whatsappOrderUrl',
+             'whatsappContactUrl'
+         ));
      }
 }

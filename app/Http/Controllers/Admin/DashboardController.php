@@ -8,6 +8,8 @@ use App\Models\Invitation;
 use App\Models\InvitationVisit;
 use App\Models\Theme;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\UserSubscription;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -84,6 +86,41 @@ class DashboardController extends Controller
             'guest_trend' => $guestTrend,
         ];
 
+        // Phase 21: Subscription, Order & Revenue Metrics
+        if ($isAdmin) {
+            $stats['total_active_subscriptions'] = UserSubscription::where('status', 'active')->count();
+            $stats['total_expired_subscriptions'] = UserSubscription::where('status', 'expired')->count();
+            $stats['expired_this_month'] = UserSubscription::where('status', 'expired')
+                ->whereYear('end_date', $now->year)
+                ->whereMonth('end_date', $now->month)
+                ->count();
+            $stats['upcoming_expired'] = UserSubscription::where('status', 'active')
+                ->whereBetween('end_date', [$now->toDateString(), $now->copy()->addDays(30)->toDateString()])
+                ->count();
+
+            $stats['total_orders'] = Order::count();
+            $stats['pending_orders'] = Order::where('status', 'pending')->count();
+            $stats['active_orders'] = Order::where('status', 'active')->count();
+            $stats['expired_orders'] = Order::where('status', 'expired')->count();
+
+            $stats['total_revenue'] = Order::whereIn('status', ['confirmed', 'active'])->sum('price');
+            $stats['monthly_revenue'] = Order::whereIn('status', ['confirmed', 'active'])
+                ->whereYear('created_at', $now->year)
+                ->whereMonth('created_at', $now->month)
+                ->sum('price');
+        } else {
+            $stats['total_active_subscriptions'] = 0;
+            $stats['total_expired_subscriptions'] = 0;
+            $stats['expired_this_month'] = 0;
+            $stats['upcoming_expired'] = 0;
+            $stats['total_orders'] = 0;
+            $stats['pending_orders'] = 0;
+            $stats['active_orders'] = 0;
+            $stats['expired_orders'] = 0;
+            $stats['total_revenue'] = 0;
+            $stats['monthly_revenue'] = 0;
+        }
+
         // 2. Prepare visual charts data
         $monthMap = [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun',
@@ -125,6 +162,37 @@ class DashboardController extends Controller
             $visitorChartData[] = $query->count();
         }
 
+        // Phase 21: Subscription Growth, Order Monthly, Revenue Monthly Charts
+        $subscriptionGrowthLabels = [];
+        $subscriptionGrowthSeries = [];
+        $orderMonthlyLabels = [];
+        $orderMonthlySeries = [];
+        $revenueMonthlyLabels = [];
+        $revenueMonthlySeries = [];
+
+        if ($isAdmin) {
+            for ($i = 5; $i >= 0; $i--) {
+                $date = $now->copy()->subMonths($i);
+                $label = $monthMap[$date->month] . ' ' . $date->year;
+
+                $subscriptionGrowthLabels[] = $label;
+                $subscriptionGrowthSeries[] = UserSubscription::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->count();
+
+                $orderMonthlyLabels[] = $label;
+                $orderMonthlySeries[] = Order::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->count();
+
+                $revenueMonthlyLabels[] = $label;
+                $revenueMonthlySeries[] = (float) Order::whereIn('status', ['confirmed', 'active'])
+                    ->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('price');
+            }
+        }
+
         $chartData = [
             'invitations' => [
                 'labels' => $invitationChartMonths,
@@ -133,6 +201,18 @@ class DashboardController extends Controller
             'visitors' => [
                 'labels' => $visitorChartDays,
                 'series' => $visitorChartData,
+            ],
+            'subscriptionGrowth' => [
+                'labels' => $subscriptionGrowthLabels,
+                'series' => $subscriptionGrowthSeries,
+            ],
+            'orderMonthly' => [
+                'labels' => $orderMonthlySeries ? $orderMonthlyLabels : [],
+                'series' => $orderMonthlySeries,
+            ],
+            'revenueMonthly' => [
+                'labels' => $revenueMonthlySeries ? $revenueMonthlyLabels : [],
+                'series' => $revenueMonthlySeries,
             ]
         ];
 
