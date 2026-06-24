@@ -57,8 +57,26 @@ class AuthController extends Controller
 
             RateLimiter::clear($throttleKey);
 
-            // Update last login timestamp
             $user = Auth::user();
+
+            // Check if regular user has an active subscription
+            if ($user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin')) {
+                $today = \Carbon\Carbon::today();
+                $activeSubscription = $user->subscriptions()
+                    ->where('status', 'active')
+                    ->where('start_date', '<=', $today)
+                    ->where('end_date', '>=', $today)
+                    ->first();
+                
+                if (!$activeSubscription) {
+                    $user->update([
+                        'last_login_at' => now(),
+                    ]);
+                    return redirect()->route('subscription.expired');
+                }
+            }
+
+            // Update last login timestamp
             $user->update([
                 'last_login_at' => now(),
             ]);
@@ -72,6 +90,18 @@ class AuthController extends Controller
         return back()->withErrors([
             'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
+    }
+
+    /**
+     * Tampilkan halaman langganan kedaluwarsa.
+     */
+    public function subscriptionExpired()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        return view('auth.subscription-expired');
     }
 
     /**

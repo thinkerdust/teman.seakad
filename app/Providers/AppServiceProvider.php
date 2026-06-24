@@ -28,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Sidebar View Composer
         view()->composer('admin.layouts.sidebar', \App\Http\View\Composers\SidebarComposer::class);
+
+        // Register Notification View Composer
+        view()->composer('admin.layouts.header', \App\Http\View\Composers\NotificationComposer::class);
     }
 }

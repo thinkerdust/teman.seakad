@@ -75,8 +75,11 @@ return new class extends Migration
 
             // 5. Hapus kolom invitation_id dari tabel music
             Schema::table('music', function (Blueprint $table) {
-                $table->dropUnique(['invitation_id']);
                 $table->dropForeign(['invitation_id']);
+            });
+
+            Schema::table('music', function (Blueprint $table) {
+                $table->dropUnique(['invitation_id']);
                 $table->dropColumn('invitation_id');
             });
         }

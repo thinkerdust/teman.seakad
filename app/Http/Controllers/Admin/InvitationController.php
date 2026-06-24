@@ -7,12 +7,28 @@ use App\Http\Requests\Admin\StoreInvitationRequest;
 use App\Http\Requests\Admin\UpdateInvitationRequest;
 use App\Models\Invitation;
 use App\Models\Theme;
+use App\Services\SubscriptionService;
+use App\Services\QuotaService;
+use App\Services\InvitationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class InvitationController extends Controller
 {
+    protected SubscriptionService $subscriptionService;
+    protected QuotaService $quotaService;
+    protected InvitationService $invitationService;
+
+    public function __construct(
+        SubscriptionService $subscriptionService,
+        QuotaService $quotaService,
+        InvitationService $invitationService
+    ) {
+        $this->subscriptionService = $subscriptionService;
+        $this->quotaService = $quotaService;
+        $this->invitationService = $invitationService;
+    }
     /**
      * Tampilkan daftar undangan dengan pencarian dan filter status.
      */
@@ -59,12 +75,45 @@ class InvitationController extends Controller
         // Ambil tema aktif untuk dropdown formulir pembuatan/pembaruan undangan
         $themes = Theme::where('status', 'active')->orderBy('name')->get();
 
-        // Jika request via AJAX untuk hot-swapping
-        if ($request->ajax()) {
-            return view('admin.invitations.index', compact('invitations', 'themes'));
+        $hasActiveSubscription = false;
+        $remainingQuota = 0;
+        $totalQuota = 0;
+        $createdCount = 0;
+        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin');
+
+        if ($isRegularUser) {
+            $hasActiveSubscription = $this->subscriptionService->checkActive($user);
+
+            if ($hasActiveSubscription) {
+                $today = \Carbon\Carbon::today();
+                $activeSub = $user->subscriptions()
+                    ->where('status', 'active')
+                    ->where('start_date', '<=', $today)
+                    ->where('end_date', '>=', $today)
+                    ->first();
+
+                $totalQuota = $activeSub->order ? $activeSub->order->quota : 0;
+                $createdCount = $user->invitations()->count();
+                $remainingQuota = max(0, $totalQuota - $createdCount);
+            }
         }
 
-        return view('admin.invitations.index', compact('invitations', 'themes'));
+        $viewData = compact(
+            'invitations', 
+            'themes',
+            'isRegularUser',
+            'hasActiveSubscription',
+            'totalQuota',
+            'createdCount',
+            'remainingQuota'
+        );
+
+        // Jika request via AJAX untuk hot-swapping
+        if ($request->ajax()) {
+            return view('admin.invitations.index', $viewData);
+        }
+
+        return view('admin.invitations.index', $viewData);
     }
 
     /**
@@ -72,8 +121,23 @@ class InvitationController extends Controller
      */
     public function store(StoreInvitationRequest $request)
     {
+        $user = Auth::user();
+        $isRegularUser = $user->email !== 'admin@teman-seakad.com' && !$user->hasRole('Superadmin') && !$user->hasRole('Admin');
+
+        if ($isRegularUser) {
+            if (!$this->subscriptionService->checkActive($user)) {
+                return redirect()->route('admin.invitations.index')
+                    ->with('error', 'Masa aktif akun Anda sudah berakhir, silakan melakukan perpanjangan.');
+            }
+
+            if (!$this->quotaService->consumeQuota($user)) {
+                return redirect()->route('admin.invitations.index')
+                    ->with('error', 'Kuota pembuatan undangan Anda sudah habis. Silakan lakukan perpanjangan atau hubungi admin.');
+            }
+        }
+
         $data = $request->validated();
-        $data['user_id'] = Auth::id();
+        $data['user_id'] = $user->id;
         $data['status'] = 'draft';
 
         Invitation::create($data);
@@ -119,16 +183,19 @@ class InvitationController extends Controller
             // Ubah menjadi draft (Disable)
             $invitation->update([
                 'status' => 'draft',
-                'expired_at' => null,
             ]);
             $message = 'Undangan berhasil dinonaktifkan (kembali ke draft).';
         } else {
             // Ubah menjadi published (Publish)
-            $invitation->update([
-                'status' => 'published',
-                'expired_at' => Carbon::now()->addDays(30),
-            ]);
-            $message = 'Undangan berhasil diterbitkan (aktif selama 30 hari).';
+            $this->invitationService->publishInvitation($invitation);
+            
+            $invitation->refresh();
+            
+            if ($invitation->expired_at) {
+                $message = 'Undangan berhasil diterbitkan (aktif sampai ' . $invitation->expired_at->translatedFormat('d F Y') . ').';
+            } else {
+                $message = 'Undangan berhasil diterbitkan.';
+            }
         }
 
         if (request()->ajax()) {

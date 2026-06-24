@@ -31,7 +31,7 @@
             <ul class="space-y-2 text-xs text-zinc-500 dark:text-zinc-400">
                 <li><a href="#faq" class="hover:text-rose-gold-550 dark:hover:text-rose-gold-400 transition-colors">FAQ</a></li>
                 <li><a href="#pricing" class="hover:text-rose-gold-550 dark:hover:text-rose-gold-400 transition-colors">Harga Paket</a></li>
-                <li><a href="https://wa.me/6281234567890" target="_blank" class="hover:text-rose-gold-550 dark:hover:text-rose-gold-400 transition-colors">Hubungi Kami</a></li>
+                <li><a href="{{ $whatsappContactUrl }}" target="_blank" rel="noopener noreferrer" class="hover:text-rose-gold-550 dark:hover:text-rose-gold-400 transition-colors">Hubungi Kami</a></li>
             </ul>
         </div>
 

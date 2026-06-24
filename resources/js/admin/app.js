@@ -14,6 +14,8 @@ import './themes';
 import './invitations';
 import './guests';
 import './invitationContents';
+import './orders';
+import './packages';
 
 // Start Alpine.js
 Alpine.start();

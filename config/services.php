@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp Order Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Konfigurasi nomor WhatsApp admin dan pesan template yang digunakan
+    | pada CTA "Pesan Undangan" di landing page. Nomor harus dalam format
+    | internasional tanpa tanda "+" (contoh: 6281234567890).
+    |
+    */
+
+    'whatsapp' => [
+        'admin_number' => env('WHATSAPP_ADMIN_NUMBER', '6281234567890'),
+        'order_message' => env('WHATSAPP_ORDER_MESSAGE', "Halo Admin Teman Seakad,\n\nSaya tertarik menggunakan layanan Undangan Pernikahan Digital.\n\nNama:\nTanggal Pernikahan:\nPaket:\nJumlah Undangan:\n\nTerima kasih."),
+    ],
+
 ];

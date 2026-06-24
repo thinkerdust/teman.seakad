@@ -99,6 +99,38 @@ class RolePermissionSeeder extends Seeder
                 'name' => 'Menghapus Musik',
                 'key' => 'music.delete',
             ],
+            [
+                'name' => 'Melihat Daftar Order',
+                'key' => 'order.view',
+            ],
+            [
+                'name' => 'Membuat Order Baru',
+                'key' => 'order.create',
+            ],
+            [
+                'name' => 'Mengubah Order',
+                'key' => 'order.update',
+            ],
+            [
+                'name' => 'Menghapus Order',
+                'key' => 'order.delete',
+            ],
+            [
+                'name' => 'Melihat Daftar Paket',
+                'key' => 'package.view',
+            ],
+            [
+                'name' => 'Membuat Paket Baru',
+                'key' => 'package.create',
+            ],
+            [
+                'name' => 'Mengubah Paket',
+                'key' => 'package.update',
+            ],
+            [
+                'name' => 'Menghapus Paket',
+                'key' => 'package.delete',
+            ],
         ];
 
         $permissionModels = [];
@@ -132,6 +164,14 @@ class RolePermissionSeeder extends Seeder
                     'music.create',
                     'music.update',
                     'music.delete',
+                    'order.view',
+                    'order.create',
+                    'order.update',
+                    'order.delete',
+                    'package.view',
+                    'package.create',
+                    'package.update',
+                    'package.delete',
                 ],
             ],
             [

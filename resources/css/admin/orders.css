@@ -1,0 +1,12 @@
+/* Custom styles for Order Management page */
+
+/* Smooth hover effects for tables */
+tbody tr {
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Accent borders or focus ring customization */
+.focus-ring-indigo:focus {
+    border-color: var(--color-indigo-500);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}

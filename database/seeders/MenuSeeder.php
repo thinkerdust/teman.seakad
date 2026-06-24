@@ -36,6 +36,18 @@ class MenuSeeder extends Seeder
             ]
         );
 
+        // Order Management under Menu Utama
+        Menu::updateOrCreate(
+            ['title' => 'Order Management', 'parent_id' => $menuUtama->id],
+            [
+                'icon' => '<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>',
+                'route' => 'admin.orders.index',
+                'permission' => 'order.view',
+                'order' => 2,
+                'status' => 'active',
+            ]
+        );
+
         // User Management under Menu Utama
         Menu::updateOrCreate(
             ['title' => 'User Management', 'parent_id' => $menuUtama->id],
@@ -43,7 +55,19 @@ class MenuSeeder extends Seeder
                 'icon' => '<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>',
                 'route' => 'admin.users.index',
                 'permission' => 'user.view',
-                'order' => 2,
+                'order' => 4,
+                'status' => 'active',
+            ]
+        );
+
+        // Package Management under Menu Utama
+        Menu::updateOrCreate(
+            ['title' => 'Package Management', 'parent_id' => $menuUtama->id],
+            [
+                'icon' => '<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m8 4v10M4 7v10l8 4" /></svg>',
+                'route' => 'admin.packages.index',
+                'permission' => 'package.view',
+                'order' => 3,
                 'status' => 'active',
             ]
         );
@@ -55,7 +79,7 @@ class MenuSeeder extends Seeder
                 'icon' => '<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>',
                 'route' => 'admin.menus.index',
                 'permission' => 'menu.view',
-                'order' => 3,
+                'order' => 5,
                 'status' => 'active',
             ]
         );
