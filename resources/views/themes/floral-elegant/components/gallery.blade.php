@@ -1,6 +1,6 @@
 <section 
     class="gallery-section py-12 px-4 text-center border-b border-stone-200/50" 
-    data-animation="fade-up"
+    {!! themeAnimation('gallery') !!}
     x-data="{ activeImage: null }"
 >
     <div class="max-w-4xl mx-auto">
@@ -16,8 +16,9 @@
             <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
                 @foreach($invitationData['gallery'] as $photo)
                     <div 
-                        class="gallery-item-wrapper relative aspect-square overflow-hidden rounded-xl group cursor-pointer border border-stone-200/40 bg-stone-100 shadow-sm"
+                        class="gallery-item-wrapper relative aspect-square overflow-hidden rounded-xl group cursor-pointer border border-[var(--theme-secondary)] bg-[var(--theme-surface)] shadow-sm"
                         @click="activeImage = '{{ asset($photo['image']) }}'"
+                        data-gsap="fade-up"
                     >
                         <img 
                             src="{{ asset($photo['image']) }}" 
@@ -44,6 +45,12 @@
     <div 
         x-show="activeImage" 
         x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
         class="fixed inset-0 z-99999 flex items-center justify-center bg-black/95 p-4"
         @click="activeImage = null"
         @keydown.escape.window="activeImage = null"

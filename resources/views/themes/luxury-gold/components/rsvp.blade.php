@@ -1,8 +1,8 @@
-<section class="py-16 px-6 border-b border-stone-200/50 space-y-8" data-animation="fade-up">
+<section class="py-16 px-6 border-b border-[var(--theme-secondary)]/50 space-y-8" {!! themeAnimation('rsvp') !!}>
     <div class="text-center space-y-2">
-        <h2 class="text-2xl font-bold uppercase tracking-widest" style="font-family: var(--font-heading);">Konfirmasi Kehadiran</h2>
-        <div class="h-[1px] w-12 bg-current mx-auto mt-2 opacity-50"></div>
-        <p class="text-xs opacity-75 max-w-xs mx-auto mt-4">
+        <h2 class="text-2xl font-bold uppercase tracking-widest text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);">Konfirmasi Kehadiran</h2>
+        <div class="h-[1px] w-12 bg-[var(--theme-primary)] mx-auto mt-2 opacity-50"></div>
+        <p class="text-xs text-[var(--theme-text)] opacity-75 max-w-xs mx-auto mt-4 font-body" style="font-family: var(--theme-font-body);">
             Silakan konfirmasi kehadiran Anda melalui formulir di bawah ini:
         </p>
     </div>
@@ -13,32 +13,35 @@
         class="space-y-4 max-w-md mx-auto text-left"
     >
         <div>
-            <label class="block text-xs font-semibold opacity-70 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+            <label class="block text-xs font-semibold text-[var(--theme-text)] opacity-70 uppercase tracking-wider mb-1.5 font-body" style="font-family: var(--theme-font-body);">Nama Lengkap</label>
             <input 
                 type="text" 
                 x-model="form.name"
                 required
                 placeholder="Contoh: Budi Santoso"
-                class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400"
+                class="w-full border border-[var(--theme-secondary)] bg-[var(--theme-surface)]/80 px-4 py-3 text-sm text-[var(--theme-text)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] transition duration-200 font-body"
+                style="font-family: var(--theme-font-body); border-radius: 4px;"
             />
         </div>
 
         <div>
-            <label class="block text-xs font-semibold opacity-70 uppercase tracking-wider mb-1.5">Nomor WhatsApp</label>
+            <label class="block text-xs font-semibold text-[var(--theme-text)] opacity-70 uppercase tracking-wider mb-1.5 font-body" style="font-family: var(--theme-font-body);">Nomor WhatsApp</label>
             <input 
                 type="text" 
                 x-model="form.phone"
                 placeholder="Contoh: 08123456789"
-                class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400"
+                class="w-full border border-[var(--theme-secondary)] bg-[var(--theme-surface)]/80 px-4 py-3 text-sm text-[var(--theme-text)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] transition duration-200 font-body"
+                style="font-family: var(--theme-font-body); border-radius: 4px;"
             />
         </div>
 
         <div>
-            <label class="block text-xs font-semibold opacity-70 uppercase tracking-wider mb-1.5">Konfirmasi Kehadiran</label>
+            <label class="block text-xs font-semibold text-[var(--theme-text)] opacity-70 uppercase tracking-wider mb-1.5 font-body" style="font-family: var(--theme-font-body);">Konfirmasi Kehadiran</label>
             <select 
                 x-model="form.attendance"
                 required
-                class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400"
+                class="w-full border border-[var(--theme-secondary)] bg-[var(--theme-surface)]/80 px-4 py-3 text-sm text-[var(--theme-text)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] transition duration-200 font-body"
+                style="font-family: var(--theme-font-body); border-radius: 4px;"
             >
                 <option value="hadir">Saya Akan Hadir</option>
                 <option value="tidak_hadir">Maaf, Saya Tidak Bisa Hadir</option>
@@ -47,22 +50,23 @@
         </div>
 
         <div>
-            <label class="block text-xs font-semibold opacity-70 uppercase tracking-wider mb-1.5">Ucapan & Doa Restu</label>
+            <label class="block text-xs font-semibold text-[var(--theme-text)] opacity-70 uppercase tracking-wider mb-1.5 font-body" style="font-family: var(--theme-font-body);">Ucapan & Doa Restu</label>
             <textarea 
                 x-model="form.message"
                 rows="4"
                 placeholder="Tuliskan ucapan selamat dan doa restu Anda..."
-                class="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm focus:border-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-400"
+                class="w-full border border-[var(--theme-secondary)] bg-[var(--theme-surface)]/80 px-4 py-3 text-sm text-[var(--theme-text)] focus:border-[var(--theme-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-primary)] transition duration-200 font-body"
+                style="font-family: var(--theme-font-body); border-radius: 4px;"
             ></textarea>
         </div>
 
         <button 
             type="submit" 
             :disabled="loading"
-            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-white font-bold text-sm uppercase tracking-widest shadow-md transition duration-300 disabled:opacity-50 cursor-pointer"
-            style="background-color: var(--primary, #8b5a2b);"
+            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[var(--theme-primary)] text-[var(--theme-surface)] hover:bg-[var(--theme-primary)]/90 font-bold text-sm uppercase tracking-widest shadow-md transition duration-300 disabled:opacity-50 cursor-pointer"
+            style="border-radius: 2px;"
         >
-            <svg x-show="loading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <svg x-show="loading" class="animate-spin h-4 w-4 text-[var(--theme-surface)]" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -74,7 +78,8 @@
             x-show="message" 
             x-transition
             :class="success ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' : 'bg-rose-500/10 border-rose-500/20 text-rose-600'"
-            class="p-4 rounded-xl border text-xs text-center"
+            class="p-4 border text-xs text-center font-body"
+            style="font-family: var(--theme-font-body); border-radius: 4px;"
             x-text="message"
         ></div>
     </form>

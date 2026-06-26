@@ -1,37 +1,53 @@
-<div id="cover-overlay" class="fixed inset-0 z-9999 flex flex-col items-center justify-between p-8 text-center" style="background: radial-gradient(circle at center, #f5fbf7 0%, #ebf5ee 100%); color: #1e3a2b;">
+<div id="cover-overlay" {!! themeAnimation('hero') !!} class="hero-section z-[9999] flex flex-col items-center justify-between p-8 text-center transition-transform duration-1000 {{ ($themeConfig['layout']['hero'] ?? 'fullscreen') === 'fullscreen' ? 'fixed inset-0' : 'relative min-h-screen' }}" style="background-image: url('{{ themeAsset('hero.background') }}'); background-size: cover; background-position: center;">
+    <!-- Dynamic Ornaments -->
+    @if(themeAsset('ornaments.0'))
+        <div class="absolute top-0 left-0 right-0 pointer-events-none z-0 opacity-20">
+            <img src="{{ themeAsset('ornaments.0') }}" class="w-full max-h-48 object-contain object-top" />
+        </div>
+    @endif
+    @if(themeAsset('ornaments.1'))
+        <div class="absolute bottom-0 left-0 right-0 pointer-events-none z-0 opacity-20">
+            <img src="{{ themeAsset('ornaments.1') }}" class="w-full max-h-48 object-contain object-bottom" />
+        </div>
+    @endif
+    
+    <!-- Islamic Pattern Background -->
+    <div class="islamic-pattern-bg"></div>
+
     <!-- Top decorative element -->
-    <div class="mt-8">
-        <span class="text-xs uppercase tracking-[0.3em] font-semibold" style="color: #107c41;">Undangan Pernikahan</span>
-        <div class="h-[1px] w-24 mx-auto mt-2" style="background-color: #107c41;"></div>
+    <div class="mt-12 z-10 relative" data-gsap="fade-down">
+        <div class="arabic-bismillah text-3xl mb-4">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+        <span class="hero-subtitle text-[10px] font-bold">Walimatul 'Urs</span>
+        <div class="h-[2px] w-20 mx-auto mt-3 bg-[var(--theme-accent)] opacity-60"></div>
     </div>
 
     <!-- Middle content -->
-    <div class="space-y-6">
-        <div class="text-6xl sm:text-7xl animate-fade-in" style="font-family: 'Amiri', serif; color: #107c41;">
-            {{ $invitationData['groom_name'] }}
+    <div class="space-y-6 z-10 relative">
+        <div class="hero-names text-5xl sm:text-6xl" data-gsap="fade-in">
+            {{ $invitationData['groom_nickname'] ?? $invitationData['groom_name'] }}
         </div>
-        <div class="text-lg tracking-[0.2em] opacity-70">&</div>
-        <div class="text-6xl sm:text-7xl animate-fade-in" style="font-family: 'Amiri', serif; color: #107c41;">
-            {{ $invitationData['bride_name'] }}
+        <div class="font-heading text-xl text-[var(--theme-accent)] opacity-80" data-gsap="fade-in">&</div>
+        <div class="hero-names text-5xl sm:text-6xl" data-gsap="fade-in">
+            {{ $invitationData['bride_nickname'] ?? $invitationData['bride_name'] }}
         </div>
         
-        <div class="space-y-2 mt-8">
-            <p class="text-xs uppercase tracking-widest opacity-60">Kepada Yth. Bapak/Ibu/Saudara/i</p>
-            <div class="text-lg py-2 px-6 rounded-full inline-block backdrop-blur-md border" style="background-color: rgba(16, 124, 65, 0.05); border-color: rgba(16, 124, 65, 0.2); font-family: 'Amiri', serif; color: #107c41;">
-                {{ $invitationData['recipient_name'] ?: 'Tamu Undangan' }}
+        <div class="space-y-3 mt-10" data-gsap="fade-up">
+            <p class="text-[10px] uppercase tracking-[0.1em] opacity-70">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+            <div class="text-base font-heading py-2.5 px-8 inline-block backdrop-blur-md bg-white/70 border-x-2 border-[var(--theme-accent)] text-[var(--theme-text)] font-bold">
+                {{ $invitationData['recipient_name'] ?: 'Tamu Kehormatan' }}
             </div>
         </div>
     </div>
 
     <!-- Bottom action -->
-    <div class="mb-12">
+    <div class="mb-12 z-10 relative" data-gsap="fade-up">
         <button 
             id="btn-open-invitation"
-            class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest shadow-lg transition duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-            style="background-color: #107c41; color: white;"
+            class="inline-flex items-center gap-3 px-8 py-4 bg-[var(--theme-primary)] text-white font-bold text-[11px] uppercase tracking-widest shadow-lg transition duration-300 hover:brightness-95 hover:opacity-90 cursor-pointer"
+            style="border-radius: 1rem 0 1rem 0;"
         >
-            <svg class="h-4 w-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <svg class="h-4 w-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
             Buka Undangan
         </button>

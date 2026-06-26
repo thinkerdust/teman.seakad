@@ -22,13 +22,102 @@ class InvitationContentController extends Controller
     {
         $this->authorizeInvitationAction($invitation, 'invitation.update');
 
-        $invitation->load(['galleries', 'stories', 'events', 'music']);
+        $invitation->load(['galleries', 'stories', 'events', 'music', 'guests']);
 
         $musicLibrary = Music::where('status', 'active')->orderBy('title')->get();
         $recommendationService = new MusicRecommendationService;
         $recommendedMusic = $recommendationService->recommend($invitation);
 
         return view('admin.invitations.content.edit', compact('invitation', 'musicLibrary', 'recommendedMusic'));
+    }
+
+    /**
+     * Perbarui data mempelai (Couple).
+     */
+    public function updateCouple(Request $request, Invitation $invitation)
+    {
+        $this->authorizeInvitationAction($invitation, 'invitation.update');
+
+        $data = $request->validate([
+            'groom_name' => ['required', 'string', 'max:255'],
+            'bride_name' => ['required', 'string', 'max:255'],
+            'groom_nickname' => ['nullable', 'string', 'max:255'],
+            'bride_nickname' => ['nullable', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'groom_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'bride_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ], [
+            'groom_name.required' => 'Nama lengkap mempelai pria wajib diisi.',
+            'bride_name.required' => 'Nama lengkap mempelai wanita wajib diisi.',
+            'title.required' => 'Judul undangan wajib diisi.',
+            'groom_photo.image' => 'Foto mempelai pria harus berupa gambar.',
+            'groom_photo.max' => 'Ukuran foto mempelai pria maksimal adalah 2MB.',
+            'bride_photo.image' => 'Foto mempelai wanita harus berupa gambar.',
+            'bride_photo.max' => 'Ukuran foto mempelai wanita maksimal adalah 2MB.',
+        ]);
+
+        // Upload foto pria
+        if ($request->hasFile('groom_photo')) {
+            if ($invitation->groom_photo) {
+                $oldPath = str_replace('/storage/', '', $invitation->groom_photo);
+                Storage::disk('public')->delete($oldPath);
+            }
+            $path = $request->file('groom_photo')->store('invitations/avatars', 'public');
+            $data['groom_photo'] = '/storage/' . $path;
+        }
+
+        // Upload foto wanita
+        if ($request->hasFile('bride_photo')) {
+            if ($invitation->bride_photo) {
+                $oldPath = str_replace('/storage/', '', $invitation->bride_photo);
+                Storage::disk('public')->delete($oldPath);
+            }
+            $path = $request->file('bride_photo')->store('invitations/avatars', 'public');
+            $data['bride_photo'] = '/storage/' . $path;
+        }
+
+        $invitation->update($data);
+
+        return redirect()->back()->with('success', 'Data mempelai berhasil diperbarui.');
+    }
+
+    /**
+     * Perbarui gaya visual (Style Customization).
+     */
+    public function updateStyle(Request $request, Invitation $invitation)
+    {
+        $this->authorizeInvitationAction($invitation, 'invitation.update');
+
+        $request->validate([
+            'primary_color' => ['nullable', 'string', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
+            'secondary_color' => ['nullable', 'string', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
+            'font_scale' => ['required', 'numeric', 'min:0.5', 'max:2.0'],
+            'background_option' => ['required', 'string', 'in:texture,plain'],
+        ], [
+            'primary_color.regex' => 'Format warna utama tidak valid (harus berupa kode HEX, contoh: #ff0000).',
+            'secondary_color.regex' => 'Format warna sekunder tidak valid.',
+            'font_scale.required' => 'Skala ukuran font wajib diisi.',
+            'font_scale.numeric' => 'Skala ukuran font harus berupa angka.',
+            'font_scale.min' => 'Skala font minimal 0.5.',
+            'font_scale.max' => 'Skala font maksimal 2.0.',
+            'background_option.required' => 'Opsi latar belakang wajib dipilih.',
+            'background_option.in' => 'Opsi latar belakang tidak valid.',
+        ]);
+
+        $customization = $invitation->customization ?: [];
+        $customization['custom_style'] = [
+            'primary_color' => $request->input('primary_color'),
+            'secondary_color' => $request->input('secondary_color'),
+            'font_scale' => $request->input('font_scale'),
+            'background_option' => $request->input('background_option'),
+        ];
+
+        $invitation->update([
+            'customization' => $customization,
+        ]);
+
+        return redirect()->back()->with('success', 'Kustomisasi gaya visual berhasil diperbarui.');
     }
 
     /**
@@ -81,6 +170,22 @@ class InvitationContentController extends Controller
             $gallery->delete();
 
             return redirect()->back()->with('success', 'Foto berhasil dihapus dari galeri.');
+        } elseif ($action === 'toggle-visibility') {
+            $request->validate([
+                'gallery_id' => ['required', 'exists:galleries,id'],
+            ]);
+
+            $gallery = Gallery::findOrFail($request->gallery_id);
+
+            if ($gallery->invitation_id !== $invitation->id) {
+                abort(403);
+            }
+
+            $gallery->update([
+                'is_visible' => !$gallery->is_visible,
+            ]);
+
+            return redirect()->back()->with('success', 'Visibilitas foto berhasil diperbarui.');
         }
 
         return redirect()->back()->with('error', 'Tindakan galeri tidak valid.');
@@ -99,35 +204,60 @@ class InvitationContentController extends Controller
             'stories.*.title' => ['required', 'string', 'max:255'],
             'stories.*.date' => ['required', 'string', 'max:255'],
             'stories.*.description' => ['required', 'string'],
+            'stories.*.image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'delete_story_ids' => ['nullable', 'string'], // IDs dipisah koma (contoh: "1,2,3")
         ], [
             'stories.*.title.required' => 'Judul cerita wajib diisi.',
             'stories.*.date.required' => 'Tanggal/Waktu cerita wajib diisi.',
             'stories.*.description.required' => 'Isi cerita wajib diisi.',
+            'stories.*.image.image' => 'File cerita harus berupa gambar.',
+            'stories.*.image.max' => 'Ukuran gambar cerita maksimal adalah 2MB.',
         ]);
 
         // 1. Hapus cerita yang ditandai untuk dihapus
         if ($request->filled('delete_story_ids')) {
             $deleteIds = explode(',', $request->delete_story_ids);
-            Story::whereIn('id', $deleteIds)
-                ->where('invitation_id', $invitation->id)
-                ->delete();
+            
+            // Delete associated images first
+            $storiesToDelete = Story::whereIn('id', $deleteIds)->where('invitation_id', $invitation->id)->get();
+            foreach ($storiesToDelete as $s) {
+                if ($s->image) {
+                    $oldPath = str_replace('/storage/', '', $s->image);
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $s->delete();
+            }
         }
 
         // 2. Simpan atau perbarui milestones cerita
         if ($request->has('stories')) {
             foreach ($request->stories as $index => $storyData) {
+                $storyPayload = [
+                    'title' => $storyData['title'],
+                    'date' => $storyData['date'],
+                    'description' => $storyData['description'],
+                    'sort' => $index,
+                ];
+
+                if ($request->hasFile("stories.{$index}.image")) {
+                    // Hapus gambar lama jika mengupdate
+                    if (!empty($storyData['id'])) {
+                        $oldStory = Story::find($storyData['id']);
+                        if ($oldStory && $oldStory->image) {
+                            $oldPath = str_replace('/storage/', '', $oldStory->image);
+                            Storage::disk('public')->delete($oldPath);
+                        }
+                    }
+                    $path = $request->file("stories.{$index}.image")->store('invitations/stories', 'public');
+                    $storyPayload['image'] = '/storage/' . $path;
+                }
+
                 Story::updateOrCreate(
                     [
                         'id' => $storyData['id'] ?? null,
                         'invitation_id' => $invitation->id,
                     ],
-                    [
-                        'title' => $storyData['title'],
-                        'date' => $storyData['date'],
-                        'description' => $storyData['description'],
-                        'sort' => $index,
-                    ]
+                    $storyPayload
                 );
             }
         }

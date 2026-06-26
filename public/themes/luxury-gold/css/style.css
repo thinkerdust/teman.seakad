@@ -1,6 +1,31 @@
+:root {
+    --primary: #d4af37;
+    --background: #0d0d0d;
+    --accent: #f3e5ab;
+    --gradient-start: #141414;
+    --gradient-end: #0d0d0d;
+    --text-primary: #f7f5f0;
+    --text-secondary: #e5c158;
+    --surface: #141414;
+    --border: rgba(212, 175, 55, 0.2);
+    --font-heading: 'Cinzel', Georgia, serif;
+    --font-body: 'Inter', sans-serif;
+    --font-accent: 'Cinzel', serif;
+}
+
 @keyframes spin-slow {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes gold-shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes subtle-zoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
 }
 
 .animate-spin-slow {
@@ -8,153 +33,258 @@
 }
 
 .theme-luxury-gold {
-    font-family: 'Cinzel', Georgia, serif;
-    background-color: #0d0d0d; /* Deep dark background */
-    color: #f7f5f0; /* Ivory white text */
+    font-family: var(--font-body);
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+.font-heading {
+    font-family: var(--font-heading);
+}
+
+.font-accent {
+    font-family: var(--font-accent);
+}
+
+/* Gold Shimmer Effect */
+.gold-shimmer-text {
+    background: linear-gradient(
+        to right,
+        var(--primary) 20%,
+        var(--accent) 40%,
+        var(--accent) 60%,
+        var(--primary) 80%
+    );
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: gold-shimmer 4s linear infinite;
+}
+
+.gold-shimmer-bg {
+    background: linear-gradient(
+        135deg,
+        rgba(212, 175, 55, 0) 0%,
+        rgba(212, 175, 55, 0.05) 50%,
+        rgba(212, 175, 55, 0) 100%
+    );
+    background-size: 200% 200%;
+    animation: gold-shimmer 6s linear infinite;
+}
+
+/* Particles Layer */
+.gold-particles-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* Hero Section Custom Styling */
 .theme-luxury-gold .hero-section {
-    background: radial-gradient(circle at center, #141414 0%, #0d0d0d 100%);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
 }
 
 .theme-luxury-gold .hero-subtitle {
-    color: #d4af37;
+    color: var(--primary);
     letter-spacing: 0.25em;
+    text-transform: uppercase;
 }
 
 .theme-luxury-gold .hero-names {
-    font-family: 'Cinzel', serif;
-    color: #e5c158;
-    background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: none;
+    font-family: var(--font-accent);
     font-weight: 500;
 }
 
 .theme-luxury-gold .hero-date {
-    color: #e5c158;
+    color: var(--text-secondary);
     font-weight: 500;
+    letter-spacing: 0.15em;
 }
 
 .theme-luxury-gold .hero-divider {
-    background-color: #d4af37;
+    background-color: var(--primary);
+    opacity: 0.5;
+}
+
+/* Base Card Styling */
+.theme-luxury-gold .luxury-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease;
+}
+
+.theme-luxury-gold .luxury-card:hover {
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.1);
+    transform: translateY(-3px);
+    border-color: rgba(212, 175, 55, 0.4);
 }
 
 /* Countdown Styling */
 .theme-luxury-gold .countdown-title {
-    color: #d4af37;
+    color: var(--primary);
 }
 
 .theme-luxury-gold .countdown-card {
-    background-color: #141414;
-    border-color: rgba(212, 175, 55, 0.2);
+    background-color: var(--surface);
+    border-color: var(--border);
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.08);
 }
 
 .theme-luxury-gold .countdown-number {
-    color: #f3e5ab;
+    color: var(--accent);
 }
 
 .theme-luxury-gold .countdown-label {
-    color: #d4af37;
-}
-
-.theme-luxury-gold .countdown-finished-title {
-    color: #f3e5ab;
+    color: var(--primary);
+    letter-spacing: 0.1em;
 }
 
 /* Event Styling */
 .theme-luxury-gold .events-subtitle {
-    color: #d4af37;
+    color: var(--primary);
 }
 
 .theme-luxury-gold .events-title {
-    color: #f7f5f0;
+    color: var(--text-primary);
 }
 
 .theme-luxury-gold .event-card {
-    background-color: #141414;
-    border-color: rgba(212, 175, 55, 0.15);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    background-color: var(--surface);
+    border-color: var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .theme-luxury-gold .event-name {
-    color: #f3e5ab;
-    font-family: 'Cinzel', serif;
+    color: var(--accent);
+    font-family: var(--font-heading);
 }
 
 .theme-luxury-gold .event-card-divider {
-    background-color: #d4af37;
+    background-color: var(--primary);
 }
 
 .theme-luxury-gold .event-icon-bg {
     background-color: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
+    color: var(--primary);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .theme-luxury-gold .event-map-btn {
-    background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, #aa7c11 100%);
     color: #0d0d0d;
     font-weight: 700;
+    transition: all 0.3s ease;
 }
 
 .theme-luxury-gold .event-map-btn:hover {
-    background: linear-gradient(135deg, #e5c158 0%, #c59b27 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #c59b27 100%);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
 
 /* Story/Timeline Section */
 .theme-luxury-gold .story-subtitle {
-    color: #d4af37;
+    color: var(--primary);
 }
 
 .theme-luxury-gold .story-title {
-    color: #f7f5f0;
+    color: var(--text-primary);
 }
 
 .theme-luxury-gold .story-line {
-    background-color: rgba(212, 175, 55, 0.25);
+    background: linear-gradient(to bottom, transparent, var(--primary), var(--primary), transparent);
+    opacity: 0.3;
 }
 
 .theme-luxury-gold .story-dot {
-    background-color: #0d0d0d;
-    border-color: #d4af37;
+    background-color: var(--background);
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
 }
 
 .theme-luxury-gold .story-dot span {
-    color: #d4af37;
+    color: var(--primary);
 }
 
 .theme-luxury-gold .story-card {
-    background-color: #141414;
-    border-color: rgba(212, 175, 55, 0.15);
+    background-color: var(--surface);
+    border-color: var(--border);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .theme-luxury-gold .story-card-date {
-    color: #d4af37;
+    color: var(--primary);
+    letter-spacing: 0.1em;
 }
 
 .theme-luxury-gold .story-card-title {
-    color: #f3e5ab;
+    color: var(--accent);
 }
 
-.theme-luxury-gold .story-card-desc {
-    color: #dfdeda;
+/* Forms & Inputs */
+.theme-luxury-gold input,
+.theme-luxury-gold textarea,
+.theme-luxury-gold select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--border);
+    color: var(--text-primary);
 }
 
-/* Gallery Section */
-.theme-luxury-gold .gallery-subtitle {
-    color: #d4af37;
+.theme-luxury-gold input:focus, 
+.theme-luxury-gold textarea:focus, 
+.theme-luxury-gold select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
-.theme-luxury-gold .gallery-title {
-    color: #f7f5f0;
+/* Premium Wedding Design System Refinements - Phase 9 */
+.theme-luxury-gold .hero-names {
+    font-size: clamp(2rem, 9vw, 4.5rem) !important;
+    line-height: 1.15 !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
-.theme-luxury-gold .gallery-item-wrapper {
-    border-color: rgba(212, 175, 55, 0.2);
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.05);
+.theme-luxury-gold .font-accent {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
+
+/* Specific clamp for couple names in couple section */
+.theme-luxury-gold section.py-20 .font-accent {
+    font-size: clamp(1.8rem, 8vw, 3rem) !important;
+    line-height: 1.2 !important;
+}
+
+/* Mobile Spacing & Visual Optimizations */
+@media (max-width: 640px) {
+    .theme-luxury-gold .hero-section {
+        padding-top: 5rem !important;
+        padding-bottom: 5rem !important;
+        min-height: 100vh !important;
+    }
+    
+    .theme-luxury-gold section {
+        padding-top: 3.5rem !important;
+        padding-bottom: 3.5rem !important;
+    }
+    
+    /* Make sure inline hero section names also look centered and neat */
+    .theme-luxury-gold .hero-names-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+

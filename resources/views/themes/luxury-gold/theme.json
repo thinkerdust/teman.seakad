@@ -1,15 +1,65 @@
 {
-    "name": "Luxury",
+    "name": "Luxury Gold",
     "version": "1.0",
     "author": "Teman Seakad",
-    "colors": {
-        "primary": "#d4af37",
-        "background": "#0d0d0d",
-        "accent": "#f3e5ab"
+    "identity": {
+        "style": "premium",
+        "mood": [
+            "luxury",
+            "exclusive",
+            "gold",
+            "dark"
+        ],
+        "description": "Exclusive and luxurious gold themed wedding experience"
     },
-    "fonts": {
-        "heading": "Cinzel",
-        "body": "Inter"
+    "design": {
+        "colors": {
+            "primary": "#d4af37",
+            "secondary": "#2a2210",
+            "accent": "#f3e5ab",
+            "background": "#0d0d0d",
+            "text": "#f7f5f0"
+        },
+        "typography": {
+            "heading": "Cinzel",
+            "body": "Inter"
+        }
+    },
+    "motion": {
+        "opening": {
+            "type": "fade-slide",
+            "duration": 2500
+        },
+        "section": {
+            "type": "slide-stagger",
+            "duration": 1000
+        },
+        "gallery": {
+            "type": "zoom-in",
+            "transition": "smooth"
+        },
+        "button": {
+            "type": "hover-glow"
+        }
+    },
+    "assets": {
+        "hero": {
+            "background": "images/hero/main.jpg",
+            "overlay": true
+        },
+        "ornaments": [
+            "ornaments/gold-frame.png",
+            "ornaments/gold-divider.png"
+        ],
+        "background": {
+            "texture": "backgrounds/dark-shimmer.png"
+        },
+        "audio": {
+            "enabled": true
+        }
+    },
+    "layout": {
+        "hero": "fullscreen"
     },
     "features": {
         "music": true,

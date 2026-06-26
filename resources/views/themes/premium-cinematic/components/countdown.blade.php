@@ -1,31 +1,35 @@
-<section class="py-12 px-6 bg-neutral-950/40 border-b border-neutral-850 text-center space-y-6" data-animation="fade-up">
-    <h3 class="font-heading text-lg text-amber-300 font-bold uppercase tracking-widest">Hari Bahagia</h3>
+<section class="py-12 px-6 bg-[var(--theme-surface)]/20 border-b border-[var(--theme-secondary)]/30 text-center space-y-6" {!! themeAnimation('countdown') !!}>
+    <h3 class="font-heading text-lg text-[var(--theme-primary)] font-bold uppercase tracking-widest" style="font-family: var(--theme-font-heading);">Hari Bahagia</h3>
     
     <div 
         x-data="countdownTimer('{{ $invitation->akad_date ? $invitation->akad_date->format('Y-m-d\TH:i:s') : '' }}')"
-        class="grid grid-cols-4 gap-2 max-w-xs mx-auto text-white"
+        class="grid grid-cols-4 gap-2 max-w-xs mx-auto text-[var(--theme-text)]"
     >
-        <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3">
-            <span class="block text-2xl font-bold font-heading text-amber-200" x-text="days">00</span>
-            <span class="text-[10px] text-neutral-400 uppercase tracking-wider">Hari</span>
+        <div class="backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 rounded-xl p-3 shadow-md">
+            <span class="block text-2xl font-bold font-heading text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);" x-text="days">00</span>
+            <span class="text-[10px] text-[var(--theme-text)] opacity-70 uppercase tracking-wider font-body" style="font-family: var(--theme-font-body);">Hari</span>
         </div>
-        <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3">
-            <span class="block text-2xl font-bold font-heading text-amber-200" x-text="hours">00</span>
-            <span class="text-[10px] text-neutral-400 uppercase tracking-wider">Jam</span>
+        <div class="backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 rounded-xl p-3 shadow-md">
+            <span class="block text-2xl font-bold font-heading text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);" x-text="hours">00</span>
+            <span class="text-[10px] text-[var(--theme-text)] opacity-70 uppercase tracking-wider font-body" style="font-family: var(--theme-font-body);">Jam</span>
         </div>
-        <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3">
-            <span class="block text-2xl font-bold font-heading text-amber-200" x-text="minutes">00</span>
-            <span class="text-[10px] text-neutral-400 uppercase tracking-wider">Menit</span>
+        <div class="backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 rounded-xl p-3 shadow-md">
+            <span class="block text-2xl font-bold font-heading text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);" x-text="minutes">00</span>
+            <span class="text-[10px] text-[var(--theme-text)] opacity-70 uppercase tracking-wider font-body" style="font-family: var(--theme-font-body);">Menit</span>
         </div>
-        <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3">
-            <span class="block text-2xl font-bold font-heading text-amber-200" x-text="seconds">00</span>
-            <span class="text-[10px] text-neutral-400 uppercase tracking-wider">Detik</span>
+        <div class="backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 rounded-xl p-3 shadow-md">
+            <span class="block text-2xl font-bold font-heading text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);" x-text="seconds">00</span>
+            <span class="text-[10px] text-[var(--theme-text)] opacity-70 uppercase tracking-wider font-body" style="font-family: var(--theme-font-body);">Detik</span>
         </div>
     </div>
 </section>
 
+@once
 <script>
     document.addEventListener('alpine:init', () => {
+        if (window.countdownTimerInited) return;
+        window.countdownTimerInited = true;
+        
         Alpine.data('countdownTimer', (targetDateStr) => ({
             targetDate: targetDateStr ? new Date(targetDateStr).getTime() : null,
             days: '00',
@@ -64,3 +68,4 @@
         }));
     });
 </script>
+@endonce

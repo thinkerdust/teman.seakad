@@ -744,6 +744,35 @@ Technical:
 
 ---
 
+# 19. Phase 6 - Component Visual Upgrade Regulations
+
+Selama proses visual upgrade di Phase 6, aturan penulisan style dan visual pada component diperketat untuk memastikan kualitas premium yang konsisten:
+
+1. **JANGAN Gunakan Hardcoded Color & Font:**
+   - Semua warna wajib menggunakan token dinamis: `var(--theme-primary)`, `var(--theme-secondary)`, `var(--theme-accent)`, `var(--theme-text)`, dan `var(--theme-surface)`.
+   - Huruf wajib menggunakan kelas `.font-accent` / `.font-heading` atau style `font-family: var(--theme-font-heading);` / `var(--theme-font-body);`.
+
+2. **Glow & Glassmorphism:**
+   - Floating components (seperti Music Button) wajib menggunakan efek glow halus berbasis CSS variable: `box-shadow: 0 0 15px var(--theme-primary);` dan ring pulsing menggunakan standard utility.
+   - Gunakan backdrop blur `backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 shadow-md` untuk frame premium/semi-transparan (seperti pada Countdown Card).
+
+3. **Konsistensi Border-Radius (Theme-Driven):**
+   - Setiap tema memiliki identitas kelengkungan (border-radius) tersendiri yang harus konsisten di seluruh komponen:
+     - `floral-elegant`: Standard rounded (`rounded-xl` / `rounded-2xl`).
+     - `luxury-gold`: Geometris kaku/persegi (`style="border-radius: 4px;"` atau `2px`).
+     - `islamic-wedding`: Signature kubah / daun (`style="border-radius: 1rem 0 1rem 0;"` atau `0.5rem 0 0.5rem 0`).
+     - `rustic-forest`: Natural rounded (`rounded-xl` / `rounded-3xl`).
+     - `premium-cinematic`: Rounded elegant (`rounded-2xl`).
+
+4. **Keterbatasan Tinggi & Scrollbar Kontainer:**
+   - Untuk data dinamis panjang (seperti ucapan tamu pada `guest-wish.blade.php`), batasi tinggi maksimal (`max-h-[400px]`) dan tambahkan custom scrollbar (`custom-scrollbar`) agar layout tidak rusak oleh konten yang banyak.
+
+5. **Integrasi Animasi & Efek Transisi:**
+   - Gunakan pemicu GSAP berbasis data atribut: `data-gsap="fade-up"` atau pemicu sejenisnya yang terintegrasi dengan Animation Engine.
+   - Gunakan transisi bawaan Alpine.js (`x-transition`) untuk modal lightbox galeri demi kelancaran interaksi user.
+
+---
+
 # Final Rule
 
 Component bukan sekedar potongan HTML.

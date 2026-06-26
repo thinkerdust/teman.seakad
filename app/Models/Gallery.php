@@ -25,7 +25,17 @@ class Gallery extends Model
     protected $fillable = [
         'invitation_id',
         'image',
+        'is_visible',
         'sort',
+    ];
+
+    /**
+     * Get the casts for the model.
+     *
+     * @return array<string, string>
+     */
+    protected $casts = [
+        'is_visible' => 'boolean',
     ];
 
     /**

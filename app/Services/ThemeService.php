@@ -4,28 +4,33 @@ namespace App\Services;
 
 use App\Models\Theme;
 use Illuminate\Support\Facades\File;
+use App\Services\ThemeTokenService;
+use App\Services\ThemeConfigService;
 
 class ThemeService
 {
+    protected ThemeTokenService $tokenService;
+
+    public function __construct(ThemeTokenService $tokenService)
+    {
+        $this->tokenService = $tokenService;
+    }
+
     /**
      * Get configuration for a theme.
      * First checks if theme has config in database, otherwise reads from theme.json file.
      */
     public function getThemeConfig(Theme $theme): array
     {
-        if ($theme->config) {
-            return $theme->config;
-        }
+        return app(ThemeConfigService::class)->load($theme);
+    }
 
-        $jsonPath = resource_path("views/themes/{$theme->folder}/theme.json");
-        if (File::exists($jsonPath)) {
-            $config = json_decode(File::get($jsonPath), true);
-            if (is_array($config)) {
-                return $config;
-            }
-        }
-
-        return [];
+    /**
+     * Get dynamic CSS variables string based on theme configuration.
+     */
+    public function getThemeCssTokens(array $themeConfig): string
+    {
+        return $this->tokenService->generateStyleTag($themeConfig);
     }
 
     /**

@@ -1,6 +1,26 @@
+:root {
+    --primary: #8b5a2b;
+    --background: #f5ebe0;
+    --accent: #3e5c46;
+    --gradient-start: #f5ebe0;
+    --gradient-end: #eddcd2;
+    --text-primary: #4a3728;
+    --text-secondary: #8b5a2b;
+    --surface: #fffaf5;
+    --border: #e3d5ca;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-accent: 'Great Vibes', cursive;
+}
+
 @keyframes spin-slow {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes sway-leaf {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
 }
 
 .animate-spin-slow {
@@ -8,143 +28,171 @@
 }
 
 .theme-rustic-forest {
-    font-family: 'Playfair Display', 'Times New Roman', Georgia, serif;
-    background-color: #f5ebe0; /* Earthy warm sand bg */
-    color: #4a3728; /* Deep wooden brown text */
+    font-family: var(--font-body);
+    background-color: var(--background);
+    color: var(--text-primary);
 }
 
-/* Hero Section Custom Styling */
+.font-heading {
+    font-family: var(--font-heading);
+}
+
+.font-accent {
+    font-family: var(--font-accent);
+}
+
+/* Texture Overlay */
+.rustic-texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+}
+
+/* Hero Section */
 .theme-rustic-forest .hero-section {
-    background: radial-gradient(circle at center, #f5ebe0 0%, #eddcd2 100%);
+    background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    position: relative;
+    overflow: hidden;
     border-bottom: 2px dashed rgba(139, 90, 43, 0.15);
 }
 
 .theme-rustic-forest .hero-subtitle {
-    color: #3e5c46; /* Forest green */
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
 }
 
 .theme-rustic-forest .hero-names {
-    font-family: 'Great Vibes', cursive;
-    color: #8b5a2b; /* Wood brown */
-    font-weight: normal;
+    font-family: var(--font-accent);
+    color: var(--primary);
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
 }
 
-.theme-rustic-forest .hero-date {
-    color: #3e5c46;
-    font-weight: 600;
+/* Base Card Styling */
+.theme-rustic-forest .rustic-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 2px 2px 0px rgba(139, 90, 43, 0.1);
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.theme-rustic-forest .hero-divider {
-    background-color: #8b5a2b;
-}
-
-/* Countdown Styling */
-.theme-rustic-forest .countdown-title {
-    color: #3e5c46;
-}
-
-.theme-rustic-forest .countdown-card {
-    background-color: #fffaf5;
-    border-color: #e3d5ca;
-    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.08);
-}
-
-.theme-rustic-forest .countdown-number {
-    color: #8b5a2b;
-}
-
-.theme-rustic-forest .countdown-label {
-    color: #3e5c46;
-}
-
-.theme-rustic-forest .countdown-finished-title {
-    color: #8b5a2b;
+.theme-rustic-forest .rustic-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px rgba(139, 90, 43, 0.15);
 }
 
 /* Event Styling */
-.theme-rustic-forest .events-subtitle {
-    color: #3e5c46;
-}
-
-.theme-rustic-forest .events-title {
-    color: #4a3728;
-}
-
 .theme-rustic-forest .event-card {
-    background-color: #fffaf5;
-    border-color: #e3d5ca;
-    box-shadow: 0 6px 16px rgba(139, 90, 43, 0.06);
+    background-color: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 0.5rem;
+    position: relative;
 }
 
 .theme-rustic-forest .event-name {
-    color: #8b5a2b;
-    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+    font-family: var(--font-heading);
 }
 
 .theme-rustic-forest .event-card-divider {
-    background-color: #3e5c46;
+    background-color: var(--accent);
+    height: 1px;
 }
 
 .theme-rustic-forest .event-icon-bg {
-    background-color: #f7ede2;
-    color: #8b5a2b;
+    background-color: rgba(139, 90, 43, 0.05);
+    color: var(--primary);
+    border-radius: 50%;
 }
 
 .theme-rustic-forest .event-map-btn {
-    background-color: #3e5c46;
-    color: #ffffff;
+    background-color: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 9999px;
+    transition: all 0.3s ease;
 }
 
 .theme-rustic-forest .event-map-btn:hover {
-    background-color: #2b4131;
+    background-color: var(--accent);
+    color: #fff;
 }
 
 /* Story/Timeline Section */
-.theme-rustic-forest .story-subtitle {
-    color: #3e5c46;
-}
-
-.theme-rustic-forest .story-title {
-    color: #4a3728;
-}
-
 .theme-rustic-forest .story-line {
-    background-color: #e3d5ca;
-    border-style: dashed;
+    background-color: transparent;
+    border-left: 2px dashed var(--border);
 }
 
 .theme-rustic-forest .story-dot {
-    border-color: #3e5c46;
+    background-color: var(--background);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
 }
 
 .theme-rustic-forest .story-dot span {
-    color: #3e5c46;
+    color: var(--accent);
 }
 
-.theme-rustic-forest .story-card {
-    background-color: #fffaf5;
-    border-color: #e3d5ca;
-    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.05);
+/* Inputs */
+.theme-rustic-forest input,
+.theme-rustic-forest textarea {
+    background-color: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 0.5rem;
 }
 
-.theme-rustic-forest .story-card-date {
-    color: #8b5a2b;
+.theme-rustic-forest input:focus,
+.theme-rustic-forest textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 90, 43, 0.1);
 }
 
-.theme-rustic-forest .story-card-title {
-    color: #3e5c46;
+/* Premium Wedding Design System Refinements - Phase 9 */
+.theme-rustic-forest .hero-names {
+    font-size: clamp(2rem, 9vw, 4.5rem) !important;
+    line-height: 1.15 !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
-/* Gallery Section */
-.theme-rustic-forest .gallery-subtitle {
-    color: #3e5c46;
+.theme-rustic-forest .font-accent {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
-.theme-rustic-forest .gallery-title {
-    color: #4a3728;
+/* Specific clamp for couple names in couple section */
+.theme-rustic-forest section.py-16 .font-accent {
+    font-size: clamp(1.8rem, 8vw, 3rem) !important;
+    line-height: 1.2 !important;
 }
 
-.theme-rustic-forest .gallery-item-wrapper {
-    border-color: #e3d5ca;
-    box-shadow: 0 4px 12px rgba(139, 90, 43, 0.06);
+/* Mobile Spacing & Visual Optimizations */
+@media (max-width: 640px) {
+    .theme-rustic-forest .hero-section {
+        padding-top: 5rem !important;
+        padding-bottom: 5rem !important;
+        min-height: 100vh !important;
+    }
+    
+    .theme-rustic-forest section {
+        padding-top: 3.5rem !important;
+        padding-bottom: 3.5rem !important;
+    }
+    
+    /* Make sure inline hero section names also look centered and neat */
+    .theme-rustic-forest .hero-names-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
+

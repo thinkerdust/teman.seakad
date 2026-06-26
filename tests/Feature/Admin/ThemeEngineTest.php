@@ -32,6 +32,9 @@ class ThemeEngineTest extends TestCase
         $this->superadminRole = Role::where('name', 'Superadmin')->first();
         $this->superadmin = User::factory()->create();
         $this->superadmin->roles()->sync([$this->superadminRole->id]);
+
+        // Mock Vite to prevent manifest.json missing exceptions in tests
+        \Illuminate\Support\Facades\Vite::spy();
     }
 
     /**
@@ -72,7 +75,7 @@ class ThemeEngineTest extends TestCase
             'is_active' => true,
         ]);
 
-        $service = new ThemeService;
+        $service = app(ThemeService::class);
         $config = $service->getThemeConfig($theme);
 
         $this->assertIsArray($config);
@@ -209,4 +212,75 @@ class ThemeEngineTest extends TestCase
         $response->assertViewHas('invitationData');
         $response->assertViewHas('themeConfig');
     }
+
+    /**
+     * Test ThemeAssetService resolves assets correctly.
+     */
+    public function test_theme_asset_service_resolves_assets(): void
+    {
+        $themeConfig = [
+            'folder' => 'floral-elegant',
+            'assets' => [
+                'hero' => [
+                    'background' => 'images/hero/main.jpg',
+                ],
+                'background' => [
+                    'texture' => 'backgrounds/soft.png',
+                ],
+            ],
+        ];
+
+        $service = app(\App\Services\ThemeAssetService::class);
+
+        // Test normal resolution
+        $url = $service->getAssetUrl('hero.background', $themeConfig);
+        $this->assertStringContainsString('themes/floral-elegant/images/hero/main.jpg', $url);
+
+        // Test absolute URL resolution
+        $themeConfig['assets']['hero']['background'] = 'https://example.com/custom.jpg';
+        $url = $service->getAssetUrl('hero.background', $themeConfig);
+        $this->assertEquals('https://example.com/custom.jpg', $url);
+
+        // Test fallback resolution
+        $fallbackAudio = $service->getAssetUrl('audio', []);
+        $this->assertStringContainsString('assets/demo/music/lagu-nikah.mp3', $fallbackAudio);
+    }
+
+    /**
+     * Test ThemeTokenService generates dynamic @font-face and background texture CSS variables.
+     */
+    public function test_theme_token_service_generates_correct_font_faces_and_textures(): void
+    {
+        $themeConfig = [
+            'folder' => 'floral-elegant',
+            'design' => [
+                'colors' => [
+                    'primary' => '#b86b70',
+                ],
+                'typography' => [
+                    'heading' => 'CustomFont.ttf',
+                    'body' => 'Instrument Sans',
+                ],
+            ],
+            'assets' => [
+                'background' => [
+                    'texture' => 'backgrounds/soft.png',
+                ],
+            ],
+        ];
+
+        $service = app(\App\Services\ThemeTokenService::class);
+        $tokens = $service->generateTokens($themeConfig);
+
+        // Should contain @font-face block for CustomFont.ttf
+        $this->assertStringContainsString("@font-face {", $tokens);
+        $this->assertStringContainsString("font-family: 'CustomFont';", $tokens);
+        $this->assertStringContainsString("themes/floral-elegant/CustomFont.ttf", $tokens);
+
+        // Should map CSS variables
+        $this->assertStringContainsString("--theme-font-heading: 'CustomFont', Georgia, serif;", $tokens);
+        $this->assertStringContainsString("--theme-background-texture: url('", $tokens);
+        $this->assertStringContainsString("themes/floral-elegant/backgrounds/soft.png", $tokens);
+    }
 }
+

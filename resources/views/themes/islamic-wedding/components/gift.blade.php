@@ -1,6 +1,6 @@
-<section class="py-16 px-6 border-b border-stone-200/50 text-center space-y-8" data-animation="fade-up" x-data="{ open: false }">
+<section class="py-16 px-6 border-b border-stone-200/50 text-center space-y-8" {!! themeAnimation('gift') !!} x-data="{ open: false }">
     <div class="space-y-2">
-        <h2 class="text-2xl font-bold uppercase tracking-widest" style="font-family: var(--font-heading);">Kado Digital</h2>
+        <h2 class="text-2xl font-bold uppercase tracking-widest" style="font-family: var(--theme-font-heading);">Kado Digital</h2>
         <div class="h-[1px] w-12 bg-current mx-auto mt-2 opacity-50"></div>
         <p class="text-xs opacity-75 max-w-xs mx-auto mt-4 leading-relaxed">
             Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat mengirimkannya secara digital.

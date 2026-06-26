@@ -108,7 +108,9 @@ Route::middleware(['auth', 'subscription.active'])->prefix('admin')->name('admin
     Route::post('/invitations/{invitation}/guests/import', [GuestController::class, 'import'])->name('invitations.guests.import')->middleware('permission:invitation.update');
 
     // Invitation Content Management
-    Route::get('/invitations/{invitation}/content', [InvitationContentController::class, 'edit'])->name('invitations.content.edit')->middleware('permission:invitation.update');
+    Route::get('/invitations/{invitation}/edit', [InvitationContentController::class, 'edit'])->name('invitations.content.edit')->middleware('permission:invitation.update');
+    Route::post('/invitations/{invitation}/content/couple', [InvitationContentController::class, 'updateCouple'])->name('invitations.content.couple')->middleware('permission:invitation.update');
+    Route::post('/invitations/{invitation}/content/style', [InvitationContentController::class, 'updateStyle'])->name('invitations.content.style')->middleware('permission:invitation.update');
     Route::post('/invitations/{invitation}/content/gallery', [InvitationContentController::class, 'updateGallery'])->name('invitations.content.gallery')->middleware('permission:invitation.update');
     Route::post('/invitations/{invitation}/content/story', [InvitationContentController::class, 'updateStory'])->name('invitations.content.story')->middleware('permission:invitation.update');
     Route::post('/invitations/{invitation}/content/event', [InvitationContentController::class, 'updateEvent'])->name('invitations.content.event')->middleware('permission:invitation.update');

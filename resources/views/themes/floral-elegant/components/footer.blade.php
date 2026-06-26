@@ -1,4 +1,4 @@
-<footer class="py-16 px-6 text-center space-y-6" data-animation="fade-up">
+<footer class="py-16 px-6 text-center space-y-6" {!! themeAnimation('footer') !!}>
     <div class="space-y-2">
         <p class="text-xs opacity-75">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
     </div>

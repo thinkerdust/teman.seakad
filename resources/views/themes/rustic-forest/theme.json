@@ -1,15 +1,65 @@
 {
-    "name": "Rustic",
+    "name": "Rustic Forest",
     "version": "1.0",
     "author": "Teman Seakad",
-    "colors": {
-        "primary": "#8b5a2b",
-        "background": "#f5ebe0",
-        "accent": "#3e5c46"
+    "identity": {
+        "style": "rustic",
+        "mood": [
+            "earthy",
+            "natural",
+            "vintage",
+            "woodsy"
+        ],
+        "description": "Natural and earthy rustic forest wedding experience"
     },
-    "fonts": {
-        "heading": "Playfair Display",
-        "body": "Instrument Sans"
+    "design": {
+        "colors": {
+            "primary": "#8b5a2b",
+            "secondary": "#e3d5ca",
+            "accent": "#3e5c46",
+            "background": "#f5ebe0",
+            "text": "#4a3728"
+        },
+        "typography": {
+            "heading": "Playfair Display",
+            "body": "Instrument Sans"
+        }
+    },
+    "motion": {
+        "opening": {
+            "type": "fade-slide",
+            "duration": 2000
+        },
+        "section": {
+            "type": "parallax-reveal",
+            "duration": 1200
+        },
+        "gallery": {
+            "type": "zoom-in",
+            "transition": "bounce"
+        },
+        "button": {
+            "type": "hover-scale"
+        }
+    },
+    "assets": {
+        "hero": {
+            "background": "images/hero/main.jpg",
+            "overlay": true
+        },
+        "ornaments": [
+            "ornaments/leaves.png",
+            "ornaments/wood-divider.png"
+        ],
+        "background": {
+            "texture": "backgrounds/paper.png"
+        },
+        "audio": {
+            "enabled": true
+        }
+    },
+    "layout": {
+        "hero": "fullscreen"
     },
     "features": {
         "music": true,

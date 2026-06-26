@@ -1,7 +1,13 @@
 import './bootstrap';
+import './theme-animation';
+import Alpine from 'alpinejs';
 import { createApp, defineAsyncComponent, h } from 'vue';
 import { gsap } from 'gsap';
 import RsvpForm from './invitation/components/RsvpForm.vue';
+
+// Initialize Alpine.js for Blade-based templates and components
+window.Alpine = Alpine;
+Alpine.start();
 
 // Penanganan cover overlay (GSAP transition)
 const btnOpen = document.getElementById('btn-open-invitation');
