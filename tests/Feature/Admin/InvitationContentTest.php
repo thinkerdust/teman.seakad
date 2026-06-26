@@ -454,4 +454,103 @@ class InvitationContentTest extends TestCase
         $path = str_replace('/storage/', '', $customMusic->file);
         Storage::disk('public')->assertExists($path);
     }
+
+    /**
+     * User can update couple details (including nickname and photos).
+     */
+    public function test_user_can_update_couple_details(): void
+    {
+        Storage::fake('public');
+
+        $groomPhoto = UploadedFile::fake()->image('groom.jpg');
+        $bridePhoto = UploadedFile::fake()->image('bride.jpg');
+
+        $response = $this->actingAs($this->user)
+            ->post(route('admin.invitations.content.couple', $this->invitation->id), [
+                'groom_name' => 'Budi Pratama',
+                'bride_name' => 'Ani Lestari',
+                'groom_nickname' => 'Budi',
+                'bride_nickname' => 'Ani',
+                'title' => 'Pernikahan Budi & Ani',
+                'description' => 'Kami mengundang Anda...',
+                'groom_photo' => $groomPhoto,
+                'bride_photo' => $bridePhoto,
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success', 'Data mempelai berhasil diperbarui.');
+
+        $this->invitation->refresh();
+        $this->assertEquals('Budi Pratama', $this->invitation->groom_name);
+        $this->assertEquals('Ani Lestari', $this->invitation->bride_name);
+        $this->assertEquals('Budi', $this->invitation->groom_nickname);
+        $this->assertEquals('Ani', $this->invitation->bride_nickname);
+        $this->assertEquals('Pernikahan Budi & Ani', $this->invitation->title);
+        $this->assertEquals('Kami mengundang Anda...', $this->invitation->description);
+
+        $groomPath = str_replace('/storage/', '', $this->invitation->groom_photo);
+        $bridePath = str_replace('/storage/', '', $this->invitation->bride_photo);
+        Storage::disk('public')->assertExists($groomPath);
+        Storage::disk('public')->assertExists($bridePath);
+    }
+
+    /**
+     * User can update visual style customization.
+     */
+    public function test_user_can_update_visual_style_customization(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->post(route('admin.invitations.content.style', $this->invitation->id), [
+                'primary_color' => '#ff5500',
+                'secondary_color' => '#00ff55',
+                'font_scale' => 1.2,
+                'background_option' => 'plain',
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success', 'Kustomisasi gaya visual berhasil diperbarui.');
+
+        $this->invitation->refresh();
+        $customStyle = $this->invitation->customization['custom_style'] ?? [];
+        $this->assertEquals('#ff5500', $customStyle['primary_color']);
+        $this->assertEquals('#00ff55', $customStyle['secondary_color']);
+        $this->assertEquals(1.2, $customStyle['font_scale']);
+        $this->assertEquals('plain', $customStyle['background_option']);
+    }
+
+    /**
+     * User can toggle gallery photo visibility.
+     */
+    public function test_user_can_toggle_gallery_photo_visibility(): void
+    {
+        $gallery = Gallery::create([
+            'invitation_id' => $this->invitation->id,
+            'image' => '/storage/invitations/gallery/test.jpg',
+            'is_visible' => true,
+            'sort' => 0,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->post(route('admin.invitations.content.gallery', $this->invitation->id), [
+                'action' => 'toggle-visibility',
+                'gallery_id' => $gallery->id,
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success', 'Visibilitas foto berhasil diperbarui.');
+
+        $gallery->refresh();
+        $this->assertFalse($gallery->is_visible);
+
+        // Toggle back to true
+        $response2 = $this->actingAs($this->user)
+            ->post(route('admin.invitations.content.gallery', $this->invitation->id), [
+                'action' => 'toggle-visibility',
+                'gallery_id' => $gallery->id,
+            ]);
+        $response2->assertStatus(302);
+
+        $gallery->refresh();
+        $this->assertTrue($gallery->is_visible);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Guest;
 use App\Models\InvitationVisit;
 use App\Services\ThemeService;
+use App\Services\ThemeConfigService;
 use Illuminate\Http\Request;
 
 class PublicInvitationController extends Controller
@@ -12,7 +13,7 @@ class PublicInvitationController extends Controller
     /**
      * Tampilkan undangan publik berdasarkan slug.
      */
-    public function show(Request $request, string $slug, ThemeService $themeService)
+    public function show(Request $request, string $slug, ThemeService $themeService, ThemeConfigService $themeConfigService, \App\Services\InvitationCustomizationService $customizationService)
     {
         // Ambil instance undangan dari request attribute yang telah divalidasi oleh middleware
         $invitation = $request->attributes->get('invitation');
@@ -27,71 +28,28 @@ class PublicInvitationController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // Ambil nama penerima dari query string '?to=Nama+Tamu'
-        $recipientName = $request->query('to');
-
-        // Transformasikan data agar bersih dan rapi untuk dibaca oleh Vue/Blade
-        $invitationData = [
-            'title' => $invitation->title,
-            'groom_name' => $invitation->groom_name,
-            'bride_name' => $invitation->bride_name,
-            'akad_date' => $invitation->akad_date ? $invitation->akad_date->toIso8601String() : null,
-            'reception_date' => $invitation->reception_date ? $invitation->reception_date->toIso8601String() : null,
-            'venue' => $invitation->venue,
-            'address' => $invitation->address,
-            'maps_url' => $invitation->maps_url,
-            'description' => $invitation->description,
-            'recipient_name' => $recipientName,
-            'theme' => [
-                'name' => $invitation->theme?->name,
-                'slug' => $invitation->theme?->slug,
-                'folder' => $invitation->theme?->folder,
-            ],
-            'gallery' => $invitation->galleries->sortBy('sort')->map(function ($g) {
-                return [
-                    'id' => $g->id,
-                    'image' => $g->image,
-                    'sort' => $g->sort,
-                ];
-            })->values()->all(),
-            'story' => $invitation->stories->sortBy('sort')->map(function ($s) {
-                return [
-                    'id' => $s->id,
-                    'title' => $s->title,
-                    'date' => $s->date,
-                    'description' => $s->description,
-                    'sort' => $s->sort,
-                ];
-            })->values()->all(),
-            'events' => $invitation->events->sortBy('date')->map(function ($e) {
-                return [
-                    'id' => $e->id,
-                    'name' => $e->name,
-                    'date' => $e->date ? $e->date->format('Y-m-d') : null,
-                    'time' => $e->time,
-                    'location' => $e->location,
-                ];
-            })->values()->all(),
-            'music' => $invitation->music->first() ? [
-                'title' => $invitation->music->first()->title,
-                'artist' => $invitation->music->first()->artist,
-                'file' => $invitation->music->first()->file,
-            ] : [
-                'title' => '',
-                'artist' => '',
-                'file' => '',
-            ],
-        ];
-
         // Resolve view based on theme engine
         $view = 'public.invitation';
         $themeConfig = [];
+        $themeCssTokens = '';
+
         if ($invitation->theme) {
             $view = $themeService->getThemeView($invitation->theme);
-            $themeConfig = $themeService->getThemeConfig($invitation->theme);
+            $baseConfig = $themeConfigService->load($invitation->theme);
+
+            // Merge customization & prepare data
+            $customized = $customizationService->getCustomizedData($invitation, $baseConfig);
+            $themeConfig = $customized['themeConfig'];
+            $invitationData = $customized['invitationData'];
+
+            $themeCssTokens = $themeService->getThemeCssTokens($themeConfig);
+            view()->share('themeConfig', $themeConfig);
+        } else {
+            $customized = $customizationService->getCustomizedData($invitation, []);
+            $invitationData = $customized['invitationData'];
         }
 
-        return view($view, compact('invitation', 'invitationData', 'themeConfig'));
+        return view($view, compact('invitation', 'invitationData', 'themeConfig', 'themeCssTokens'));
     }
 
     /**

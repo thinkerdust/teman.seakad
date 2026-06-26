@@ -18,6 +18,12 @@
         <meta property="og:image" content="{{ asset($invitation->theme->thumbnail) }}">
     @endif
 
+    <!-- Theme Isolated CSS -->
+    <link rel="stylesheet" href="{{ asset('themes/' . $invitation->theme->folder . '/css/style.css') }}">
+    
+    <!-- Dynamic Theme Tokens -->
+    {!! $themeCssTokens ?? '' !!}
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,46 +33,42 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- GSAP & Alpine JS -->
-    <script src="{{ asset('assets/vendor/gsap/gsap.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/gsap/ScrollTrigger.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/gsap/gsap.min.js') }}" defer></script>
+    <script src="{{ asset('assets/vendor/gsap/ScrollTrigger.min.js') }}" defer></script>
     
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         [x-cloak] {
             display: none !important;
         }
-        :root {
-            --primary: {{ $themeConfig['colors']['primary'] ?? '#B76E79' }};
-            --background: {{ $themeConfig['colors']['background'] ?? '#FFF8F0' }};
-            --accent: {{ $themeConfig['colors']['accent'] ?? '#D4AF37' }};
-            --font-heading: 'Playfair Display', Georgia, serif;
-            --font-body: 'Inter', sans-serif;
-        }
         body {
-            background-color: var(--background);
-            font-family: var(--font-body);
+            background-color: var(--theme-background);
+            font-family: var(--theme-font-body);
             color: #1f2937;
             overflow-x: hidden;
         }
         .font-heading {
-            font-family: var(--font-heading);
+            font-family: var(--theme-font-heading);
         }
         .font-accent {
             font-family: 'Great Vibes', cursive;
         }
         .bg-primary {
-            background-color: var(--primary);
+            background-color: var(--theme-primary);
         }
         .text-primary {
-            color: var(--primary);
+            color: var(--theme-primary);
         }
         .border-primary {
-            border-color: var(--primary);
+            border-color: var(--theme-primary);
         }
         .text-accent {
-            color: var(--accent);
+            color: var(--theme-accent);
         }
         .bg-accent {
-            background-color: var(--accent);
+            background-color: var(--theme-accent);
         }
     </style>
 
@@ -74,7 +76,17 @@
         window.invitationData = @json($invitationData);
     </script>
 </head>
-<body class="antialiased min-h-screen relative" x-data="{ opened: false }">
+<body class="antialiased min-h-screen relative overflow-hidden" x-data="{ opened: false }">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--theme-surface,#ffffff)]">
+        <div class="relative flex flex-col items-center">
+            <!-- Premium double spinner -->
+            <div class="w-16 h-16 border-4 border-[var(--theme-primary)]/20 border-t-[var(--theme-primary)] rounded-full animate-spin"></div>
+            <div class="absolute w-10 h-10 border-4 border-[var(--theme-secondary)]/20 border-t-[var(--theme-secondary)] rounded-full animate-spin [animation-direction:reverse] top-3"></div>
+            <span class="mt-4 text-sm font-medium tracking-wider text-[var(--theme-text)]/70 animate-pulse">Memuat Undangan...</span>
+        </div>
+    </div>
 
     <!-- Cover / Landing Overlay -->
     @include('themes.premium-cinematic.components.hero', [
@@ -83,7 +95,7 @@
     ])
 
     <!-- Main Content (revealed after clicking Buka Undangan) -->
-    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen bg-neutral-900 text-white shadow-2xl relative z-10 border-x border-neutral-800">
+    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen bg-neutral-900 text-white shadow-2xl relative z-10 border-x border-neutral-800" style="background-image: var(--theme-background-texture);">
         
         <!-- Couple Section -->
         @include('themes.premium-cinematic.components.couple', [
@@ -151,13 +163,31 @@
     </div>
 
     <!-- Background Music Player Component -->
-    @if(($themeConfig['features']['music'] ?? true) && !empty($invitationData['music']['file']))
+    @if(($themeConfig['features']['music'] ?? true) && (!empty($invitationData['music']['file']) || themeAsset('audio')))
         @include('themes.premium-cinematic.components.music', [
             'music' => $invitationData['music']
         ])
     @endif
 
     <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-screen');
+            if (loader) {
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(loader, {
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                        onComplete: () => loader.remove()
+                    });
+                } else {
+                    loader.style.transition = 'opacity 0.8s ease';
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 800);
+                }
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
 
@@ -173,8 +203,7 @@
                         audioPlayer.play().catch(err => console.log('Autoplay blocked or failed:', err));
                     }
 
-                    // Dispatch custom event for Alpine and music control
-                    window.dispatchEvent(new CustomEvent('invitation-opened'));
+                    
 
                     // GSAP transition
                     gsap.timeline()
@@ -187,29 +216,13 @@
                             // Enable body overflow
                             document.body.classList.remove('overflow-hidden');
                             
-                            // Initialize ScrollTrigger animations
-                            initAnimations();
+                            // Dispatch custom event to trigger animations and music
+                            window.dispatchEvent(new CustomEvent('invitation-opened'));
                         });
                 });
             }
 
-            function initAnimations() {
-                // Reveal section animations
-                const sections = document.querySelectorAll('section[data-animation="fade-up"]');
-                sections.forEach(section => {
-                    gsap.from(section, {
-                        scrollTrigger: {
-                            trigger: section,
-                            start: 'top 85%',
-                            toggleActions: 'play none none none'
-                        },
-                        y: 50,
-                        opacity: 0,
-                        duration: 1,
-                        ease: 'power3.out'
-                    });
-                });
-            }
+            
         });
     </script>
 </body>

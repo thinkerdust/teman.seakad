@@ -1,4 +1,4 @@
-<section class="story-section py-16 px-4 border-b border-stone-200/50" data-animation="fade-up">
+<section class="story-section py-16 px-4 border-b border-stone-200/50" {!! themeAnimation('story') !!}>
     <div class="max-w-4xl mx-auto">
         <div class="text-center mb-12">
             <span class="story-subtitle text-xs uppercase tracking-widest font-semibold">Kisah Kami</span>
@@ -11,27 +11,32 @@
         @if(count($invitationData['story']) > 0)
             <div class="relative max-w-md mx-auto">
                 <!-- Center timeline line -->
-                <div class="absolute left-4 top-0 bottom-0 w-[2px] bg-stone-200 story-line"></div>
+                <div class="absolute left-4 top-0 bottom-0 w-[2px] bg-[var(--theme-secondary)] story-line"></div>
                 
                 <div class="space-y-12 relative">
                     @foreach(collect($invitationData['story'])->sortBy('sort') as $index => $item)
-                        <div class="flex flex-col items-stretch relative">
+                        <div class="flex flex-col items-stretch relative" data-gsap="fade-up">
                             <!-- Timeline circle dot -->
                             <div class="absolute left-4 -translate-x-1/2 flex items-center justify-center z-10">
-                                <div class="w-8 h-8 rounded-full bg-white border-2 flex items-center justify-center shadow-sm story-dot">
-                                    <span class="text-xs font-bold">{{ $index + 1 }}</span>
+                                <div class="w-8 h-8 rounded-full bg-[var(--theme-surface)] border-2 border-[var(--theme-primary)] flex items-center justify-center shadow-sm story-dot" style="border-radius: 0.5rem 0 0.5rem 0;">
+                                    <span class="text-xs font-bold text-[var(--theme-primary)]">{{ $index + 1 }}</span>
                                 </div>
                             </div>
                             
                             <!-- Story Card -->
                             <div class="w-full pl-12">
-                                <div class="story-card bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm relative hover:shadow-md transition duration-300 text-left">
+                                <div class="story-card bg-[var(--theme-surface)] p-6 border border-[var(--theme-secondary)] shadow-sm relative hover:shadow-md transition duration-300 text-left" style="border-radius: 1rem 0 1rem 0;">
                                     <span class="story-card-date text-xs font-bold tracking-wider">
-                                        {{ $item['date'] ? Carbon\Carbon::parse($item['date'])->translatedFormat('d F Y') : '-' }}
+                                        {{ format_date_safe($item['date']) }}
                                     </span>
                                     <h4 class="story-card-title text-lg font-bold mt-1 leading-snug">
                                         {{ $item['title'] }}
                                     </h4>
+                                    @if(!empty($item['image']))
+                                        <div class="mt-3 mb-2 overflow-hidden border border-[var(--theme-secondary)] aspect-video" style="border-radius: 0.8rem 0 0.8rem 0;">
+                                            <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" class="w-full h-full object-cover" />
+                                        </div>
+                                    @endif
                                     <p class="story-card-desc text-xs sm:text-sm opacity-80 leading-relaxed mt-2 whitespace-pre-line">
                                         {{ $item['description'] }}
                                     </p>

@@ -1,15 +1,64 @@
 {
-    "name": "Floral",
+    "name": "Floral Elegant",
     "version": "1.0",
     "author": "Teman Seakad",
-    "colors": {
-        "primary": "#b86b70",
-        "background": "#faf6f0",
-        "accent": "#8fa89b"
+    "identity": {
+        "style": "romantic",
+        "mood": [
+            "soft",
+            "warm",
+            "beautiful"
+        ],
+        "description": "Soft and romantic floral wedding experience"
     },
-    "fonts": {
-        "heading": "Playfair Display",
-        "body": "Instrument Sans"
+    "design": {
+        "colors": {
+            "primary": "#b86b70",
+            "secondary": "#ebdcd7",
+            "accent": "#8fa89b",
+            "background": "#faf6f0",
+            "text": "#4e3e3b"
+        },
+        "typography": {
+            "heading": "Playfair Display",
+            "body": "Instrument Sans"
+        }
+    },
+    "motion": {
+        "opening": {
+            "type": "fade-in",
+            "duration": 2000
+        },
+        "section": {
+            "type": "fade-up",
+            "duration": 1200
+        },
+        "gallery": {
+            "type": "zoom-in",
+            "transition": "smooth"
+        },
+        "button": {
+            "type": "hover-scale"
+        }
+    },
+    "assets": {
+        "hero": {
+            "background": "images/hero/main.jpg",
+            "overlay": true
+        },
+        "ornaments": [
+            "ornaments/floral-frame.png",
+            "ornaments/floral-corner.png"
+        ],
+        "background": {
+            "texture": "backgrounds/soft.png"
+        },
+        "audio": {
+            "enabled": true
+        }
+    },
+    "layout": {
+        "hero": "fullscreen"
     },
     "features": {
         "music": true,
