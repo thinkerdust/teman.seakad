@@ -1,6 +1,6 @@
 <section 
-    class="py-16 px-6 border-b border-stone-200/50 space-y-8" 
-    data-animation="fade-up"
+    class="py-16 px-6 border-b border-[var(--theme-secondary)]/50 space-y-8" 
+    {!! themeAnimation('guest-wish') !!}
     x-data='{
         wishes: @json($invitation->guests->whereNotNull("message")->sortByDesc("created_at")->map(function($g) {
             return [
@@ -23,23 +23,23 @@
     }'
 >
     <div class="text-center space-y-2">
-        <h2 class="text-2xl font-bold uppercase tracking-widest" style="font-family: var(--font-heading);">Doa & Ucapan</h2>
-        <div class="h-[1px] w-12 bg-current mx-auto mt-2 opacity-50"></div>
+        <h2 class="text-2xl font-bold uppercase tracking-widest text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);">Doa & Ucapan</h2>
+        <div class="h-[1px] w-12 bg-[var(--theme-primary)] mx-auto mt-2 opacity-50"></div>
     </div>
 
     <!-- Wishes Container -->
-    <div class="space-y-4 max-h-[400px] overflow-y-auto pr-1 max-w-md mx-auto">
+    <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 max-w-md mx-auto custom-scrollbar">
         <template x-for="wish in wishes" :key="wish.name + wish.time">
-            <div class="bg-white border border-stone-200/80 rounded-2xl p-5 space-y-2 shadow-sm text-left">
+            <div class="bg-[var(--theme-surface)]/80 border border-[var(--theme-secondary)]/60 rounded-2xl p-5 space-y-2 shadow-sm text-left">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-bold uppercase tracking-wider" x-text="wish.name"></h4>
-                    <span class="text-[10px] opacity-40" x-text="wish.time"></span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--theme-primary)] font-body" style="font-family: var(--theme-font-body);" x-text="wish.name"></h4>
+                    <span class="text-[10px] text-[var(--theme-text)] opacity-40 font-body" style="font-family: var(--theme-font-body);" x-text="wish.time"></span>
                 </div>
-                <p class="text-xs opacity-80 leading-relaxed" x-text="wish.message"></p>
+                <p class="text-xs text-[var(--theme-text)] opacity-80 leading-relaxed font-body" style="font-family: var(--theme-font-body);" x-text="wish.message"></p>
             </div>
         </template>
 
-        <div x-show="wishes.length === 0" class="text-center py-8 opacity-40 text-xs">
+        <div x-show="wishes.length === 0" class="text-center py-8 text-[var(--theme-text)] opacity-50 text-xs font-body" style="font-family: var(--theme-font-body);">
             Belum ada ucapan. Jadilah yang pertama memberikan doa restu!
         </div>
     </div>

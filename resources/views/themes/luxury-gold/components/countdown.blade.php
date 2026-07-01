@@ -1,6 +1,6 @@
-<section class="countdown-section py-12 px-4 text-center border-b border-stone-200/50" data-animation="fade-up">
+<section class="countdown-section py-12 px-4 text-center border-b border-[var(--theme-secondary)]/50" {!! themeAnimation('countdown') !!}>
     <div class="max-w-xl mx-auto">
-        <h3 class="countdown-title text-sm sm:text-base uppercase tracking-widest font-semibold mb-6">
+        <h3 class="countdown-title text-sm sm:text-base uppercase tracking-widest font-semibold mb-6 text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);">
             Menuju Hari Bahagia
         </h3>
         
@@ -9,27 +9,27 @@
             class="grid grid-cols-4 gap-2 sm:gap-4 max-w-sm sm:max-w-md mx-auto"
         >
             <!-- Hari -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl bg-white shadow-sm border border-stone-100">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight" x-text="days">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider opacity-60 mt-1">Hari</span>
+            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 border border-[var(--theme-secondary)]/40 backdrop-blur-md bg-[var(--theme-surface)]/60 shadow-md" style="border-radius: 4px;">
+                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="days">00</span>
+                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Hari</span>
             </div>
             
             <!-- Jam -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl bg-white shadow-sm border border-stone-100">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight" x-text="hours">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider opacity-60 mt-1">Jam</span>
+            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 border border-[var(--theme-secondary)]/40 backdrop-blur-md bg-[var(--theme-surface)]/60 shadow-md" style="border-radius: 4px;">
+                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="hours">00</span>
+                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Jam</span>
             </div>
             
             <!-- Menit -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl bg-white shadow-sm border border-stone-100">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight" x-text="minutes">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider opacity-60 mt-1">Menit</span>
+            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 border border-[var(--theme-secondary)]/40 backdrop-blur-md bg-[var(--theme-surface)]/60 shadow-md" style="border-radius: 4px;">
+                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="minutes">00</span>
+                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Menit</span>
             </div>
             
             <!-- Detik -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl bg-white shadow-sm border border-stone-100">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight" x-text="seconds">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider opacity-60 mt-1">Detik</span>
+            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 border border-[var(--theme-secondary)]/40 backdrop-blur-md bg-[var(--theme-surface)]/60 shadow-md" style="border-radius: 4px;">
+                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="seconds">00</span>
+                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Detik</span>
             </div>
         </div>
     </div>

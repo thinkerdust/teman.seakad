@@ -1,0 +1,19 @@
+{
+    "motion": {
+        "opening": {
+            "type": "cinematic-reveal",
+            "duration": 3000
+        },
+        "scroll": {
+            "type": "parallax-reveal",
+            "duration": 2000
+        },
+        "gallery": {
+            "type": "zoom",
+            "transition": "smooth"
+        },
+        "button": {
+            "type": "hover-glow"
+        }
+    }
+}

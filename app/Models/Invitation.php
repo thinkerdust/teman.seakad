@@ -29,6 +29,10 @@ class Invitation extends Model
         'expired_at',
         'groom_name',
         'bride_name',
+        'groom_nickname',
+        'bride_nickname',
+        'groom_photo',
+        'bride_photo',
         'akad_date',
         'reception_date',
         'venue',
@@ -36,6 +40,7 @@ class Invitation extends Model
         'maps_url',
         'description',
         'wedding_mood',
+        'customization',
     ];
 
     /**
@@ -50,6 +55,7 @@ class Invitation extends Model
             'expired_at' => 'datetime',
             'akad_date' => 'datetime',
             'reception_date' => 'datetime',
+            'customization' => 'array',
         ];
     }
 

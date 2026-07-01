@@ -27,13 +27,19 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- GSAP & Alpine JS -->
-    <script src="{{ asset('assets/vendor/gsap/gsap.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/gsap/ScrollTrigger.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/gsap/gsap.min.js') }}" defer></script>
+    <script src="{{ asset('assets/vendor/gsap/ScrollTrigger.min.js') }}" defer></script>
     
     <!-- Theme Isolated CSS -->
     <link rel="stylesheet" href="{{ asset('themes/' . $invitation->theme->folder . '/css/style.css') }}">
     
+    <!-- Dynamic Theme Tokens -->
+    {!! $themeCssTokens ?? '' !!}
+    
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         [x-cloak] {
             display: none !important;
         }
@@ -43,7 +49,17 @@
         window.invitationData = @json($invitationData);
     </script>
 </head>
-<body class="antialiased min-h-screen relative overflow-x-hidden" x-data="{ opened: false }">
+<body class="antialiased min-h-screen relative overflow-x-hidden overflow-hidden" x-data="{ opened: false }">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--theme-surface,#ffffff)]">
+        <div class="relative flex flex-col items-center">
+            <!-- Premium double spinner -->
+            <div class="w-16 h-16 border-4 border-[var(--theme-primary)]/20 border-t-[var(--theme-primary)] rounded-full animate-spin"></div>
+            <div class="absolute w-10 h-10 border-4 border-[var(--theme-secondary)]/20 border-t-[var(--theme-secondary)] rounded-full animate-spin [animation-direction:reverse] top-3"></div>
+            <span class="mt-4 text-sm font-medium tracking-wider text-[var(--theme-text)]/70 animate-pulse">Memuat Undangan...</span>
+        </div>
+    </div>
 
     <!-- Cover / Landing Overlay -->
     @include('themes.' . $invitation->theme->folder . '.components.hero', [
@@ -52,7 +68,7 @@
     ])
 
     <!-- Main Content (revealed after clicking Buka Undangan) -->
-    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen shadow-2xl relative z-10 theme-{{ $invitation->theme->folder }}">
+    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen shadow-2xl relative z-10 theme-{{ $invitation->theme->folder }}" style="background-image: var(--theme-background-texture);">
         
         <!-- Couple Section -->
         @include('themes.' . $invitation->theme->folder . '.components.couple', [
@@ -120,13 +136,31 @@
     </div>
 
     <!-- Background Music Player Component -->
-    @if(($themeConfig['features']['music'] ?? true) && !empty($invitationData['music']['file']))
+    @if(($themeConfig['features']['music'] ?? true) && (!empty($invitationData['music']['file']) || themeAsset('audio')))
         @include('themes.' . $invitation->theme->folder . '.components.music', [
             'music' => $invitationData['music']
         ])
     @endif
 
     <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-screen');
+            if (loader) {
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(loader, {
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                        onComplete: () => loader.remove()
+                    });
+                } else {
+                    loader.style.transition = 'opacity 0.8s ease';
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 800);
+                }
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
 
@@ -142,8 +176,7 @@
                         audioPlayer.play().catch(err => console.log('Autoplay blocked or failed:', err));
                     }
 
-                    // Dispatch custom event for Alpine and music control
-                    window.dispatchEvent(new CustomEvent('invitation-opened'));
+                    
 
                     // GSAP transition
                     gsap.timeline()
@@ -156,29 +189,13 @@
                             // Enable body overflow
                             document.body.classList.remove('overflow-hidden');
                             
-                            // Initialize ScrollTrigger animations
-                            initAnimations();
+                            // Dispatch custom event to trigger animations and music
+                            window.dispatchEvent(new CustomEvent('invitation-opened'));
                         });
                 });
             }
 
-            function initAnimations() {
-                // Reveal section animations
-                const sections = document.querySelectorAll('section[data-animation="fade-up"]');
-                sections.forEach(section => {
-                    gsap.from(section, {
-                        scrollTrigger: {
-                            trigger: section,
-                            start: 'top 85%',
-                            toggleActions: 'play none none none'
-                        },
-                        y: 50,
-                        opacity: 0,
-                        duration: 1,
-                        ease: 'power3.out'
-                    });
-                });
-            }
+            
         });
     </script>
 </body>

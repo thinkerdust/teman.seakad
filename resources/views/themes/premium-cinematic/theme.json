@@ -1,22 +1,71 @@
 {
-  "name": "Premium Cinematic",
-  "version": "1.0",
-  "author": "Teman Seakad",
-  "colors": {
-    "primary": "#B76E79",
-    "background": "#FFF8F0",
-    "accent": "#D4AF37"
-  },
-  "fonts": {
-    "heading": "Playfair Display",
-    "body": "Inter"
-  },
-  "features": {
-    "music": true,
-    "gallery": true,
-    "countdown": true,
-    "rsvp": true,
-    "stories": true,
-    "gift": true
-  }
+    "name": "Premium Cinematic",
+    "version": "1.0",
+    "author": "Teman Seakad",
+    "identity": {
+        "style": "cinematic",
+        "mood": [
+            "dramatic",
+            "elegant",
+            "emotional",
+            "movie-like"
+        ],
+        "description": "Dramatic and emotional cinematic wedding experience"
+    },
+    "design": {
+        "colors": {
+            "primary": "#B76E79",
+            "secondary": "#E5E7EB",
+            "accent": "#D4AF37",
+            "background": "#FFF8F0",
+            "text": "#1F2937"
+        },
+        "typography": {
+            "heading": "Playfair Display",
+            "body": "Inter"
+        }
+    },
+    "motion": {
+        "opening": {
+            "type": "cinematic-reveal",
+            "duration": 3000
+        },
+        "section": {
+            "type": "parallax-reveal",
+            "duration": 2000
+        },
+        "gallery": {
+            "type": "slow-zoom",
+            "transition": "dramatic"
+        },
+        "button": {
+            "type": "hover-outline"
+        }
+    },
+    "assets": {
+        "hero": {
+            "background": "images/hero/main.jpg",
+            "overlay": true
+        },
+        "ornaments": [
+            "ornaments/minimal-lines.png"
+        ],
+        "background": {
+            "texture": "backgrounds/film-grain.png"
+        },
+        "audio": {
+            "enabled": true
+        }
+    },
+    "layout": {
+        "hero": "fullscreen"
+    },
+    "features": {
+        "music": true,
+        "gallery": true,
+        "countdown": true,
+        "rsvp": true,
+        "stories": true,
+        "gift": true
+    }
 }

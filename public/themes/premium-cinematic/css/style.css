@@ -1,0 +1,226 @@
+:root {
+    --primary: #B76E79;
+    --background: #FFF8F0;
+    --accent: #D4AF37;
+    --gradient-start: #FFF8F0;
+    --gradient-end: #F5ECE1;
+    --text-primary: #1F2937;
+    --text-secondary: #4B5563;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', sans-serif;
+    --font-accent: 'Great Vibes', cursive;
+}
+
+@keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes cinematic-fade {
+    0% { opacity: 0; filter: blur(10px); transform: scale(1.05); }
+    100% { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes film-grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -5%); }
+    20% { transform: translate(-10%, 5%); }
+    30% { transform: translate(5%, -10%); }
+    40% { transform: translate(-5%, 15%); }
+    50% { transform: translate(-10%, 5%); }
+    60% { transform: translate(15%, 0); }
+    70% { transform: translate(0, 10%); }
+    80% { transform: translate(-15%, 0); }
+    90% { transform: translate(10%, 5%); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+.theme-premium-cinematic {
+    font-family: var(--font-body);
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+.font-heading {
+    font-family: var(--font-heading);
+}
+
+.font-accent {
+    font-family: var(--font-accent);
+}
+
+/* Film Grain Overlay */
+.film-grain-overlay {
+    position: absolute;
+    inset: -150%;
+    pointer-events: none;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    animation: film-grain 8s steps(10) infinite;
+}
+
+/* Cinematic Letterbox (Black Bars) */
+.cinematic-letterbox::before,
+.cinematic-letterbox::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    background: #000;
+    z-index: 50;
+    transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.cinematic-letterbox::before { top: 0; transform: translateY(-100%); }
+.cinematic-letterbox::after { bottom: 0; transform: translateY(100%); }
+
+.cinematic-letterbox.active::before { transform: translateY(0); }
+.cinematic-letterbox.active::after { transform: translateY(0); }
+
+/* Hero Section */
+.theme-premium-cinematic .hero-section {
+    background: #000;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-premium-cinematic .hero-subtitle {
+    color: var(--accent);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+}
+
+.theme-premium-cinematic .hero-names {
+    font-family: var(--font-accent);
+    color: #fff;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Base Card Styling */
+.theme-premium-cinematic .cinematic-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    border-radius: 0; /* Sharp cinematic edges */
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.theme-premium-cinematic .cinematic-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* Event Styling */
+.theme-premium-cinematic .event-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0;
+}
+
+.theme-premium-cinematic .event-name {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    letter-spacing: 0.05em;
+}
+
+.theme-premium-cinematic .event-map-btn {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 0;
+    transition: all 0.4s ease;
+}
+
+.theme-premium-cinematic .event-map-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Story/Timeline Section */
+.theme-premium-cinematic .story-line {
+    background-color: var(--border);
+    width: 1px;
+}
+
+.theme-premium-cinematic .story-dot {
+    border-radius: 0;
+    transform: rotate(45deg);
+    border-color: var(--primary);
+    background: var(--surface);
+}
+
+.theme-premium-cinematic .story-dot span {
+    transform: rotate(-45deg);
+    color: var(--primary);
+}
+
+/* Inputs */
+.theme-premium-cinematic input,
+.theme-premium-cinematic textarea {
+    border-radius: 0;
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.theme-premium-cinematic input:focus,
+.theme-premium-cinematic textarea:focus {
+    border-bottom-color: var(--primary);
+    box-shadow: none;
+    outline: none;
+}
+
+/* Premium Wedding Design System Refinements - Phase 9 */
+.theme-premium-cinematic .hero-names {
+    font-size: clamp(2.2rem, 10vw, 4.5rem) !important;
+    line-height: 1.15 !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+}
+
+.theme-premium-cinematic .font-accent {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+}
+
+/* Specific clamp for couple names in couple section */
+.theme-premium-cinematic section.py-24 .font-accent {
+    font-size: clamp(2rem, 9vw, 3.8rem) !important;
+    line-height: 1.2 !important;
+}
+
+/* Mobile Spacing & Visual Optimizations */
+@media (max-width: 640px) {
+    .theme-premium-cinematic .hero-section {
+        padding-top: 6rem !important;
+        padding-bottom: 6rem !important;
+        min-height: 100vh !important;
+    }
+    
+    .theme-premium-cinematic section {
+        padding-top: 4rem !important;
+        padding-bottom: 4rem !important;
+    }
+    
+    /* Make sure inline hero section names also look centered and neat */
+    .theme-premium-cinematic .hero-names-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+

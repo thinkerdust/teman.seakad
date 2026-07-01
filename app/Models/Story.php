@@ -26,6 +26,7 @@ class Story extends Model
         'invitation_id',
         'title',
         'description',
+        'image',
         'date',
         'sort',
     ];

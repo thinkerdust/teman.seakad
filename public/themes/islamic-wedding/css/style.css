@@ -1,6 +1,25 @@
+:root {
+    --primary: #107c41;
+    --background: #f5fbf7;
+    --accent: #b58428;
+    --gradient-start: #f5fbf7;
+    --gradient-end: #ebf5ee;
+    --text-primary: #1e3a2b;
+    --text-secondary: #107c41;
+    --surface: #ffffff;
+    --border: #ebf5ee;
+    --font-heading: 'Amiri', Georgia, serif;
+    --font-body: 'Playfair Display', serif;
+}
+
 @keyframes spin-slow {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes arabesque-pulse {
+    0%, 100% { opacity: 0.05; transform: scale(1); }
+    50% { opacity: 0.08; transform: scale(1.02); }
 }
 
 .animate-spin-slow {
@@ -8,96 +27,97 @@
 }
 
 .theme-islamic-wedding {
-    font-family: 'Amiri', 'Playfair Display', Georgia, serif;
-    background-color: #f5fbf7; /* Very soft light green background */
-    color: #1e3a2b; /* Deep green-slate text */
+    font-family: var(--font-body);
+    background-color: var(--background);
+    color: var(--text-primary);
 }
 
-/* Islamic Header Styling */
-.theme-islamic-wedding .arabic-bismillah {
-    font-family: 'Amiri', serif;
+.font-heading {
+    font-family: var(--font-heading);
+}
+
+/* Islamic Patterns */
+.islamic-pattern-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83 22.091L60 22.57v14.86l-4.543.479-.83 22.091H39.767l-3.32-15.064-6.447 6.447v15.064H15.14l.83-22.091L11.427 43.88l-4.543-.479V28.54l4.543-.479L15.97 5.97h14.86l3.32 15.064 6.447-6.447V-.001h14.03zM30 46.54c-9.135 0-16.54-7.405-16.54-16.54S20.865 13.46 30 13.46s16.54 7.405 16.54 16.54S39.135 46.54 30 46.54zm0-30.08c-7.477 0-13.54 6.063-13.54 13.54S22.523 43.54 30 43.54s13.54-6.063 13.54-13.54S37.477 16.46 30 16.46z' fill='%23107c41' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+    animation: arabesque-pulse 8s infinite;
 }
 
 /* Hero Section Custom Styling */
 .theme-islamic-wedding .hero-section {
-    background: radial-gradient(circle at center, #f5fbf7 0%, #ebf5ee 100%);
-    border-bottom: 1px solid rgba(16, 124, 65, 0.1);
+    background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid rgba(16, 124, 65, 0.1);
 }
 
-.theme-luxury-gold .hero-subtitle {
-    color: #107c41;
+.theme-islamic-wedding .arabic-bismillah {
+    font-family: var(--font-heading);
+    color: var(--accent);
+    font-size: 2rem;
+}
+
+.theme-islamic-wedding .hero-subtitle {
+    color: var(--primary);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
 }
 
 .theme-islamic-wedding .hero-names {
-    font-family: 'Amiri', serif;
-    color: #107c41; /* Emerald green */
+    font-family: var(--font-heading);
+    color: var(--primary);
     font-weight: 700;
 }
 
 .theme-islamic-wedding .hero-date {
-    color: #b58428; /* Gold accent */
+    color: var(--accent);
     font-weight: 600;
 }
 
-.theme-islamic-wedding .hero-divider {
-    background-color: #107c41;
+/* Base Card Styling */
+.theme-islamic-wedding .islamic-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 15px rgba(16, 124, 65, 0.05);
+    border-radius: 1rem 0 1rem 0; /* Unique corner style */
+    transition: all 0.4s ease;
 }
 
-/* Countdown Styling */
-.theme-islamic-wedding .countdown-title {
-    color: #107c41;
-}
-
-.theme-islamic-wedding .countdown-card {
-    background-color: #ffffff;
-    border-color: #ebf5ee;
-    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.08);
-}
-
-.theme-islamic-wedding .countdown-number {
-    color: #107c41;
-}
-
-.theme-islamic-wedding .countdown-label {
-    color: #b58428;
-}
-
-.theme-islamic-wedding .countdown-finished-title {
-    color: #107c41;
+.theme-islamic-wedding .islamic-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 124, 65, 0.1);
+    border-color: rgba(16, 124, 65, 0.2);
 }
 
 /* Event Styling */
-.theme-islamic-wedding .events-subtitle {
-    color: #107c41;
-}
-
-.theme-islamic-wedding .events-title {
-    color: #1e3a2b;
-}
-
 .theme-islamic-wedding .event-card {
-    background-color: #ffffff;
-    border-color: #ebf5ee;
-    box-shadow: 0 6px 16px rgba(16, 124, 65, 0.06);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem 0 1rem 0;
 }
 
 .theme-islamic-wedding .event-name {
-    color: #107c41;
-    font-family: 'Amiri', serif;
+    color: var(--primary);
+    font-family: var(--font-heading);
 }
 
 .theme-islamic-wedding .event-card-divider {
-    background-color: #b58428;
+    background-color: var(--accent);
+    height: 2px;
 }
 
 .theme-islamic-wedding .event-icon-bg {
-    background-color: #f0f7f3;
-    color: #107c41;
+    background-color: rgba(16, 124, 65, 0.05);
+    color: var(--primary);
 }
 
 .theme-islamic-wedding .event-map-btn {
-    background-color: #107c41;
+    background-color: var(--primary);
     color: #ffffff;
+    border-radius: 0.5rem 0 0.5rem 0;
 }
 
 .theme-islamic-wedding .event-map-btn:hover {
@@ -105,50 +125,61 @@
 }
 
 /* Story/Timeline Section */
-.theme-islamic-wedding .story-subtitle {
-    color: #107c41;
-}
-
-.theme-islamic-wedding .story-title {
-    color: #1e3a2b;
-}
-
 .theme-islamic-wedding .story-line {
-    background-color: #ebf5ee;
+    background-color: var(--border);
 }
 
 .theme-islamic-wedding .story-dot {
-    border-color: #107c41;
+    border-color: var(--primary);
+    border-radius: 50% 0 50% 50%;
+    transform: rotate(45deg);
 }
 
 .theme-islamic-wedding .story-dot span {
-    color: #107c41;
+    color: var(--primary);
+    transform: rotate(-45deg);
 }
 
-.theme-islamic-wedding .story-card {
-    background-color: #ffffff;
-    border-color: #ebf5ee;
-    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.05);
+/* Premium Wedding Design System Refinements - Phase 9 */
+.theme-islamic-wedding .hero-names {
+    font-size: clamp(2rem, 9vw, 4.5rem) !important;
+    line-height: 1.15 !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
-.theme-islamic-wedding .story-card-date {
-    color: #b58428;
+.theme-islamic-wedding .font-accent {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
-.theme-islamic-wedding .story-card-title {
-    color: #107c41;
+/* Specific clamp for couple names in couple section */
+.theme-islamic-wedding section.py-16 .font-accent {
+    font-size: clamp(1.8rem, 8vw, 3rem) !important;
+    line-height: 1.2 !important;
 }
 
-/* Gallery Section */
-.theme-islamic-wedding .gallery-subtitle {
-    color: #107c41;
+/* Mobile Spacing & Visual Optimizations */
+@media (max-width: 640px) {
+    .theme-islamic-wedding .hero-section {
+        padding-top: 5rem !important;
+        padding-bottom: 5rem !important;
+        min-height: 100vh !important;
+    }
+    
+    .theme-islamic-wedding section {
+        padding-top: 3.5rem !important;
+        padding-bottom: 3.5rem !important;
+    }
+    
+    /* Make sure inline hero section names also look centered and neat */
+    .theme-islamic-wedding .hero-names-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
-.theme-islamic-wedding .gallery-title {
-    color: #1e3a2b;
-}
-
-.theme-islamic-wedding .gallery-item-wrapper {
-    border-color: #ebf5ee;
-    box-shadow: 0 4px 12px rgba(16, 124, 65, 0.06);
-}

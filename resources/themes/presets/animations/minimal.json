@@ -1,0 +1,19 @@
+{
+    "motion": {
+        "opening": {
+            "type": "fade-in",
+            "duration": 1500
+        },
+        "scroll": {
+            "type": "fade-up",
+            "duration": 800
+        },
+        "gallery": {
+            "type": "fade-in",
+            "transition": "quick"
+        },
+        "button": {
+            "type": "hover-scale"
+        }
+    }
+}

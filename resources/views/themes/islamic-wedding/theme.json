@@ -1,15 +1,65 @@
 {
-    "name": "Islamic",
+    "name": "Islamic Wedding",
     "version": "1.0",
     "author": "Teman Seakad",
-    "colors": {
-        "primary": "#107c41",
-        "background": "#f5fbf7",
-        "accent": "#b58428"
+    "identity": {
+        "style": "traditional",
+        "mood": [
+            "spiritual",
+            "calm",
+            "elegant",
+            "green"
+        ],
+        "description": "Spiritual and elegant islamic wedding experience"
     },
-    "fonts": {
-        "heading": "Amiri",
-        "body": "Playfair Display"
+    "design": {
+        "colors": {
+            "primary": "#107c41",
+            "secondary": "#ebf5ee",
+            "accent": "#b58428",
+            "background": "#f5fbf7",
+            "text": "#1e3a2b"
+        },
+        "typography": {
+            "heading": "Amiri",
+            "body": "Playfair Display"
+        }
+    },
+    "motion": {
+        "opening": {
+            "type": "fade-in",
+            "duration": 2500
+        },
+        "section": {
+            "type": "fade-up",
+            "duration": 1500
+        },
+        "gallery": {
+            "type": "zoom-in",
+            "transition": "smooth"
+        },
+        "button": {
+            "type": "hover-scale"
+        }
+    },
+    "assets": {
+        "hero": {
+            "background": "images/hero/main.jpg",
+            "overlay": true
+        },
+        "ornaments": [
+            "ornaments/arabesque.png",
+            "ornaments/mandala.png"
+        ],
+        "background": {
+            "texture": "backgrounds/geometric.png"
+        },
+        "audio": {
+            "enabled": true
+        }
+    },
+    "layout": {
+        "hero": "fullscreen"
     },
     "features": {
         "music": true,

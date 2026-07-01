@@ -665,8 +665,52 @@ Technical:
 
 ---
 
+# 21. Theme Preview & Interaction System Guidelines
+
+Untuk menjamin kualitas interaksi yang premium bagi para tamu undangan, setiap tema harus mematuhi panduan interaksi berikut:
+
+## 21.1 Visual Entrance (Loading Screen)
+* Layar loading wajib menutupi seluruh area layar (fullscreen) dan menggunakan warna latar yang sesuai dengan token `--theme-surface`.
+* Gunakan double spinner melingkar dengan arah putaran berlawanan untuk memberikan kesan canggih.
+* Peralihan menghilangnya loading screen harus halus (`duration: 0.8` dengan easing `power2.out`) menggunakan GSAP dan langsung menghapus elemen dari DOM setelah selesai.
+
+## 21.2 Cover Entrance & Scroll Lock
+* Scroll halaman harus dikunci seutuhnya (`overflow: hidden` pada `<body>`) sebelum undangan dibuka untuk mencegah kebocoran visual konten utama.
+* Transisi pembukaan cover harus menggunakan efek pergeseran amplop ke atas (`yPercent: -100` dengan easing `power3.inOut`) selama minimal 0.8 detik.
+
+## 21.3 Audio Autoplay & Control Aesthetics
+* Kontrol musik harus diletakkan di area yang mudah dijangkau (seperti pojok kanan bawah) dengan indeks z-index tinggi.
+* Tombol musik wajib dilengkapi dengan animasi denyut ring ganda (*pulsing glow rings*) dan ikon berputar lambat (*spin-slow*) saat aktif.
+* Status pemutaran disimpan ke `localStorage` (`music_playing`) agar sesi mendengarkan tamu dapat pulih secara mulus saat memuat ulang halaman.
+
+---
+
+# 22. Theme Customization & Personalization Design Guidelines
+
+Meskipun pengguna dapat menyesuaikan isi dan beberapa aspek gaya visual, tema harus mempertahankan kualitas estetika premiumnya dengan mengikuti pedoman berikut:
+
+## 22.1 Dynamic Color Override Design
+* Jika pengguna menentukan warna kustom (`primary_color` dan `secondary_color`), pastikan kontras teks tetap tinggi terhadap warna latar belakang.
+* Warna kustom diterapkan melalui variabel CSS dan tidak boleh memecah palet warna pelengkap (seperti warna aksen) yang menjadi ciri khas tema.
+
+## 22.2 Font Scaling Boundaries
+* Penyesuaian `font_scale` (antara `0.5` dan `2.0`) menggunakan variabel CSS `--theme-font-scale` harus diimplementasikan secara proporsional.
+* Hindari teks tumpang tindih (*text overlapping*) pada layar mobile (360px - 430px) dengan memastikan container teks menggunakan properti `line-height` dan `flex-wrap` yang fleksibel.
+
+## 22.3 Texture vs. Plain Background
+* Opsi `plain` menonaktifkan tekstur dekoratif latar belakang untuk memberikan tampilan yang lebih bersih (*minimalist*).
+* Tema harus tetap elegan dengan menggunakan warna dasar yang kaya dari variabel CSS ketika tekstur dinonaktifkan.
+
+## 22.4 Custom Avatars & Milestone Photos
+* Desain bingkai foto mempelai (`groom_photo`, `bride_photo`) dan cerita cinta harus fleksibel:
+  * Jika gambar diunggah, render dalam kontainer berbentuk lingkaran/persegi bersisi bulat dengan properti `object-cover`.
+  * Sediakan placeholder ornamen inisial berkelas jika gambar tidak tersedia agar visual tidak terdistorsi.
+
+---
+
 # Final Rule
 
 Every wedding invitation theme must feel like:
 
 "A luxury digital wedding card, not a normal website."
+

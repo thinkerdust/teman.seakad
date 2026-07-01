@@ -1,4 +1,4 @@
-<section class="py-16 px-6 border-b border-neutral-850 text-center space-y-8" data-animation="fade-up" x-data="{ open: false }">
+<section class="py-16 px-6 border-b border-neutral-850 text-center space-y-8" {!! themeAnimation('gift') !!} x-data="{ open: false }">
     <div class="space-y-2">
         <h2 class="font-heading text-2xl text-amber-300 font-bold uppercase tracking-widest">Kado Digital</h2>
         <div class="h-[1px] w-12 bg-amber-400 mx-auto mt-2"></div>

@@ -38,6 +38,7 @@
                 'title' => $s->title,
                 'date' => $s->date,
                 'description' => $s->description,
+                'image' => $s->image ? asset($s->image) : null,
             ];
         })->values();
 
@@ -61,6 +62,7 @@
             weddingMood: '{{ $invitation->wedding_mood ?: '' }}',
             selectedMusicId: {{ $invitation->music->first() ? $invitation->music->first()->id : 'null' }}
         })"
+        @init="if(!sessionStorage.getItem('invitation_content_active_tab')) activeTab = 'couple'"
         class="space-y-6"
     >
         <!-- Header Info Card -->
@@ -101,28 +103,16 @@
         <!-- Navigation Tabs -->
         <div class="border-b border-slate-200 dark:border-slate-800">
             <nav class="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
-                <!-- Tab Galeri -->
+                <!-- Tab Mempelai -->
                 <button 
-                    @click="activeTab = 'gallery'"
-                    :class="activeTab === 'gallery' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
+                    @click="activeTab = 'couple'"
+                    :class="activeTab === 'couple' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
                     class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
                 >
-                    <svg :class="activeTab === 'gallery' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg :class="activeTab === 'couple' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    Galeri Foto
-                </button>
-
-                <!-- Tab Cerita Cinta -->
-                <button 
-                    @click="activeTab = 'stories'"
-                    :class="activeTab === 'stories' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
-                    class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
-                >
-                    <svg :class="activeTab === 'stories' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    Cerita Cinta
+                    Mempelai (Couple)
                 </button>
 
                 <!-- Tab Susunan Acara -->
@@ -137,6 +127,30 @@
                     Susunan Acara
                 </button>
 
+                <!-- Tab Cerita Cinta -->
+                <button 
+                    @click="activeTab = 'stories'"
+                    :class="activeTab === 'stories' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
+                    class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
+                >
+                    <svg :class="activeTab === 'stories' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    Cerita Cinta
+                </button>
+
+                <!-- Tab Galeri Foto -->
+                <button 
+                    @click="activeTab = 'gallery'"
+                    :class="activeTab === 'gallery' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
+                    class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
+                >
+                    <svg :class="activeTab === 'gallery' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Galeri Foto
+                </button>
+
                 <!-- Tab Musik Latar -->
                 <button 
                     @click="activeTab = 'music'"
@@ -148,11 +162,178 @@
                     </svg>
                     Musik Latar
                 </button>
+
+                <!-- Tab Gaya Visual -->
+                <button 
+                    @click="activeTab = 'style'"
+                    :class="activeTab === 'style' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
+                    class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
+                >
+                    <svg :class="activeTab === 'style' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                    Gaya Visual (Style)
+                </button>
+
+                <!-- Tab RSVP & Ucapan -->
+                <button 
+                    @click="activeTab = 'rsvp'"
+                    :class="activeTab === 'rsvp' ? 'border-indigo-500 text-indigo-650 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-450 dark:hover:text-slate-200'"
+                    class="group inline-flex items-center border-b-2 py-4 px-1 text-sm font-semibold transition whitespace-nowrap"
+                >
+                    <svg :class="activeTab === 'rsvp' ? 'text-indigo-500' : 'text-slate-400 group-hover:text-slate-500 dark:text-slate-500'" class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    RSVP & Ucapan
+                </button>
             </nav>
         </div>
 
         <!-- Tab Contents Wrapper -->
         <div class="mt-4">
+            <!-- TAB MEMPELAI (COUPLE) -->
+            <div x-show="activeTab === 'couple'" x-cloak class="space-y-6">
+                <x-admin.card title="Detail Undangan & Mempelai">
+                    <form 
+                        action="{{ route('admin.invitations.content.couple', $invitation->id) }}" 
+                        method="POST" 
+                        enctype="multipart/form-data"
+                        class="space-y-6"
+                    >
+                        @csrf
+                        
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Judul Undangan</label>
+                                <input 
+                                    type="text" 
+                                    name="title" 
+                                    value="{{ old('title', $invitation->title) }}"
+                                    required
+                                    placeholder="Contoh: Pernikahan Andi & Budi"
+                                    class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Deskripsi Singkat</label>
+                                <input 
+                                    type="text" 
+                                    name="description" 
+                                    value="{{ old('description', $invitation->description) }}"
+                                    placeholder="Contoh: Kami mengundang Anda untuk merayakan..."
+                                    class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                />
+                            </div>
+                        </div>
+
+                        <hr class="border-slate-200 dark:border-slate-800" />
+
+                        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                            <!-- Mempelai Pria -->
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-bold text-indigo-650 dark:text-indigo-400">Mempelai Pria (Groom)</h4>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Nama Lengkap</label>
+                                    <input 
+                                        type="text" 
+                                        name="groom_name" 
+                                        value="{{ old('groom_name', $invitation->groom_name) }}"
+                                        required
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Nama Panggilan (Nickname)</label>
+                                    <input 
+                                        type="text" 
+                                        name="groom_nickname" 
+                                        value="{{ old('groom_nickname', $invitation->groom_nickname) }}"
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Foto Mempelai Pria</label>
+                                    <div class="flex items-center gap-4 mt-2">
+                                        <div class="h-16 w-16 rounded-xl border border-slate-200 bg-slate-100 overflow-hidden flex-shrink-0 dark:border-slate-800 animate-pulse-none">
+                                            @if($invitation->groom_photo)
+                                                <img src="{{ asset($invitation->groom_photo) }}" alt="Groom Photo" class="h-full w-full object-cover" />
+                                            @else
+                                                <div class="h-full w-full flex items-center justify-center text-slate-400">
+                                                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <input 
+                                            type="file" 
+                                            name="groom_photo" 
+                                            accept="image/*"
+                                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-950/40 dark:file:text-indigo-400"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mempelai Wanita -->
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-bold text-pink-650 dark:text-pink-400">Mempelai Wanita (Bride)</h4>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Nama Lengkap</label>
+                                    <input 
+                                        type="text" 
+                                        name="bride_name" 
+                                        value="{{ old('bride_name', $invitation->bride_name) }}"
+                                        required
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Nama Panggilan (Nickname)</label>
+                                    <input 
+                                        type="text" 
+                                        name="bride_nickname" 
+                                        value="{{ old('bride_nickname', $invitation->bride_nickname) }}"
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Foto Mempelai Wanita</label>
+                                    <div class="flex items-center gap-4 mt-2">
+                                        <div class="h-16 w-16 rounded-xl border border-slate-200 bg-slate-100 overflow-hidden flex-shrink-0 dark:border-slate-800">
+                                            @if($invitation->bride_photo)
+                                                <img src="{{ asset($invitation->bride_photo) }}" alt="Bride Photo" class="h-full w-full object-cover" />
+                                            @else
+                                                <div class="h-full w-full flex items-center justify-center text-slate-400">
+                                                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <input 
+                                            type="file" 
+                                            name="bride_photo" 
+                                            accept="image/*"
+                                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 dark:file:bg-pink-950/40 dark:file:text-pink-400"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button 
+                                type="submit" 
+                                class="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition duration-150"
+                            >
+                                Simpan Perubahan Mempelai
+                            </button>
+                        </div>
+                    </form>
+                </x-admin.card>
+            </div>
+
             <!-- TAB GALERI -->
             <div x-show="activeTab === 'gallery'" x-cloak class="space-y-6">
                 <x-admin.card title="Unggah Foto Galeri">
@@ -219,25 +400,62 @@
                                         alt="Gallery Photo" 
                                         class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                     />
+                                    
+                                    @if(!$gallery->is_visible)
+                                        <div class="absolute top-2 left-2 z-10 rounded-md bg-slate-900/80 px-2 py-0.5 text-xxs font-semibold text-slate-200 flex items-center gap-1">
+                                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                                            </svg>
+                                            Disembunyikan
+                                        </div>
+                                        <div class="absolute inset-0 bg-slate-950/40 pointer-events-none"></div>
+                                    @endif
+
                                     <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition duration-200 group-hover:opacity-100">
-                                        <form 
-                                            action="{{ route('admin.invitations.content.gallery', $invitation->id) }}" 
-                                            method="POST"
-                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?');"
-                                        >
-                                            @csrf
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="gallery_id" value="{{ $gallery->id }}">
-                                            <button 
-                                                type="submit" 
-                                                class="rounded-lg bg-rose-650 p-2 text-white shadow-md hover:bg-rose-600 transition"
-                                                title="Hapus Foto"
+                                        <div class="flex items-center gap-2">
+                                            <!-- Toggle Visibility Form -->
+                                            <form action="{{ route('admin.invitations.content.gallery', $invitation->id) }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="action" value="toggle-visibility">
+                                                <input type="hidden" name="gallery_id" value="{{ $gallery->id }}">
+                                                <button 
+                                                    type="submit" 
+                                                    class="rounded-lg bg-indigo-650 p-2 text-white shadow-md hover:bg-indigo-600 transition"
+                                                    title="{{ $gallery->is_visible ? 'Sembunyikan dari Undangan' : 'Tampilkan di Undangan' }}"
+                                                >
+                                                    @if($gallery->is_visible)
+                                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    @else
+                                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                                                        </svg>
+                                                    @endif
+                                                </button>
+                                            </form>
+
+                                            <!-- Delete Form -->
+                                            <form 
+                                                action="{{ route('admin.invitations.content.gallery', $invitation->id) }}" 
+                                                method="POST"
+                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?');"
                                             >
-                                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                            </button>
-                                        </form>
+                                                @csrf
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="gallery_id" value="{{ $gallery->id }}">
+                                                <button 
+                                                    type="submit" 
+                                                    class="rounded-lg bg-rose-650 p-2 text-white shadow-md hover:bg-rose-600 transition"
+                                                    title="Hapus Foto"
+                                                >
+                                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -248,7 +466,7 @@
 
             <!-- TAB CERITA CINTA -->
             <div x-show="activeTab === 'stories'" x-cloak>
-                <form action="{{ route('admin.invitations.content.story', $invitation->id) }}" method="POST" class="space-y-4">
+                <form action="{{ route('admin.invitations.content.story', $invitation->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <input type="hidden" name="delete_story_ids" :value="deletedStoryIds.join(',')">
                     
@@ -270,7 +488,7 @@
                                 </button>
                             </div>
                         </x-slot:header>
-
+ 
                         <!-- Alpine Dynamic Stories List -->
                         <div class="space-y-6">
                             <template x-for="(story, index) in stories" :key="index">
@@ -286,10 +504,10 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                     </button>
-
+ 
                                     <!-- Story ID -->
                                     <input type="hidden" :name="`stories[${index}][id]`" x-model="story.id">
-
+ 
                                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 pr-6">
                                         <!-- Title -->
                                         <div>
@@ -303,7 +521,7 @@
                                                 class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:text-white"
                                             />
                                         </div>
-
+ 
                                         <!-- Date -->
                                         <div>
                                             <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Tanggal / Waktu <span class="text-rose-500">*</span></label>
@@ -317,7 +535,7 @@
                                             />
                                         </div>
                                     </div>
-
+ 
                                     <!-- Description -->
                                     <div class="pr-6">
                                         <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Isi Cerita <span class="text-rose-500">*</span></label>
@@ -329,6 +547,31 @@
                                             placeholder="Tulis detail singkat cerita cinta Anda di milestone ini..."
                                             class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:text-white"
                                         ></textarea>
+                                    </div>
+
+                                    <!-- Milestone Image Upload -->
+                                    <div class="pr-6">
+                                        <label class="block text-xs font-bold text-slate-650 dark:text-slate-350 mb-1">Foto Cerita (Opsional)</label>
+                                        <div class="flex items-center gap-4 mt-2">
+                                            <div class="h-16 w-16 rounded-xl border border-slate-200 bg-slate-100 overflow-hidden flex-shrink-0 dark:border-slate-800">
+                                                <template x-if="story.image">
+                                                    <img :src="story.image" alt="Milestone Image" class="h-full w-full object-cover" />
+                                                </template>
+                                                <template x-if="!story.image">
+                                                    <div class="h-full w-full flex items-center justify-center text-slate-400">
+                                                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <input 
+                                                type="file" 
+                                                :name="`stories[${index}][image]`" 
+                                                accept="image/*"
+                                                class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-950/40 dark:file:text-indigo-400"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </template>
@@ -846,6 +1089,195 @@
                             Tidak ada lagu di perpustakaan yang cocok dengan pencarian dan filter Anda.
                         </div>
                     </div>
+                </x-admin.card>
+            </div>
+
+            <!-- TAB GAYA VISUAL (STYLE) -->
+            <div x-show="activeTab === 'style'" x-cloak class="space-y-6">
+                @php
+                    $customStyle = $invitation->customization['custom_style'] ?? [];
+                    $defaultThemeColors = $invitation->theme?->config['design']['colors'] ?? [];
+                    $primaryColor = $customStyle['primary_color'] ?? ($defaultThemeColors['primary'] ?? '#b86b70');
+                    $secondaryColor = $customStyle['secondary_color'] ?? ($defaultThemeColors['secondary'] ?? '#ebdcd7');
+                    $fontScale = $customStyle['font_scale'] ?? 1.0;
+                    $bgOption = $customStyle['background_option'] ?? 'texture';
+                @endphp
+                <x-admin.card title="Kustomisasi Gaya Visual Tema">
+                    <form 
+                        action="{{ route('admin.invitations.content.style', $invitation->id) }}" 
+                        method="POST"
+                        class="space-y-6"
+                    >
+                        @csrf
+                        
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <!-- Warna Utama -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Warna Utama (Primary Color)</label>
+                                <div class="flex items-center gap-3">
+                                    <input 
+                                        type="color" 
+                                        name="primary_color" 
+                                        value="{{ $primaryColor }}"
+                                        class="h-10 w-16 cursor-pointer rounded-lg border border-slate-200 dark:border-slate-800"
+                                    />
+                                    <input 
+                                        type="text" 
+                                        value="{{ $primaryColor }}"
+                                        oninput="this.previousElementSibling.value = this.value"
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                        placeholder="#hexcode"
+                                    />
+                                </div>
+                                <p class="mt-1 text-xxs text-slate-400">Warna dominan untuk tombol, judul besar, dan aksen penting.</p>
+                            </div>
+
+                            <!-- Warna Sekunder -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Warna Sekunder (Secondary Color)</label>
+                                <div class="flex items-center gap-3">
+                                    <input 
+                                        type="color" 
+                                        name="secondary_color" 
+                                        value="{{ $secondaryColor }}"
+                                        class="h-10 w-16 cursor-pointer rounded-lg border border-slate-200 dark:border-slate-800"
+                                    />
+                                    <input 
+                                        type="text" 
+                                        value="{{ $secondaryColor }}"
+                                        oninput="this.previousElementSibling.value = this.value"
+                                        class="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                        placeholder="#hexcode"
+                                    />
+                                </div>
+                                <p class="mt-1 text-xxs text-slate-400">Warna pendukung untuk border, tombol sekunder, atau variasi sub-section.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <!-- Skala Font -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Ukuran Skala Font (Font Scale)</label>
+                                <div class="flex items-center gap-4">
+                                    <input 
+                                        type="range" 
+                                        name="font_scale" 
+                                        min="0.5" 
+                                        max="2.0" 
+                                        step="0.05" 
+                                        value="{{ $fontScale }}"
+                                        class="w-full cursor-pointer accent-indigo-600"
+                                        oninput="this.nextElementSibling.value = this.value"
+                                    />
+                                    <output class="text-sm font-bold text-slate-700 dark:text-slate-300 w-10 text-center">{{ $fontScale }}</output>
+                                </div>
+                                <p class="mt-1 text-xxs text-slate-400">Sesuaikan tingkat keterbacaan teks (default: 1.0, disarankan berkisar 0.85 - 1.25).</p>
+                            </div>
+
+                            <!-- Opsi Latar Belakang -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Latar Belakang (Background Option)</label>
+                                <select 
+                                    name="background_option" 
+                                    class="w-full rounded-xl border border-slate-200 bg-white dark:bg-slate-950 px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none dark:border-slate-800 dark:text-white"
+                                >
+                                    <option value="texture" {{ $bgOption === 'texture' ? 'selected' : '' }}>Gunakan Tekstur Bawaan Tema (Default)</option>
+                                    <option value="plain" {{ $bgOption === 'plain' ? 'selected' : '' }}>Polos (Tanpa Tekstur Latar)</option>
+                                </select>
+                                <p class="mt-1 text-xxs text-slate-400">Jika tekstur background dinilai terlalu ramai, Anda dapat mematikan gambar tekstur.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button 
+                                type="submit" 
+                                class="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition duration-150"
+                            >
+                                Simpan Kustomisasi Visual
+                            </button>
+                        </div>
+                    </form>
+                </x-admin.card>
+            </div>
+
+            <!-- TAB RSVP & UCAPAN -->
+            <div x-show="activeTab === 'rsvp'" x-cloak class="space-y-6">
+                @php
+                    $rsvpStats = [
+                        'hadir' => $invitation->guests->where('attendance', 'hadir')->count(),
+                        'tidak_hadir' => $invitation->guests->where('attendance', 'tidak_hadir')->count(),
+                        'belum_pasti' => $invitation->guests->where('attendance', 'belum_pasti')->count(),
+                    ];
+                @endphp
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <x-admin.stat-card title="Konfirmasi Hadir" value="{{ $rsvpStats['hadir'] }}">
+                        <x-slot:iconSlot>
+                            <svg class="h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </x-slot:iconSlot>
+                    </x-admin.stat-card>
+                    <x-admin.stat-card title="Tidak Hadir" value="{{ $rsvpStats['tidak_hadir'] }}">
+                        <x-slot:iconSlot>
+                            <svg class="h-6 w-6 text-rose-650 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </x-slot:iconSlot>
+                    </x-admin.stat-card>
+                    <x-admin.stat-card title="Belum Pasti" value="{{ $rsvpStats['belum_pasti'] }}">
+                        <x-slot:iconSlot>
+                            <svg class="h-6 w-6 text-amber-650 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </x-slot:iconSlot>
+                    </x-admin.stat-card>
+                </div>
+
+                <x-admin.card title="Daftar RSVP & Ucapan Tamu">
+                    @if($invitation->guests->isEmpty())
+                        <div class="flex flex-col items-center justify-center py-12 text-center">
+                            <div class="rounded-full bg-slate-100 p-3 dark:bg-slate-800">
+                                <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                            <h4 class="mt-4 font-semibold text-slate-800 dark:text-white">Belum Ada RSVP / Ucapan</h4>
+                            <p class="mt-1 text-sm text-slate-400 dark:text-slate-500 max-w-xs">
+                                Konfirmasi kehadiran dari para undangan yang mengunjungi halaman publik Anda akan tercatat di sini.
+                            </p>
+                        </div>
+                    @else
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse text-left text-sm text-slate-550 dark:text-slate-400">
+                                <thead class="bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-800">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Nama Tamu</th>
+                                        <th scope="col" class="px-6 py-3">No. Telepon</th>
+                                        <th scope="col" class="px-6 py-3">Status Kehadiran</th>
+                                        <th scope="col" class="px-6 py-3">Ucapan / Doa Restu</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                                    @foreach($invitation->guests as $guest)
+                                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                                            <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">{{ $guest->name }}</td>
+                                            <td class="px-6 py-4 font-mono text-xs">{{ $guest->phone ?: '-' }}</td>
+                                            <td class="px-6 py-4">
+                                                @if($guest->attendance === 'hadir')
+                                                    <span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950/30 dark:text-emerald-400">Hadir</span>
+                                                @elseif($guest->attendance === 'tidak_hadir')
+                                                    <span class="inline-flex items-center rounded-md bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20 dark:bg-rose-950/30 dark:text-rose-400">Tidak Hadir</span>
+                                                @else
+                                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950/30 dark:text-amber-400">Belum Pasti</span>
+                                                @endif
+                                            </td>
+                                            <td class="px-6 py-4 text-xs max-w-sm italic">{{ $guest->message ?: 'Tidak ada pesan' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </x-admin.card>
             </div>
         </div>
