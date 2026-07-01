@@ -58,6 +58,7 @@ class ThemeConfigService
             'version' => '1.0',
             'author' => 'Teman Seakad',
         ], $config, [
+            'folder' => $theme->folder,
             'identity' => [
                 'style' => $config['identity']['style'] ?? 'default',
                 'mood' => $config['identity']['mood'] ?? ['romantic'],
