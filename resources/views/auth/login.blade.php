@@ -11,6 +11,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS Assets -->
+    <script>
+        // Sinkronkan tema gelap dari localStorage sebelum page load untuk menghindari flash
+        try {
+            const darkMode = localStorage.getItem('_x_darkMode');
+            if (darkMode === 'true') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        } catch (e) {
+            console.error('Gagal memuat tema gelap', e);
+        }
+    </script>
     @vite(['resources/css/admin.css'])
 </head>
 <body class="bg-slate-50 font-sans text-slate-600 antialiased dark:bg-slate-950 dark:text-slate-400">

@@ -282,17 +282,17 @@ class DashboardSeeder extends Seeder
             // Seed Galleries (only if not seeded already for this invitation to avoid duplicates)
             if ($invitation->galleries()->count() === 0) {
                 $galleryImages = [
-                    '/assets/demo/gallery/IMG_8305.JPG',
-                    '/assets/demo/gallery/IMG_8306.JPG',
-                    '/assets/demo/gallery/IMG_8309.JPG',
-                    '/assets/demo/gallery/IMG_8312.JPG',
-                    '/assets/demo/gallery/IMG_8313.JPG',
-                    '/assets/demo/gallery/IMG_8314.JPG',
-                    '/assets/demo/gallery/IMG_8315.JPG',
-                    '/assets/demo/gallery/IMG_8316.JPG',
-                    '/assets/demo/gallery/IMG_8317.JPG',
-                    '/assets/demo/gallery/IMG_8318.JPG',
-                    '/assets/demo/gallery/IMG_8320.JPG',
+                    '/assets/demo/gallery/IMG_8305.jpg',
+                    '/assets/demo/gallery/IMG_8306.jpg',
+                    '/assets/demo/gallery/IMG_8309.jpg',
+                    '/assets/demo/gallery/IMG_8312.jpg',
+                    '/assets/demo/gallery/IMG_8313.jpg',
+                    '/assets/demo/gallery/IMG_8314.jpg',
+                    '/assets/demo/gallery/IMG_8315.jpg',
+                    '/assets/demo/gallery/IMG_8316.jpg',
+                    '/assets/demo/gallery/IMG_8317.jpg',
+                    '/assets/demo/gallery/IMG_8318.jpg',
+                    '/assets/demo/gallery/IMG_8320.jpg',
                 ];
 
                 // Shuffle and pick 6 images

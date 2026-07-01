@@ -30,7 +30,7 @@
     <script src="{{ asset('assets/vendor/gsap/gsap.min.js') }}" defer></script>
     <script src="{{ asset('assets/vendor/gsap/ScrollTrigger.min.js') }}" defer></script>
     
-    <!-- Theme Isolated CSS -->
+    <!-- Theme Isolated CSS (imports variables, animation, components) -->
     <link rel="stylesheet" href="{{ asset('themes/' . $invitation->theme->folder . '/css/style.css') }}">
     
     <!-- Dynamic Theme Tokens -->
@@ -43,21 +43,26 @@
         [x-cloak] {
             display: none !important;
         }
+        /* Focus ring for form inputs */
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--theme-primary) !important;
+            box-shadow: 0 0 0 3px rgba(184, 107, 112, 0.12) !important;
+        }
     </style>
 
     <script>
         window.invitationData = @json($invitationData);
     </script>
 </head>
-<body class="antialiased min-h-screen relative overflow-x-hidden overflow-hidden" x-data="{ opened: false }">
+<body class="antialiased min-h-screen relative overflow-x-hidden overflow-hidden" style="background-color: var(--theme-background);" x-data="{ opened: false }">
 
     <!-- Loading Screen -->
-    <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--theme-surface,#ffffff)]">
+    <div id="loading-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center" style="background-color: var(--theme-surface);">
         <div class="relative flex flex-col items-center">
             <!-- Premium double spinner -->
-            <div class="w-16 h-16 border-4 border-[var(--theme-primary)]/20 border-t-[var(--theme-primary)] rounded-full animate-spin"></div>
-            <div class="absolute w-10 h-10 border-4 border-[var(--theme-secondary)]/20 border-t-[var(--theme-secondary)] rounded-full animate-spin [animation-direction:reverse] top-3"></div>
-            <span class="mt-4 text-sm font-medium tracking-wider text-[var(--theme-text)]/70 animate-pulse">Memuat Undangan...</span>
+            <div class="w-16 h-16 rounded-full animate-spin" style="border: 4px solid var(--theme-secondary); border-top-color: var(--theme-primary);"></div>
+            <div class="absolute w-10 h-10 rounded-full animate-spin top-3" style="border: 4px solid var(--theme-secondary); border-top-color: var(--theme-accent); animation-direction: reverse;"></div>
+            <span class="mt-4 text-sm font-medium tracking-wider animate-pulse" style="color: var(--theme-text); opacity: 0.6;">Memuat Undangan...</span>
         </div>
     </div>
 
@@ -68,7 +73,7 @@
     ])
 
     <!-- Main Content (revealed after clicking Buka Undangan) -->
-    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen shadow-2xl relative z-10 theme-{{ $invitation->theme->folder }}" style="background-image: var(--theme-background-texture);">
+    <div id="main-content" class="hidden opacity-0 w-full max-w-md mx-auto min-h-screen shadow-2xl relative z-10 theme-background theme-{{ $invitation->theme->folder }}">
         
         <!-- Couple Section -->
         @include('themes.' . $invitation->theme->folder . '.components.couple', [
@@ -84,11 +89,15 @@
             ])
         @endif
 
+        @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'both'])
+
         <!-- Events Section -->
         @include('themes.' . $invitation->theme->folder . '.components.event', [
             'invitationData' => $invitationData,
             'invitation' => $invitation
         ])
+
+        @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'flower'])
 
         <!-- Story Section -->
         @if(($themeConfig['features']['stories'] ?? true) && count($invitationData['story']) > 0)
@@ -96,6 +105,7 @@
                 'invitationData' => $invitationData,
                 'invitation' => $invitation
             ])
+            @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'gold'])
         @endif
 
         <!-- Gallery Section -->
@@ -104,6 +114,7 @@
                 'invitationData' => $invitationData,
                 'invitation' => $invitation
             ])
+            @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'both'])
         @endif
 
         <!-- Gift Section -->
@@ -112,6 +123,7 @@
                 'invitationData' => $invitationData,
                 'invitation' => $invitation
             ])
+            @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'flower'])
         @endif
 
         <!-- RSVP Section -->
@@ -120,6 +132,7 @@
                 'invitationData' => $invitationData,
                 'invitation' => $invitation
             ])
+            @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'gold'])
         @endif
 
         <!-- Guest Wish Section -->
@@ -127,6 +140,8 @@
             'invitationData' => $invitationData,
             'invitation' => $invitation
         ])
+
+        @include('themes.' . $invitation->theme->folder . '.components.section-divider', ['type' => 'both'])
 
         <!-- Footer Section -->
         @include('themes.' . $invitation->theme->folder . '.components.footer', [
@@ -176,8 +191,6 @@
                         audioPlayer.play().catch(err => console.log('Autoplay blocked or failed:', err));
                     }
 
-                    
-
                     // GSAP transition
                     gsap.timeline()
                         .to(btnOpen, { duration: 0.3, scale: 0, opacity: 0, ease: 'power2.in' })
@@ -191,11 +204,42 @@
                             
                             // Dispatch custom event to trigger animations and music
                             window.dispatchEvent(new CustomEvent('invitation-opened'));
+
+                            // Initialize scroll animation observer
+                            initScrollAnimations();
                         });
                 });
             }
 
-            
+            /**
+             * CSS Animation Scroll Observer
+             * 
+             * Watches elements with [data-animation] attribute.
+             * Adds .is-visible class when element enters viewport.
+             * Works with .fade-up, .fade-down, .fade-in, .scale-in, .slide-left, .slide-right
+             */
+            function initScrollAnimations() {
+                const animatedElements = document.querySelectorAll('[data-animation]');
+                
+                if (!animatedElements.length) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target); // Animate once
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '0px 0px -60px 0px',
+                    threshold: 0.1
+                });
+
+                animatedElements.forEach(el => {
+                    observer.observe(el);
+                });
+            }
         });
     </script>
 </body>
