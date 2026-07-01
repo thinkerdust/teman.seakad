@@ -1,5 +1,14 @@
+{{-- 
+    Guest Wish — Doa & Ucapan
+    
+    Premium styling with theme tokens.
+    Scrollable container with custom scrollbar.
+    Real-time update when RSVP submitted.
+--}}
+
 <section 
-    class="py-16 px-6 border-b border-[var(--theme-secondary)]/50 space-y-8" 
+    class="py-12 px-6 space-y-8 relative"
+    style="border-bottom: 1px solid var(--theme-secondary);"
     {!! themeAnimation('guest-wish') !!}
     x-data='{
         wishes: @json($invitation->guests->whereNotNull("message")->sortByDesc("created_at")->map(function($g) {
@@ -22,24 +31,34 @@
         }
     }'
 >
-    <div class="text-center space-y-2">
-        <h2 class="text-2xl font-bold uppercase tracking-widest text-[var(--theme-primary)]" style="font-family: var(--theme-font-heading);">Doa & Ucapan</h2>
-        <div class="h-[1px] w-12 bg-[var(--theme-primary)] mx-auto mt-2 opacity-50"></div>
+    {{-- Section Header --}}
+    <div class="section-header fade-up" data-animation>
+        <h2 class="section-title" style="font-family: var(--theme-font-heading); color: var(--theme-primary);">Doa & Ucapan</h2>
+        <div class="section-line"></div>
     </div>
 
-    <!-- Wishes Container -->
-    <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 max-w-md mx-auto custom-scrollbar">
+    {{-- Wishes Container --}}
+    <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2 max-w-md mx-auto custom-scrollbar fade-up" data-animation style="animation-delay: 0.15s;">
         <template x-for="wish in wishes" :key="wish.name + wish.time">
-            <div class="bg-[var(--theme-surface)]/80 border border-[var(--theme-secondary)]/60 rounded-2xl p-5 space-y-2 shadow-sm text-left">
+            <div class="p-4 space-y-1.5 text-left shadow-sm transition duration-300"
+                 style="background: var(--theme-surface); border: 1px solid var(--theme-secondary); border-radius: var(--theme-radius-lg);">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-[var(--theme-primary)] font-body" style="font-family: var(--theme-font-body);" x-text="wish.name"></h4>
-                    <span class="text-[10px] text-[var(--theme-text)] opacity-40 font-body" style="font-family: var(--theme-font-body);" x-text="wish.time"></span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider" 
+                        style="color: var(--theme-primary); font-family: var(--theme-font-body);" 
+                        x-text="wish.name"></h4>
+                    <span class="text-[10px] opacity-40" 
+                          style="color: var(--theme-text); font-family: var(--theme-font-body);" 
+                          x-text="wish.time"></span>
                 </div>
-                <p class="text-xs text-[var(--theme-text)] opacity-80 leading-relaxed font-body" style="font-family: var(--theme-font-body);" x-text="wish.message"></p>
+                <p class="text-xs opacity-75 leading-relaxed" 
+                   style="color: var(--theme-text); font-family: var(--theme-font-body);" 
+                   x-text="wish.message"></p>
             </div>
         </template>
 
-        <div x-show="wishes.length === 0" class="text-center py-8 text-[var(--theme-text)] opacity-50 text-xs font-body" style="font-family: var(--theme-font-body);">
+        <div x-show="wishes.length === 0" 
+             class="text-center py-8 text-xs opacity-45" 
+             style="color: var(--theme-text); font-family: var(--theme-font-body);">
             Belum ada ucapan. Jadilah yang pertama memberikan doa restu!
         </div>
     </div>

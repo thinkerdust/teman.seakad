@@ -1,57 +1,85 @@
 {
     "name": "Floral Elegant",
-    "version": "1.0",
+    "version": "2.0",
     "author": "Teman Seakad",
     "identity": {
         "style": "romantic",
         "mood": [
             "soft",
             "warm",
-            "beautiful"
+            "beautiful",
+            "luxury",
+            "cinematic"
         ],
-        "description": "Soft and romantic floral wedding experience"
+        "description": "A luxury floral wedding invitation card brought to life digitally"
     },
     "design": {
         "colors": {
             "primary": "#b86b70",
             "secondary": "#ebdcd7",
-            "accent": "#8fa89b",
+            "accent": "#D4AF37",
             "background": "#faf6f0",
-            "text": "#4e3e3b"
+            "text": "#4e3e3b",
+            "surface": "#ffffff"
         },
         "typography": {
             "heading": "Playfair Display",
-            "body": "Instrument Sans"
+            "body": "Instrument Sans",
+            "accent": "Great Vibes",
+            "decorative": "Cinzel"
         }
     },
     "motion": {
         "opening": {
-            "type": "fade-in",
-            "duration": 2000
+            "type": "cinematic-sequence",
+            "duration": 3500
         },
         "section": {
-            "type": "fade-up",
-            "duration": 1200
+            "type": "scroll-reveal",
+            "duration": 800
         },
         "gallery": {
-            "type": "zoom-in",
+            "type": "masonry-reveal",
             "transition": "smooth"
         },
         "button": {
-            "type": "hover-scale"
+            "type": "pulse-glow"
         }
     },
     "assets": {
-        "hero": {
-            "background": "images/hero/main.jpg",
-            "overlay": true
-        },
-        "ornaments": [
-            "ornaments/floral-frame.png",
-            "ornaments/floral-corner.png"
-        ],
         "background": {
-            "texture": "backgrounds/soft.png"
+            "cover": "images/background/cover-bg.png",
+            "paper": "images/background/paper-texture.png",
+            "watercolor": "images/background/watercolor-bg.png",
+            "gallery": "images/background/gallery-bg.png"
+        },
+        "floral": {
+            "corner_left": "images/floral/flower-corner-top-left.png",
+            "corner_right": "images/floral/flower-corner-top-right.png",
+            "corner_bottom": "images/floral/flower-corner-bottom-right.png",
+            "rose_01": "images/floral/rose-01.png",
+            "rose_02": "images/floral/rose-02.png",
+            "leaf_01": "images/floral/leaf-01.png",
+            "leaf_02": "images/floral/leaf-02.png",
+            "bouquet": "images/floral/bouquet.png"
+        },
+        "frame": {
+            "arch": "images/frame/frame-arch.png",
+            "modern": "images/frame/frame-modern.png",
+            "round": "images/frame/frame-round.png"
+        },
+        "ornament": {
+            "divider": "images/divider/flower-divider.png",
+            "gold_line": "images/ornament/gold-line.png"
+        },
+        "icon": {
+            "calendar": "images/icon/calendar.png",
+            "location": "images/icon/location.png",
+            "gift": "images/icon/gift.png"
+        },
+        "illustration": {
+            "couple": "images/illustration/couple.png",
+            "envelope": "images/illustration/envelope.png"
         },
         "audio": {
             "enabled": true

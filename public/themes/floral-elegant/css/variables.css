@@ -1,0 +1,65 @@
+/* ============================================================
+   Floral Elegant — Theme Token System (variables.css)
+   
+   Semua variabel token desain disimpan di sini.
+   Komponen dan animasi harus selalu mereferensi token ini.
+   Dilarang keras: color:#xxx atau font-family langsung.
+   ============================================================ */
+
+:root {
+    /* ── Color Palette ── */
+    --theme-primary: #b86b70;
+    --theme-secondary: #ebdcd7;
+    --theme-accent: #D4AF37;
+    --theme-background: #faf6f0;
+    --theme-text: #4e3e3b;
+    --theme-surface: #ffffff;
+
+    /* ── Extended Palette ── */
+    --theme-primary-light: #c78283;
+    --theme-primary-dark: #9a5458;
+    --theme-background-warm: #f5eee6;
+    --theme-border: #ebdcd7;
+    --theme-text-secondary: #8a7370;
+    --theme-text-muted: #b8a5a0;
+    --theme-gold-glow: rgba(212, 175, 55, 0.15);
+    --theme-rose-glow: rgba(184, 107, 112, 0.12);
+
+    /* ── Typography ── */
+    --theme-font-heading: 'Playfair Display', Georgia, serif;
+    --theme-font-body: 'Instrument Sans', sans-serif;
+    --theme-font-accent: 'Great Vibes', cursive;
+    --theme-font-decorative: 'Cinzel', serif;
+
+    /* ── Border Radius (Floral Elegant = soft rounded) ── */
+    --theme-radius: 1rem;
+    --theme-radius-sm: 0.75rem;
+    --theme-radius-lg: 1.5rem;
+    --theme-radius-xl: 2rem;
+    --theme-radius-full: 9999px;
+
+    /* ── Spacing ── */
+    --theme-section-py: 4rem;
+    --theme-section-px: 1.5rem;
+
+    /* ── Shadows ── */
+    --theme-shadow-sm: 0 2px 8px rgba(184, 107, 112, 0.06);
+    --theme-shadow-md: 0 8px 24px rgba(184, 107, 112, 0.08);
+    --theme-shadow-lg: 0 16px 48px rgba(184, 107, 112, 0.1);
+    --theme-shadow-glow: 0 0 20px rgba(184, 107, 112, 0.15);
+
+    /* ── Transitions ── */
+    --theme-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --theme-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --theme-duration-fast: 0.2s;
+    --theme-duration: 0.4s;
+    --theme-duration-slow: 0.8s;
+
+    /* ── Glass Effect ── */
+    --theme-glass-bg: rgba(255, 255, 255, 0.45);
+    --theme-glass-border: rgba(255, 255, 255, 0.6);
+    --theme-glass-blur: 12px;
+
+    /* ── Background Texture ── */
+    --theme-background-texture: url('/themes/floral-elegant/images/background/paper-texture.png');
+}

@@ -1,35 +1,48 @@
-<section class="countdown-section py-12 px-4 text-center border-b border-[var(--theme-secondary)]/50" {!! themeAnimation('countdown') !!}>
+{{-- 
+    Countdown — Glass Premium Style
+    
+    From plain numbers to premium glass card countdown
+    with soft pulse animation and theme variables.
+--}}
+
+<section class="py-12 px-4 text-center relative" style="border-bottom: 1px solid var(--theme-secondary);" {!! themeAnimation('countdown') !!}>
     <div class="max-w-xl mx-auto">
-        <h3 class="countdown-title text-sm sm:text-base uppercase tracking-widest font-semibold mb-6 text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);">
-            Menuju Hari Bahagia
-        </h3>
+        {{-- Title --}}
+        <div class="fade-up" data-animation>
+            <h3 class="section-subtitle mb-1" style="color: var(--theme-primary);">Menghitung Hari</h3>
+            <p class="section-title text-lg" style="font-family: var(--theme-font-heading);">Menuju Hari Bahagia</p>
+            <div class="section-line mt-2 mb-8"></div>
+        </div>
         
+        {{-- Countdown Grid --}}
         <div 
             x-data="countdownTimer('{{ $invitation->reception_date ? $invitation->reception_date->format('Y-m-d\TH:i:s') : ( $invitation->akad_date ? $invitation->akad_date->format('Y-m-d\TH:i:s') : '' ) }}')"
-            class="grid grid-cols-4 gap-2 sm:gap-4 max-w-sm sm:max-w-md mx-auto"
+            class="grid grid-cols-4 gap-2 sm:gap-4 max-w-sm sm:max-w-md mx-auto fade-up"
+            data-animation
+            style="animation-delay: 0.2s;"
         >
-            <!-- Hari -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 shadow-md">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="days">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Hari</span>
+            {{-- Hari --}}
+            <div class="countdown-glass-card soft-pulse" style="animation-delay: 0s;">
+                <span class="countdown-number" x-text="days">00</span>
+                <span class="countdown-label">Hari</span>
             </div>
             
-            <!-- Jam -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 shadow-md">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="hours">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Jam</span>
+            {{-- Jam --}}
+            <div class="countdown-glass-card soft-pulse" style="animation-delay: 0.5s;">
+                <span class="countdown-number" x-text="hours">00</span>
+                <span class="countdown-label">Jam</span>
             </div>
             
-            <!-- Menit -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 shadow-md">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="minutes">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Menit</span>
+            {{-- Menit --}}
+            <div class="countdown-glass-card soft-pulse" style="animation-delay: 1s;">
+                <span class="countdown-number" x-text="minutes">00</span>
+                <span class="countdown-label">Menit</span>
             </div>
             
-            <!-- Detik -->
-            <div class="countdown-card flex flex-col justify-center items-center p-3 sm:p-4 rounded-xl backdrop-blur-md bg-[var(--theme-surface)]/60 border border-[var(--theme-secondary)]/40 shadow-md">
-                <span class="countdown-number text-2xl sm:text-4xl font-bold tracking-tight text-[var(--theme-primary)] font-heading" style="font-family: var(--theme-font-heading);" x-text="seconds">00</span>
-                <span class="countdown-label text-[9px] sm:text-xs uppercase tracking-wider text-[var(--theme-text)] opacity-70 mt-1 font-body" style="font-family: var(--theme-font-body);">Detik</span>
+            {{-- Detik --}}
+            <div class="countdown-glass-card soft-pulse" style="animation-delay: 1.5s;">
+                <span class="countdown-number" x-text="seconds">00</span>
+                <span class="countdown-label">Detik</span>
             </div>
         </div>
     </div>

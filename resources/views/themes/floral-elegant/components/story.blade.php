@@ -1,53 +1,80 @@
-<section class="story-section py-16 px-4 border-b border-stone-200/50" {!! themeAnimation('story') !!}>
-    <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-            <span class="story-subtitle text-xs uppercase tracking-widest font-semibold">Kisah Kami</span>
-            <h3 class="story-title text-2xl sm:text-3xl font-bold mt-1">Perjalanan Cinta</h3>
-            <p class="story-desc text-xs sm:text-sm opacity-70 mt-2 max-w-md mx-auto">
+{{-- 
+    Story Timeline — Premium Love Journey (Phase 2.1)
+    
+    Premium timeline with:
+    - Vertical line connector
+    - Numbered dots
+    - Story cards with image, date, title, description
+    - Floral ornament accents
+    - Scroll reveal animation
+--}}
+
+@php
+    $themeFolder = $invitation->theme->folder;
+@endphp
+
+<section class="py-12 px-4 relative overflow-hidden" style="border-bottom: 1px solid var(--theme-secondary);" {!! themeAnimation('story') !!}>
+    {{-- Side decorations for timeline storytelling --}}
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'leaf-01', 'class' => 'left-2 top-1/4 opacity-15'])
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'leaf-02', 'class' => 'right-2 bottom-1/4 opacity-15'])
+
+    <div class="max-w-4xl mx-auto relative z-10">
+        {{-- Section Header --}}
+        <div class="section-header fade-up" data-animation>
+            <span class="section-subtitle">Kisah Kami</span>
+            <h3 class="section-title">Perjalanan Cinta</h3>
+            <div class="section-line"></div>
+            <p class="section-desc">
                 Bagaimana Tuhan mempertemukan kami dalam bingkai takdir yang indah
             </p>
         </div>
 
+        {{-- Center Rose Accent --}}
+        <div class="flex justify-center mb-6 fade-in" data-animation>
+            @include('themes.' . $themeFolder . '.components.theme-decoration', [
+                'type' => 'rose-01',
+                'class' => 'relative block',
+                'style' => 'position: relative; width: 2.5rem; height: 2.5rem; opacity: 0.35;'
+            ])
+        </div>
+
         @if(count($invitationData['story']) > 0)
-            <div class="relative max-w-md mx-auto">
-                <!-- Center timeline line -->
-                <div class="absolute left-4 top-0 bottom-0 w-[2px] bg-[var(--theme-secondary)] story-line"></div>
-                
-                <div class="space-y-12 relative">
+            <div class="story-timeline">
+                {{-- Timeline Line --}}
+                <div class="story-timeline-line"></div>
+
+                <div class="space-y-0">
                     @foreach(collect($invitationData['story'])->sortBy('sort') as $index => $item)
-                        <div class="flex flex-col items-stretch relative" data-gsap="fade-up">
-                            <!-- Timeline circle dot -->
-                            <div class="absolute left-4 -translate-x-1/2 flex items-center justify-center z-10">
-                                <div class="w-8 h-8 rounded-full bg-[var(--theme-surface)] border-2 border-[var(--theme-primary)] flex items-center justify-center shadow-sm story-dot">
-                                    <span class="text-xs font-bold text-[var(--theme-primary)]">{{ $index + 1 }}</span>
-                                </div>
+                        <div class="story-timeline-item fade-up" data-animation style="animation-delay: {{ $index * 0.15 }}s;">
+                            {{-- Timeline Dot --}}
+                            <div class="story-timeline-dot">
+                                <span>{{ $index + 1 }}</span>
                             </div>
                             
-                            <!-- Story Card -->
-                            <div class="w-full pl-12">
-                                <div class="story-card bg-[var(--theme-surface)] p-6 rounded-2xl border border-[var(--theme-secondary)] shadow-sm relative hover:shadow-md transition duration-300 text-left">
-                                    <span class="story-card-date text-xs font-bold tracking-wider">
-                                        {{ format_date_safe($item['date']) }}
-                                    </span>
-                                    <h4 class="story-card-title text-lg font-bold mt-1 leading-snug">
-                                        {{ $item['title'] }}
-                                    </h4>
-                                    @if(!empty($item['image']))
-                                        <div class="mt-3 mb-2 overflow-hidden rounded-xl border border-[var(--theme-secondary)] aspect-video">
-                                            <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" class="w-full h-full object-cover" />
-                                        </div>
-                                    @endif
-                                    <p class="story-card-desc text-xs sm:text-sm opacity-80 leading-relaxed mt-2 whitespace-pre-line">
-                                        {{ $item['description'] }}
-                                    </p>
-                                </div>
+                            {{-- Story Card --}}
+                            <div class="story-card">
+                                <span class="story-card-date">
+                                    {{ format_date_safe($item['date']) }}
+                                </span>
+                                <h4 class="story-card-title mt-1">
+                                    {{ $item['title'] }}
+                                </h4>
+                                @if(!empty($item['image']))
+                                    <div class="story-card-image hover-zoom mt-3">
+                                        <img src="{{ $item['image'] }}" 
+                                             alt="{{ $item['title'] }}" 
+                                             class="w-full h-full object-cover"
+                                             loading="lazy" />
+                                    </div>
+                                @endif
+                                <p class="story-card-desc mt-3 text-xs leading-relaxed opacity-85">{{ $item['description'] }}</p>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
         @else
-            <div class="text-center py-8 text-stone-400 text-sm italic">
+            <div class="text-center py-8 opacity-40 text-sm italic" style="color: var(--theme-text);">
                 Belum ada kisah perjalanan cinta yang dibagikan.
             </div>
         @endif

@@ -1,0 +1,392 @@
+/* ============================================================
+   Floral Elegant — CSS Motion System (animation.css)
+   
+   Sistem animasi reusable berbasis CSS.
+   Komponen cukup menambahkan class dan data-animation attribute.
+   Observer JS minimal di bawah untuk trigger scroll reveal.
+   ============================================================ */
+
+/* ── Keyframes ── */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes floatGentle {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-12px) rotate(2deg);
+    }
+}
+
+@keyframes softPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.03);
+    }
+}
+
+@keyframes rotateSlow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 var(--theme-rose-glow);
+    }
+    50% {
+        box-shadow: 0 0 20px 8px var(--theme-rose-glow);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* ── Sparkle / Particle Keyframes ── */
+
+@keyframes sparkleFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1);
+    }
+    80% {
+        opacity: 0.6;
+        transform: translateY(-60px) scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0);
+    }
+}
+
+@keyframes sparkleGlow {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes sparkleDrift {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(var(--drift-x, 30px), var(--drift-y, -80px)) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+@keyframes floatPetal {
+    0% {
+        transform: translateY(-5vh) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.7;
+    }
+    85% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(105vh) translateX(20vw) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+
+/* ── Animation Classes (scroll-triggered) ── */
+
+.fade-up,
+.fade-down,
+.fade-in,
+.scale-in,
+.slide-left,
+.slide-right {
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+.fade-up {
+    transform: translateY(30px);
+}
+
+.fade-down {
+    transform: translateY(-30px);
+}
+
+.scale-in {
+    transform: scale(0.85);
+}
+
+.slide-left {
+    transform: translateX(40px);
+}
+
+.slide-right {
+    transform: translateX(-40px);
+}
+
+/* ── Triggered States (when visible) ── */
+
+.fade-up.is-visible {
+    animation: fadeUp 0.8s var(--theme-ease) forwards;
+}
+
+.fade-down.is-visible {
+    animation: fadeDown 0.8s var(--theme-ease) forwards;
+}
+
+.fade-in.is-visible {
+    animation: fadeIn 0.8s var(--theme-ease) forwards;
+}
+
+.scale-in.is-visible {
+    animation: scaleIn 0.8s var(--theme-ease) forwards;
+}
+
+.slide-left.is-visible {
+    animation: slideLeft 0.8s var(--theme-ease) forwards;
+}
+
+.slide-right.is-visible {
+    animation: slideRight 0.8s var(--theme-ease) forwards;
+}
+
+/* ── Stagger Children ── */
+
+.stagger-children > *:nth-child(1) { animation-delay: 0s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.45s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.6s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.75s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.9s; }
+.stagger-children > *:nth-child(8) { animation-delay: 1.05s; }
+
+/* ── Continuous Animations (non scroll-triggered) ── */
+
+.float {
+    animation: floatGentle 4s ease-in-out infinite;
+}
+
+.soft-pulse {
+    animation: softPulse 3s ease-in-out infinite;
+}
+
+.rotate-slow {
+    animation: rotateSlow 12s linear infinite;
+}
+
+.pulse-glow {
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+.shimmer-text {
+    background: linear-gradient(
+        90deg,
+        var(--theme-primary) 0%,
+        var(--theme-accent) 50%,
+        var(--theme-primary) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ── Sparkle Overlay Particles (pure CSS) ── */
+
+.sparkle-overlay {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.sparkle-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        var(--theme-accent) 0%,
+        rgba(212, 175, 55, 0.3) 40%,
+        transparent 70%
+    );
+    animation: sparkleGlow var(--sparkle-duration, 4s) ease-in-out infinite;
+    animation-delay: var(--sparkle-delay, 0s);
+    opacity: 0.4;
+}
+
+.sparkle-particle.drift {
+    animation: sparkleDrift var(--sparkle-duration, 6s) ease-in-out infinite;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(212, 175, 55, 0.4) 30%,
+        transparent 60%
+    );
+}
+
+/* ── Floral Petal Particles ── */
+
+.floral-particles-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floral-petal {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-image: radial-gradient(
+        circle at top left,
+        rgba(200, 130, 131, 0.5),
+        rgba(184, 107, 112, 0.15)
+    );
+    border-radius: 50% 0 50% 50%;
+    filter: blur(0.5px);
+    animation: floatPetal 18s linear infinite;
+}
+
+/* ── Hover Effects ── */
+
+.hover-lift {
+    transition: transform var(--theme-duration) var(--theme-ease),
+                box-shadow var(--theme-duration) var(--theme-ease);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--theme-shadow-lg);
+}
+
+.hover-zoom {
+    overflow: hidden;
+}
+
+.hover-zoom img {
+    transition: transform 0.6s var(--theme-ease);
+}
+
+.hover-zoom:hover img {
+    transform: scale(1.08);
+}
+
+/* ── Reduced Motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-up,
+    .fade-down,
+    .fade-in,
+    .scale-in,
+    .slide-left,
+    .slide-right {
+        opacity: 1;
+        transform: none;
+    }
+
+    .float,
+    .soft-pulse,
+    .rotate-slow,
+    .pulse-glow,
+    .sparkle-particle {
+        animation: none;
+    }
+}

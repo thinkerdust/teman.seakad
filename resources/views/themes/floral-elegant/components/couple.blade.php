@@ -1,28 +1,46 @@
-<!-- Inline Hero Section -->
-<div class="hero-section relative flex flex-col justify-center items-center min-h-[70vh] py-16 px-6 text-center overflow-hidden">
-    <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none hero-bg" style="background-image: url('{{ themeAsset('hero.background') }}')"></div>
+{{-- 
+    Couple Section — Premium Mempelai Introduction (Phase 2.1)
     
+    Structure:
+    - Inline Hero (names, date, venue)
+    - Floral Divider
+    - Groom Details (photo with arch frame, name, story)
+    - Heart Divider with gold line ornament
+    - Bride Details (photo with arch frame, name, story)
+--}}
+
+@php
+    $themeFolder = $invitation->theme->folder;
+@endphp
+
+{{-- Inline Hero Section --}}
+<div class="inline-hero-section relative">
+    <div class="hero-bg-muted" style="background-image: url('{{ themeAsset('background.watercolor') }}');"></div>
+    
+    {{-- Sparkle overlay --}}
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'sparkle'])
+
     <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
-        <span class="hero-subtitle text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold mb-6 inline-block">
+        <span class="section-subtitle mb-4 fade-up" data-animation>
             Undangan Pernikahan
         </span>
         
-        <div class="hero-names-container my-4 sm:my-6">
-            <h1 class="hero-names text-4xl sm:text-5xl md:text-7xl font-bold tracking-wide leading-tight">
+        <div class="text-center my-2 sm:my-4 fade-up" data-animation style="animation-delay: 0.15s;">
+            <h1 class="hero-names-display">
                 {{ $invitationData['groom_nickname'] ?? $invitationData['groom_name'] }} & {{ $invitationData['bride_nickname'] ?? $invitationData['bride_name'] }}
             </h1>
         </div>
         
-        <div class="hero-details-container mt-6 space-y-4 w-full">
-            <div class="h-[1px] w-24 bg-current opacity-30 mx-auto my-4 hero-divider"></div>
-            <p class="hero-date text-lg sm:text-xl font-medium tracking-wide">
+        <div class="mt-4 space-y-3 w-full text-center fade-up" data-animation style="animation-delay: 0.3s;">
+            <div class="section-line"></div>
+            <p class="hero-date-badge text-sm sm:text-base">
                 {{ $invitationData['reception_date'] ? Carbon\Carbon::parse($invitationData['reception_date'])->translatedFormat('d F Y') : ( $invitationData['akad_date'] ? Carbon\Carbon::parse($invitationData['akad_date'])->translatedFormat('d F Y') : '-' ) }}
             </p>
-            <p class="hero-venue text-sm sm:text-base opacity-90 max-w-md mx-auto leading-relaxed">
+            <p class="text-xs sm:text-sm opacity-75 max-w-md mx-auto leading-relaxed" style="color: var(--theme-text);">
                 {{ $invitationData['venue'] }}
             </p>
             @if($invitationData['description'])
-                <p class="hero-description text-xs sm:text-sm italic opacity-75 max-w-md mx-auto mt-8 px-4 leading-relaxed">
+                <p class="text-xs italic opacity-65 max-w-md mx-auto mt-6 px-4 leading-relaxed" style="color: var(--theme-text);">
                     "{{ $invitationData['description'] }}"
                 </p>
             @endif
@@ -30,61 +48,74 @@
     </div>
 </div>
 
-<!-- Separation Divider -->
-<div class="flex justify-center items-center py-6 floral-divider">
-    <div class="h-[1px] w-24 bg-current opacity-20"></div>
-    <span class="mx-4 text-lg">❀</span>
-    <div class="h-[1px] w-24 bg-current opacity-20"></div>
-</div>
+{{-- Floral Divider --}}
+@include('themes.' . $themeFolder . '.components.section-divider', ['type' => 'flower'])
 
-<!-- Mempelai Details -->
-<section class="py-16 px-6 text-center space-y-12 border-b border-stone-200/50" {!! themeAnimation('couple') !!}>
-    <div class="space-y-2">
-        <h2 class="text-2xl font-bold uppercase tracking-widest" style="font-family: var(--theme-font-heading);">Mempelai</h2>
-        <div class="h-[1px] w-12 bg-current mx-auto mt-2 opacity-50"></div>
-        <p class="text-xs opacity-75 max-w-xs mx-auto leading-relaxed mt-4">
+{{-- Mempelai Section --}}
+<section class="py-12 px-6 text-center space-y-10 relative overflow-hidden" style="border-bottom: 1px solid var(--theme-secondary);" {!! themeAnimation('couple') !!}>
+    {{-- Floating Floral Decorations for Storytelling --}}
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'rose-01', 'class' => 'left-2 top-20 opacity-20'])
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'leaf-01', 'class' => 'right-2 top-40 opacity-15'])
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'rose-02', 'class' => 'left-4 bottom-40 opacity-20'])
+    @include('themes.' . $themeFolder . '.components.theme-decoration', ['type' => 'leaf-02', 'class' => 'right-4 bottom-20 opacity-15'])
+
+    {{-- Section Header --}}
+    <div class="section-header fade-up relative z-10" data-animation>
+        <h2 class="section-title" style="font-family: var(--theme-font-heading);">Mempelai</h2>
+        <div class="section-line"></div>
+        <p class="text-xs opacity-65 max-w-xs mx-auto leading-relaxed mt-3" style="color: var(--theme-text);">
             Maha Suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami menyatukan dua hati dalam ikatan pernikahan yang suci.
         </p>
     </div>
 
-    <!-- Groom details -->
-    <div class="space-y-4" data-gsap="fade-up">
-        <div class="relative w-28 h-28 mx-auto rounded-full flex items-center justify-center border border-[var(--theme-secondary)] bg-[var(--theme-surface)] shadow-inner mb-4 overflow-hidden">
-            <div class="absolute inset-1 rounded-full border border-dashed border-[var(--theme-primary)]/40 z-10"></div>
+    {{-- Groom --}}
+    <div class="space-y-3 fade-up relative z-10" data-animation style="animation-delay: 0.15s;">
+        <div class="photo-frame arch scale-in" data-animation style="animation-delay: 0.3s;">
+            <img src="{{ themeAsset('frame.arch') }}" alt="" class="frame-border" aria-hidden="true" />
             @if(!empty($invitationData['groom_photo']))
-                <img src="{{ $invitationData['groom_photo'] }}" alt="{{ $invitationData['groom_nickname'] ?? $invitationData['groom_name'] }}" class="h-full w-full object-cover" />
+                <img src="{{ $invitationData['groom_photo'] }}" 
+                     alt="{{ $invitationData['groom_nickname'] ?? $invitationData['groom_name'] }}"
+                     class="frame-photo" />
             @else
-                <span class="text-4xl font-heading text-[var(--theme-primary)] font-light opacity-80">{{ substr($invitationData['groom_nickname'] ?? $invitationData['groom_name'], 0, 1) }}</span>
+                <div class="couple-initial flex items-center justify-center w-full h-full bg-slate-50/50">
+                    {{ substr($invitationData['groom_nickname'] ?? $invitationData['groom_name'], 0, 1) }}
+                </div>
             @endif
         </div>
-        <div class="font-accent text-4xl text-[var(--theme-primary)]">{{ $invitationData['groom_name'] }}</div>
-        <p class="text-xs opacity-60">Putra dari Bapak & Ibu Terbaik</p>
+        <div class="couple-name mt-4">{{ $invitationData['groom_name'] }}</div>
+        <p class="couple-subtitle">Putra dari Bapak & Ibu Terbaik</p>
+        @if(!empty($invitationData['groom_description']))
+            <p class="couple-story-text">{{ $invitationData['groom_description'] }}</p>
+        @endif
     </div>
 
-    <!-- Divider -->
-    @if(themeAsset('ornaments.1'))
-        <div class="py-6 pointer-events-none z-10 opacity-30" data-gsap="fade-in">
-            <img src="{{ themeAsset('ornaments.1') }}" class="mx-auto max-h-12 object-contain" />
-        </div>
-    @else
-        <div class="flex justify-center items-center py-6" data-gsap="fade-in">
-            <div class="h-[1px] w-24 bg-[var(--theme-primary)] opacity-20"></div>
-            <span class="mx-4 text-lg text-[var(--theme-primary)] opacity-40">❀</span>
-            <div class="h-[1px] w-24 bg-[var(--theme-primary)] opacity-20"></div>
-        </div>
-    @endif
+    {{-- Heart Divider --}}
+    <div class="couple-heart-divider fade-in relative z-10" data-animation style="animation-delay: 0.2s;">
+        <div class="line"></div>
+        <img src="{{ themeAsset('ornament.gold_line') }}" alt="" class="h-3 opacity-40" aria-hidden="true" />
+        <span class="heart-icon">♡</span>
+        <img src="{{ themeAsset('ornament.gold_line') }}" alt="" class="h-3 opacity-40" aria-hidden="true" />
+        <div class="line"></div>
+    </div>
 
-    <!-- Bride details -->
-    <div class="space-y-4" data-gsap="fade-up">
-        <div class="relative w-28 h-28 mx-auto rounded-full flex items-center justify-center border border-[var(--theme-secondary)] bg-[var(--theme-surface)] shadow-inner mb-4 overflow-hidden">
-            <div class="absolute inset-1 rounded-full border border-dashed border-[var(--theme-primary)]/40 z-10"></div>
+    {{-- Bride --}}
+    <div class="space-y-3 fade-up relative z-10" data-animation style="animation-delay: 0.3s;">
+        <div class="photo-frame arch scale-in" data-animation style="animation-delay: 0.45s;">
+            <img src="{{ themeAsset('frame.arch') }}" alt="" class="frame-border" aria-hidden="true" />
             @if(!empty($invitationData['bride_photo']))
-                <img src="{{ $invitationData['bride_photo'] }}" alt="{{ $invitationData['bride_nickname'] ?? $invitationData['bride_name'] }}" class="h-full w-full object-cover" />
+                <img src="{{ $invitationData['bride_photo'] }}" 
+                     alt="{{ $invitationData['bride_nickname'] ?? $invitationData['bride_name'] }}"
+                     class="frame-photo" />
             @else
-                <span class="text-4xl font-heading text-[var(--theme-primary)] font-light opacity-80">{{ substr($invitationData['bride_nickname'] ?? $invitationData['bride_name'], 0, 1) }}</span>
+                <div class="couple-initial flex items-center justify-center w-full h-full bg-slate-50/50">
+                    {{ substr($invitationData['bride_nickname'] ?? $invitationData['bride_name'], 0, 1) }}
+                </div>
             @endif
         </div>
-        <div class="font-accent text-4xl text-[var(--theme-primary)]">{{ $invitationData['bride_name'] }}</div>
-        <p class="text-xs opacity-60">Putri dari Bapak & Ibu Terbaik</p>
+        <div class="couple-name mt-4">{{ $invitationData['bride_name'] }}</div>
+        <p class="couple-subtitle">Putri dari Bapak & Ibu Terbaik</p>
+        @if(!empty($invitationData['bride_description']))
+            <p class="couple-story-text">{{ $invitationData['bride_description'] }}</p>
+        @endif
     </div>
 </section>
